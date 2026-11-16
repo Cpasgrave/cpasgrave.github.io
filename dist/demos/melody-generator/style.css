@@ -1,0 +1,70 @@
+.melody-inputs, .melody-settings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem 1rem;
+}
+
+.melody-settings {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-block: 1rem;
+}
+
+.melody-inputs label, .melody-settings label { font-weight: 650; }
+
+.melody-inputs textarea, .melody-settings select, .melody-settings input[type="range"] {
+  display: block;
+  width: 100%;
+  margin-top: .3rem;
+}
+
+.melody-inputs textarea, .demo-page select {
+  min-height: 44px;
+  padding: .45rem .65rem;
+  border: 1px solid #87613e;
+  border-radius: .25rem;
+  color: var(--ink);
+  background: #fcf0d9;
+  font: inherit;
+}
+
+.melody-inputs textarea { resize: vertical; }
+.demo-page select { max-width: 100%; }
+.melody-toolbar label:last-child { margin-inline-start: auto; }
+.melody-check { display: inline-flex; gap: .35rem; align-items: center; min-height: 44px; }
+.melody-settings output { color: #60401f; font-size: .88rem; font-weight: 500; }
+.melody-hint { color: #60401f; font-size: .9rem; }
+
+.score {
+  min-height: 6rem;
+  max-height: 21rem;
+  overflow: auto;
+  border: 1px solid #8e6c4d;
+  border-radius: .25rem;
+  background: #f9ebcf;
+  color: #302114;
+}
+
+.score svg { display: block; width: 100%; height: auto; }
+.score .current-note, .score .current-note * { fill: #a0351c; stroke: #a0351c; }
+.score:empty::before { content: 'La partition s’affichera ici.'; display: block; padding: 1rem; }
+.demo-status.is-error { color: #8b2d18; }
+.demo-page summary { padding-block: .35rem; cursor: pointer; font-weight: 700; }
+
+#durations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .15rem .8rem;
+  border: 1px solid #87613e;
+}
+
+#durations label { display: inline-flex; align-items: center; min-height: 40px; font-size: .9rem; }
+#durations input { margin-inline-end: .35rem; }
+
+@media (max-width: 38rem) {
+  .melody-settings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .melody-toolbar label:last-child { margin-inline-start: 0; }
+}
+
+@media (max-width: 27rem) {
+  .melody-inputs { grid-template-columns: 1fr; }
+}

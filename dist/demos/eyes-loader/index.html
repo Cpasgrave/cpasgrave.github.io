@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eyes Loader · Cépagrave</title>
+  <link rel="stylesheet" href="../../style.css?v=demos">
+  <link rel="stylesheet" href="../demo.css">
+  <link rel="stylesheet" href="style.css?v=cils-pointus">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="demo-page eyes-page">
+    <a class="demo-home" href="../../index.html">← Cépagrave</a>
+    <header class="demo-header">
+      <h1>Eyes Loader</h1>
+      <p>Déplace le pointeur ou touche la scène pour guider la mouche.</p>
+    </header>
+    <section class="demo-panel" aria-label="Démonstration d’Eyes Loader">
+      <!-- Merci à Lololearn pour l’aide sur la version d’origine. -->
+      <div class="eye-stage" aria-hidden="true">
+        <span class="waiting">wait…</span>
+        <div class="eye"><span class="eyelash"></span><span class="eyelash second"></span><span class="eyelash third"></span><span class="eyelash fourth"></span><div class="sclera"><div class="iris"></div></div></div>
+        <div class="eye"><span class="eyelash"></span><span class="eyelash second"></span><span class="eyelash third"></span><span class="eyelash fourth"></span><div class="sclera"><div class="iris"></div></div></div>
+        <div class="eye"><span class="eyelash"></span><span class="eyelash second"></span><span class="eyelash third"></span><span class="eyelash fourth"></span><div class="sclera"><div class="iris"></div></div></div>
+        <div class="eye"><span class="eyelash"></span><span class="eyelash second"></span><span class="eyelash third"></span><span class="eyelash fourth"></span><div class="sclera"><div class="iris"></div></div></div>
+        <img class="fly" src="../../jeux/quarto/images/fly.svg" width="40" height="29" alt="">
+      </div>
+      <div class="demo-tools">
+        <button type="button" id="eyes-toggle" class="demo-button">Mettre en pause</button>
+        <button type="button" id="fly-move" class="demo-button">Déplacer la mouche</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

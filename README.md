@@ -22,3 +22,13 @@ Chaque jeu propose huit niveaux. Dans Onitama, le réglage est au-dessus du plat
 
 Quarto : les glissements et les poses ont des sons générés à chaque geste dans
 `dist/jeux/quarto/wood-sound.js`. Leur volume se règle dans « Réglages ».
+
+Quoridor : `dist/jeux/quoridor/` contient les sources éditables du troisième jeu.
+Il propose deux ou quatre places, chacune humaine ou contrôlée par une IA de
+niveau 1 à 8. Le calcul se fait dans un Worker, les coups s’animent et les pièces
+se déplacent à la souris, au toucher ou au clavier. Les réglages peuvent changer
+en cours de partie ; « Revenir à mon tour » annule aussi les réponses des IA.
+Les détails des sources, la référence des règles et les prompts des images de
+l’écrou et du bois clair figurent dans `dist/jeux/quoridor/README.md`.
+
+Tests des règles et de l’IA : `node --test tests/quoridor.test.cjs`.

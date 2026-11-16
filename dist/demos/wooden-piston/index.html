@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wooden Piston · Cépagrave</title>
+  <link rel="stylesheet" href="../../style.css?v=demos">
+  <link rel="stylesheet" href="../demo.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="demo-page piston-page">
+    <a class="demo-home" href="../../index.html">← Cépagrave</a>
+    <header class="demo-header">
+      <h1>Wooden Piston</h1>
+      <p>La roue entraîne la bielle. Le piston monte et descend dans le cylindre.</p>
+    </header>
+    <section class="demo-panel" aria-label="Démonstration de Wooden Piston">
+      <svg class="mechanism" viewBox="0 0 400 460" role="img" aria-labelledby="piston-title">
+        <title id="piston-title">Mécanisme en bois composé d’une roue, d’une bielle et d’un piston</title>
+        <image href="cyl2.png" x="125" y="42" width="150" height="141"/>
+        <g id="wheel" transform="rotate(-82 200 316)">
+          <image href="cog.png" x="70" y="186" width="260" height="260"/>
+        </g>
+        <g id="rod" transform="translate(200 48) rotate(90)">
+          <image href="bielle.png" x="-31" y="-34" width="242" height="67"/>
+        </g>
+        <g id="piston" transform="translate(0 48)">
+          <image href="piston.png" x="168" y="-52" width="64" height="49"/>
+        </g>
+        <image href="cylinder1.png" x="125" y="42" width="150" height="141"/>
+        <image id="crank-pin" href="boulon.png" x="-16" y="-15" width="32" height="30" transform="translate(200 246)"/>
+      </svg>
+      <div class="demo-tools">
+        <button type="button" id="piston-toggle" class="demo-button">Mettre en pause</button>
+        <label class="piston-speed" for="piston-speed">Vitesse
+          <input type="range" id="piston-speed" min="10" max="90" step="5" value="35">
+        </label>
+        <output id="piston-speed-value" for="piston-speed">35 tr/min</output>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

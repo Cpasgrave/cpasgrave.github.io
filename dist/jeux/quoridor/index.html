@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Quoridor à deux ou à quatre : joueurs et IA réglables, bois et métal.">
+  <meta name="theme-color" content="#e8cfa2">
+  <title>Quoridor · Cépagrave</title>
+  <link rel="stylesheet" href="style.css?v=2-ecrous">
+  <script src="engine.js" defer></script>
+  <script src="ai.js" defer></script>
+  <script src="../quarto/wood-sound.js" defer></script>
+  <script src="app.js?v=2-ecrous" defer></script>
+</head>
+<body>
+  <main class="game">
+    <a class="home" href="../../index.html">← Cépagrave</a>
+    <header class="masthead">
+      <h1>Quoridor</h1>
+      <nav aria-label="Commandes du jeu">
+        <button class="wood-button" id="rules-open">Règles</button>
+        <button class="wood-button" id="settings-open">Réglages</button>
+        <button class="wood-button" id="new-game">Nouvelle partie</button>
+      </nav>
+    </header>
+    <div class="game-layout">
+      <section class="board-column" aria-label="Plateau de Quoridor">
+        <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <div class="board-frame" id="board-frame">
+          <i class="rivet rivet-nw" aria-hidden="true"></i><i class="rivet rivet-ne" aria-hidden="true"></i><i class="rivet rivet-sw" aria-hidden="true"></i><i class="rivet rivet-se" aria-hidden="true"></i>
+          <div class="goal goal-n" id="goal-N"></div><div class="goal goal-e" id="goal-E"></div><div class="goal goal-s" id="goal-S"></div><div class="goal goal-w" id="goal-W"></div>
+          <div class="board" id="board" aria-label="Plateau de neuf cases sur neuf">
+            <div id="cells"></div><div id="wall-slots"></div><div id="walls" aria-hidden="true"></div><div id="pawns"></div>
+            <div id="wall-preview" class="barrier preview" hidden aria-hidden="true"></div>
+          </div>
+        </div>
+        <p id="hint" class="hint" role="status" hidden></p>
+        <div class="board-actions">
+          <button class="quiet-button" id="undo" disabled>↶ Revenir à mon tour</button>
+        </div>
+      </section>
+      <aside class="workbench" aria-label="Joueurs et réserve">
+        <h2>Autour du plateau</h2>
+        <div id="players" class="players"></div>
+        <section class="reserve" aria-labelledby="reserve-heading">
+          <h2 id="reserve-heading">Ta réserve</h2>
+          <button id="wall-source" class="wall-source" aria-label="Prendre une barrière horizontale"><span class="barrier" aria-hidden="true"></span></button>
+          <button class="wood-button compact" id="rotate">Tourner (R)</button>
+        </section>
+      </aside>
+    </div>
+    <noscript>Active JavaScript dans le navigateur pour jouer à Quoridor.</noscript>
+  </main>
+
+  <dialog id="setup-dialog" class="wood-panel" aria-labelledby="setup-title">
+    <form id="setup-form">
+      <button type="button" class="close-button" data-close="setup-dialog" aria-label="Fermer les réglages">×</button>
+      <h2 id="setup-title">Autour du plateau</h2>
+      <p id="setup-intro">Choisis les joueurs et le niveau de chaque IA.</p>
+      <fieldset class="player-count"><legend>Nombre de joueurs</legend>
+        <label><input type="radio" name="count" value="2" checked> À deux</label>
+        <label><input type="radio" name="count" value="4"> À quatre</label>
+      </fieldset>
+      <div id="seat-settings"></div>
+      <label class="starter-label" for="starter">Premier joueur <select id="starter"></select></label>
+      <fieldset class="sound-settings"><legend>Ambiance sonore</legend>
+        <label><input type="checkbox" id="sound-enabled" checked> Sons des déplacements</label>
+        <label for="sound-volume">Volume <output id="sound-output">30 %</output><input id="sound-volume" type="range" min="0" max="100" step="5" value="30"></label>
+      </fieldset>
+      <p class="small-note" id="setup-note"></p>
+      <div class="dialog-actions"><button type="button" class="wood-button compact" id="apply-settings">Appliquer</button><button type="submit" class="wood-button" id="start-game">Commencer</button></div>
+    </form>
+  </dialog>
+  <dialog id="rules-dialog" class="wood-panel" aria-labelledby="rules-title">
+    <button class="close-button" data-close="rules-dialog" aria-label="Fermer les règles">×</button>
+    <h2 id="rules-title">Les règles</h2>
+    <p>Atteins le premier le bord opposé à ton départ. À chaque tour, <strong>déplace ton pion ou pose une barrière</strong>.</p>
+    <p>Ton pion avance d’une case, vers le haut, le bas, la gauche ou la droite. Si un pion est juste devant toi, tu peux le sauter. Si un mur, le bord ou un autre pion empêche ce saut, tu peux passer à sa gauche ou à sa droite, à condition que le passage soit libre. On ne saute jamais deux pions d’un coup.</p>
+    <p>Une barrière occupe deux intervalles entre les cases. Les barrières ne se croisent pas et ne se chevauchent pas. <strong>Chacun doit garder au moins un chemin vers son arrivée.</strong></p>
+    <p>À deux : dix barrières par joueur. À quatre : cinq barrières par joueur, un départ sur chaque côté, puis les tours dans le sens horaire. Le premier arrivé gagne, sans équipes.</p>
+    <h3>Autour de la table</h3>
+    <p>Clique sur une case accessible pour y déplacer ton écrou, ou fais-le glisser. Prends une barrière dans la réserve et dépose-la dans une rainure. Tant que tu tiens une barrière, le pion ne peut pas bouger : repose-la dans la réserve pour changer d’avis.</p>
+    <p>Le bouton « Tourner (R) » change l’orientation de la barrière, au toucher comme à la souris. Au clavier : Tab et Entrée pour prendre, poser ou remettre la barrière en réserve, R pour la tourner et Échap pour la reposer. Le cadre jaune indique le joueur dont c’est le tour.</p>
+    <p>« Revenir à mon tour » annule aussi les réponses des IA. Dans les réglages, chaque place peut être humaine ou contrôlée par une IA, avec son propre niveau de 1 à 8.</p>
+    <p class="small-note">Si, à quatre, un joueur est temporairement immobilisé par les autres pions et ne dispose d’aucun coup possible, cette adaptation passe son tour.</p>
+    <p class="small-note">Adaptation personnelle du jeu de Mirko Marchesi. Quoridor est une marque de Gigamic. <a href="https://export.gigamic.com/wp-content/uploads/2021/01/INS-RULES-QUORIDOR_10-2016.pdf" target="_blank" rel="noopener">Règles officielles</a>.</p>
+  </dialog>
+  <dialog id="win-dialog" class="wood-panel win-panel" aria-labelledby="win-title">
+    <button class="close-button" data-close="win-dialog" aria-label="Voir le plateau">×</button>
+    <div id="winner-pawn" class="winner-pawn" aria-hidden="true"></div>
+    <h2 id="win-title"></h2><p id="win-text"></p>
+    <button class="wood-button" id="play-again">Une autre partie</button>
+    <button class="quiet-button" data-close="win-dialog">Voir le plateau</button>
+  </dialog>
+</body>
+</html>

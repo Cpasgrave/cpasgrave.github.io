@@ -99,6 +99,8 @@ h1 {
 }
 
 .project--quarto { --wood-position: 82%; }
+.quoridor-card { grid-column: 1 / -1; }
+.project--quoridor { --wood-position: 60%; min-height: 8rem; }
 
 .project:hover {
   transform: translateY(-2px);
@@ -141,6 +143,34 @@ h1 {
   line-height: 1;
 }
 
+.demos { margin-top: clamp(2rem, 5vh, 3rem); }
+
+.demos h2 {
+  margin: 0 0 .55rem;
+  font: 700 1.4rem/1.15 var(--display);
+}
+
+.demo-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .9rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project--small {
+  min-height: 3.4rem;
+  gap: .5rem;
+  padding: .65rem .95rem;
+  font-size: .92rem;
+  font-weight: 650;
+}
+
+.project--small span { color: #e8ca97; }
+.demo-list li:nth-child(2) .project--small { --wood-position: 84%; }
+.demo-list li:nth-child(3) .project--small { --wood-position: 15%; }
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -157,7 +187,8 @@ h1 {
   }
 
   .project-list { grid-template-columns: 1fr; }
-  .project { min-height: 8.8rem; }
+  .project:not(.project--small) { min-height: 8.8rem; }
+  .demo-list { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

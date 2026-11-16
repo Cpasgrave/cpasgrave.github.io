@@ -1,0 +1,99 @@
+.eyes-page { max-width: 39rem; }
+
+.eye-stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 15rem;
+  aspect-ratio: 1.65;
+  overflow: hidden;
+  border-radius: .4rem;
+  background: radial-gradient(ellipse, #8a8d3d, #596622);
+  box-shadow: inset 0 2px 12px #2734068c;
+}
+
+.waiting {
+  position: absolute;
+  inset: 40% 0 auto;
+  color: #f3e2b6;
+  text-align: center;
+  font: 600 clamp(1.65rem, 6vw, 3rem)/1 var(--display);
+}
+
+.eye {
+  --tint: #b6a6cf;
+  position: absolute;
+  width: clamp(3.1rem, 13vw, 5.5rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  padding: .29rem;
+  isolation: isolate;
+}
+
+/* The four rotated squares reproduce the pointed lashes of the original. */
+.eyelash {
+  position: absolute;
+  inset: 7.5%;
+  background: rgba(55, 45, 20, .8);
+  z-index: 0;
+}
+.eyelash.second { transform: rotate(22.5deg); }
+.eyelash.third { transform: rotate(45deg); }
+.eyelash.fourth { transform: rotate(67.5deg); }
+
+.eye::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  background: #492f22;
+  box-shadow: inset 0 1px 5px #e3bca281;
+}
+
+.eye:nth-of-type(2) { --tint: #dfa999; }
+.eye:nth-of-type(3) { --tint: #b8cca0; }
+.eye:nth-of-type(4) { --tint: #d9c178; }
+
+.sclera {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 40% 31%, #fff6df, var(--tint) 66%, #594235);
+}
+
+.eye.blink .sclera { animation: blink 340ms ease-in-out; }
+
+.iris {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 27%, #fff3ce 0 7%, transparent 9%),
+    radial-gradient(circle, #21180f 0 43%, #645438 49%, #433729 79%);
+  box-shadow: 0 0 4px #291d14a6;
+}
+
+.fly {
+  position: absolute;
+  width: clamp(1.7rem, 5vw, 2.5rem);
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px #281a16a0);
+}
+
+@keyframes blink {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eye.blink .sclera { animation: none; }
+}

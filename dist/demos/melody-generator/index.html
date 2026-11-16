@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melody Generator · Cépagrave</title>
+  <link rel="stylesheet" href="../../style.css?v=demos">
+  <link rel="stylesheet" href="../demo.css">
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="vexflow-4.2.5.js" defer></script>
+  <script src="presets.js" defer></script>
+  <script src="music.js?v=2" defer></script>
+  <script src="player.js" defer></script>
+  <script src="script.js?v=2" defer></script>
+</head>
+<body>
+  <main class="demo-page">
+    <a class="demo-home" href="../../index.html">← Cépagrave</a>
+    <header class="demo-header">
+      <h1>Melody Generator</h1>
+      <p>Écris un texte pour les notes et un autre pour le rythme, puis écoute le résultat.</p>
+    </header>
+    <section class="demo-panel" aria-label="Générateur de mélodies">
+      <div class="melody-inputs">
+        <label for="melody">Mélodie <textarea id="melody" rows="2" maxlength="128" spellcheck="false">Cépagrave</textarea></label>
+        <label for="rhythm">Rythme <textarea id="rhythm" rows="2" maxlength="128" spellcheck="false">Bois et papier</textarea></label>
+      </div>
+      <div class="demo-tools melody-toolbar">
+        <button type="button" id="play" class="demo-button">Écouter</button>
+        <button type="button" id="stop" class="demo-button" disabled>Arrêter</button>
+        <label class="melody-check"><input type="checkbox" id="loop"> En boucle</label>
+        <label for="demo-select">Exemple
+          <select id="demo-select"><option value="">Choisir…</option></select>
+        </label>
+      </div>
+      <p class="demo-status" id="music-status" role="status"></p>
+      <div id="score" class="score" aria-label="Partition générée" role="img"></div>
+      <div class="melody-settings">
+        <label for="tempo">Tempo <output id="tempo-value" for="tempo">100 BPM</output>
+          <input type="range" id="tempo" min="30" max="220" value="100">
+        </label>
+        <label for="volume">Volume <output id="volume-value" for="volume">45 %</output>
+          <input type="range" id="volume" min="0" max="100" value="45">
+        </label>
+        <label for="sustain">Tenue <output id="sustain-value" for="sustain">65 %</output>
+          <input type="range" id="sustain" min="10" max="100" value="65">
+        </label>
+      </div>
+      <details>
+        <summary>Gamme et valeurs rythmiques</summary>
+        <div class="melody-settings">
+          <label for="tonic">Tonique <select id="tonic"></select></label>
+          <label for="mode">Mode <select id="mode"></select></label>
+          <label for="low">Note la plus basse <select id="low"></select></label>
+          <label for="high">Note la plus haute <select id="high"></select></label>
+          <label class="melody-check"><input type="checkbox" id="convert" checked> Convertir le texte</label>
+        </div>
+        <p class="melody-hint">Les deux limites sont incluses. Avec la conversion, changer la gamme ou la tessiture peut aussi changer le nombre de notes.</p>
+        <fieldset id="durations"><legend>Durées et silences</legend></fieldset>
+      </details>
+    </section>
+  </main>
+</body>
+</html>
