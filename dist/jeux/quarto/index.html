@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jouez à Quarto contre une IA réglable ou à deux sur le même écran.">
+    <title>Quarto · CéPAGRAVE</title>
+    <link rel="stylesheet" href="./style.css?v=20261116-motion3">
+    <script src="./engine.js" defer></script>
+    <script src="./wood-sound.js?v=20261116-sound1" defer></script>
+    <script src="./drag.js?v=20261116-sound1" defer></script>
+    <script src="./motion.js?v=20261116-sound1" defer></script>
+    <script src="./script.js?v=20261116-sound1" defer></script>
+</head>
+<body id="body">
+  <!-- NEW GAME -->
+  <div id="nGbox" class="wood-panel" role="dialog" aria-modal="true" aria-labelledby="new-game-heading">
+    <div id="newGame">
+      <h1 id="new-game-heading" class="display-text">Nouvelle partie</h1>
+    </div>
+    <div id="G12P">
+      <button class="wood-button nG" id="G1P" type="button" aria-label="Jouer contre l’ordinateur"><span class="display-text">Contre l’IA</span></button>
+      <button class="wood-button nG" id="G2P" type="button"><span class="display-text">À deux</span></button>
+    </div>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
+
+    <div id="width_limiter"><a class="portal-return" href="../../index.html">← CéPAGRAVE · Projets</a>
+
+      <!--TITLE + MENU -->
+      <header>
+        <img id="title" src="./images/Logo.png" alt="Quarto">
+        <nav id="menu" aria-label="Commandes du jeu">
+          <button id="rules_button" class="wood-button" type="button"><span class="display-text">Règles</span></button>
+
+          <button id="settings_button" class="wood-button" type="button"><span class="display-text">Réglages</span></button>
+          <button type="button" id="new-game" class="wood-button"><span class="display-text">Nouvelle partie</span></button>
+        </nav>
+        <!--RULES-->
+        <div id="rules" class="wood-panel" role="dialog" aria-modal="true" aria-labelledby="rules-heading" hidden>
+          <button type="button" class="wood-button panel-close" data-close><span class="display-text">Fermer</span></button>
+          <h2 id="rules-heading" class="display-text">Règles</h2>
+          <p>Choisis une pièce et donne-la à ton adversaire. Il la pose sur une case vide,
+          puis choisit la prochaine pièce pour toi.</p>
+          <p>Quatre pièces alignées horizontalement, verticalement ou sur une grande diagonale
+          gagnent si elles ont au moins un caractère commun — couleur, hauteur, forme ou creux.</p>
+          <p>Dans cette version, les alignements sont annoncés automatiquement. Les carrés de
+          quatre pièces ne comptent pas. Un plateau plein sans alignement donne une égalité.</p>
+          <p>Fais glisser une pièce de la réserve vers le réceptacle pour l’offrir.
+          Reprends ensuite la pièce reçue et dépose-la sur une case libre du plateau.</p>
+          <p>Au clavier, utilise Tab et Entrée pour prendre une pièce, puis Tab et Entrée
+          pour la déposer. Échap annule le déplacement.</p>
+        </div>
+        <div id="settings" class="wood-panel" role="dialog" aria-modal="true" aria-labelledby="settings-heading" hidden>
+          <button type="button" class="wood-button panel-close" data-close><span class="display-text">Fermer</span></button>
+          <h2 id="settings-heading" class="display-text">Réglages</h2>
+          <label for="ai-level" class="display-text">Niveau de l’IA</label>
+          <input type="range" id="ai-level" min="1" max="8" step="1" value="3" aria-describedby="level-description">
+          <output id="level-value" for="ai-level"></output>
+          <p id="level-description"></p>
+          <label><input type="checkbox" id="sound-enabled" checked> Sons</label>
+          <label for="sound-volume" class="display-text">Volume des sons</label>
+          <input type="range" id="sound-volume" min="0" max="100" step="5" value="35">
+          <output id="sound-volume-value" for="sound-volume">35 %</output>
+        </div>
+
+      </header>
+      <div class="game-controls">
+        <p id="game-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- BOARD -->
+      <section class="game-table" aria-label="Table de jeu">
+        <div id="board">
+
+          <img id="board_img" src="./images/Board.jpg" alt="" draggable="false">
+          <table id="board_table">
+          <tr class="row">
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+          </tr>
+          <tr class="row">
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+          </tr>
+          <tr class="row">
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+          </tr>
+          <tr class="row">
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+            <td class="td free"><div class="cell"></div></td>
+          </tr>
+          </table>
+        </div>
+
+        <!-- PAWNS -->
+        <div class="reserve-column">
+        <div id="pawnset">
+          <div class="pawn gre sim squ ful off"><img class="pimg" src="./images/N-C.png"></div>
+          <div class="pawn gre sim squ hol off"><img class="pimg" src="./images/N-Ct.png"></div>
+          <div class="pawn gre sim cir ful off"><img class="pimg" src="./images/N-R.png"></div>
+          <div class="pawn gre sim cir hol off"><img class="pimg" src="./images/N-Rt.png"></div>
+          <div class="pawn gre dou squ ful off"><img class="pimg" src="./images/N-C2.png"></div>
+          <div class="pawn gre dou squ hol off"><img class="pimg" src="./images/N-C2t.png"></div>
+          <div class="pawn gre dou cir ful off"><img class="pimg" src="./images/N-R2.png"></div>
+          <div class="pawn gre dou cir hol off"><img class="pimg" src="./images/N-R2t.png"></div>
+
+          <div class="pawn ora sim squ ful off"><img class="pimg" src="./images/B-C.png"></div>
+          <div class="pawn ora sim squ hol off"><img class="pimg" src="./images/B-Ct.png"></div>
+          <div class="pawn ora sim cir ful off"><img class="pimg" src="./images/B-R.png"></div>
+          <div class="pawn ora sim cir hol off"><img class="pimg" src="./images/B-Rt.png"></div>
+          <div class="pawn ora dou squ ful off"><img class="pimg" src="./images/B-C2.png"></div>
+          <div class="pawn ora dou squ hol off"><img class="pimg" src="./images/B-C2t.png"></div>
+          <div class="pawn ora dou cir ful off"><img class="pimg" src="./images/B-R2.png"></div>
+          <div class="pawn ora dou cir hol off"><img class="pimg" src="./images/B-R2t.png"></div>
+        </div>
+      <div id="chosen_spot" role="button" aria-label="Déposer la pièce à offrir" tabindex="-1">
+        <div id="pawn_box" aria-label="Pièce à échanger"></div>
+        <span id="message2" class="display-text">Pièce à offrir</span>
+      </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</body>
+</html>
