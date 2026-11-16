@@ -3,46 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Le portail des projets de CéPAGRAVE. Joue à Onitama et à Quarto.">
-  <meta name="theme-color" content="#f6f0e5">
-  <title>CéPAGRAVE · Mes projets</title>
+  <meta name="description" content="Joue à Onitama et à Quarto chez Cépagrave.">
+  <meta name="theme-color" content="#9f825a">
+  <title>Cépagrave</title>
   <link rel="icon" type="image/jpeg" href="assets/avatar-cpasgrave.jpg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=papier-bois">
 </head>
 <body>
   <main class="portal">
     <header class="identity">
       <img class="avatar" src="assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
-      <div>
-        <p class="eyebrow">Portail personnel</p>
-        <h1>CéPAGRAVE</h1>
-        <p class="intro">Mes projets, au même endroit.</p>
-      </div>
+      <h1>Cépagrave</h1>
     </header>
 
-    <nav class="projects" aria-labelledby="projects-heading">
-      <h2 id="projects-heading">À découvrir</h2>
+    <nav class="projects" aria-label="Jeux">
       <ul class="project-list">
         <li>
           <a class="project project--onitama" href="jeux/onitama/index.html" aria-labelledby="onitama-title onitama-action" aria-describedby="onitama-description">
-            <div class="project-text">
-              <span class="project-number" aria-hidden="true">01</span>
-              <h3 id="onitama-title">Onitama</h3>
+            <div>
+              <h2 id="onitama-title">Onitama</h2>
               <p id="onitama-description">Un duel où les cartes dictent les déplacements.</p>
-              <span class="project-action" id="onitama-action">Jouer <span aria-hidden="true">→</span></span>
             </div>
-            <img class="project-art" src="assets/onitama.svg" alt="" width="108" height="108">
+            <span class="project-action" id="onitama-action">
+              <span class="visually-hidden">Jouer</span><span aria-hidden="true">→</span>
+            </span>
           </a>
         </li>
         <li>
           <a class="project project--quarto" href="jeux/quarto/index.html" aria-labelledby="quarto-title quarto-action" aria-describedby="quarto-description">
-            <div class="project-text">
-              <span class="project-number" aria-hidden="true">02</span>
-              <h3 id="quarto-title">Quarto</h3>
+            <div>
+              <h2 id="quarto-title">Quarto</h2>
               <p id="quarto-description">Aligne quatre pièces qui ont un point commun.</p>
-              <span class="project-action" id="quarto-action">Jouer <span aria-hidden="true">→</span></span>
             </div>
-            <img class="project-art" src="assets/quarto.svg" alt="" width="108" height="108">
+            <span class="project-action" id="quarto-action">
+              <span class="visually-hidden">Jouer</span><span aria-hidden="true">→</span>
+            </span>
           </a>
         </li>
       </ul>
