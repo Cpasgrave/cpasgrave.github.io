@@ -32,3 +32,32 @@ Les détails des sources, la référence des règles et les prompts des images d
 l’écrou et du bois clair figurent dans `dist/jeux/quoridor/README.md`.
 
 Tests des règles et de l’IA : `node --test tests/quoridor.test.cjs`.
+
+## Quantik
+
+Le portail ouvre `dist/jeux/quantik/`. Une partie se joue contre l’ordinateur
+(huit niveaux) ou à deux sur le même écran. Les coups se jouent par sélection
+et pose, par glissement ou au clavier. Les flèches parcourent le plateau et
+Entrée pose la pièce. En solo, l’annulation revient au dernier choix humain.
+
+Les règles (`engine.js`), l’IA (`ai.js`, `ai-worker.js`) et les gestes
+(`app.js`) sont séparés. La difficulté se règle avec le curseur de 1 à 8.
+Les sons de bois, le fond de table, la police des commandes et la flèche
+d’annulation proviennent de Quarto.
+
+Les seize pièces illustrées et le support du plateau sont des WebP transparents
+distincts dans `dist/jeux/quantik/dessins/`. Chaque forme a deux dessins
+par camp. Le choix d’un exemplaire, sa pose et son annulation conservent son
+identité. La couleur et les hachures sont aplaties dans chaque illustration.
+Le lettrage du titre, les veines des réserves et la poignée du curseur sont des
+SVG éditables. Les régions, les creux et les cibles partagent la projection
+définie dans `plateau.js`. Les boutons, les textes et les couleurs des réserves
+se modifient en HTML et CSS.
+
+Les originaux des illustrations et leurs consignes sont conservés dans
+`sources/quantik-dessin/`. L’archive locale `sources/quantik-avant-dessin-20261118-000853.zip`
+conserve la première version et son script de rendu.
+
+Règles de référence : livret Quantik de Gigamic fourni dans l’espace de travail,
+édition de juin 2019, page imprimée 5. Vérification du moteur et des huit niveaux
+depuis le dépôt : `node --test tests/quantik.test.cjs`.

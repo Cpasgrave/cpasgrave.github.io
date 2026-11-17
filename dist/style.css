@@ -99,8 +99,8 @@ h1 {
 }
 
 .project--quarto { --wood-position: 82%; }
-.quoridor-card { grid-column: 1 / -1; }
 .project--quoridor { --wood-position: 60%; min-height: 8rem; }
+.project--quantik { --wood-position: 17%; min-height: 8rem; }
 
 .project:hover {
   transform: translateY(-2px);
