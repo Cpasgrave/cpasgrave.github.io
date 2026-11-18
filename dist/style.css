@@ -42,6 +42,13 @@ body {
   text-align: center;
 }
 
+.identity-home { border-radius: 50%; }
+
+.identity-home:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 5px;
+}
+
 .avatar {
   display: block;
   width: clamp(6rem, 13vw, 9rem);
@@ -170,6 +177,20 @@ h1 {
 .project--small span { color: #e8ca97; }
 .demo-list li:nth-child(2) .project--small { --wood-position: 84%; }
 .demo-list li:nth-child(3) .project--small { --wood-position: 15%; }
+
+.section-nav {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 17rem);
+  margin: 2rem auto 0;
+}
+
+.project--section {
+  justify-content: center;
+  font: 600 1.75rem/1.1 var(--display);
+}
+
+.folders-page { background: #fff; }
 
 .visually-hidden {
   position: absolute;

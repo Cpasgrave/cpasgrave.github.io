@@ -10,7 +10,9 @@ dossiers de travail, comme indiqué ci-dessous.
 
 Lancer `../Jouer.cmd`, puis ouvrir `http://127.0.0.1:8876/` dans le profil Chrome Cepagrave. Garder la fenêtre du serveur ouverte pendant les parties. Les deux jeux améliorés fonctionnent avec leurs ressources locales. Le serveur HTTP permet à Onitama de charger ses modules et aux deux IA de calculer en arrière-plan.
 
-- `dist/index.html` : titres, descriptions et liens des projets. Pour ajouter un projet, dupliquer un élément `<li>` dans la liste et donner des identifiants uniques à ses textes.
+- `dist/index.html` : avatar et liens vers les rubriques Dossiers et Codes.
+- `dist/dossiers/index.html` : page prête à accueillir les dossiers.
+- `dist/codes/index.html` : titres, descriptions et liens des jeux et des démos. Pour ajouter un projet, dupliquer un élément `<li>` dans la liste et donner des identifiants uniques à ses textes.
 - `dist/style.css` : couleurs, mise en page et adaptation aux petits écrans.
 - `dist/assets/` : pictogrammes des jeux en SVG éditable et [avatar GitHub](https://github.com/Cpasgrave) en JPEG original, sans calques. Le cadrage circulaire est appliqué par le CSS.
 
