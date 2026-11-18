@@ -23,6 +23,8 @@ Les fichiers `.py` éditables se trouvent dans `dist/codes/python/sources/`. Les
 
 Pour ajouter un script, place le `.py` dans `sources/`, puis ajoute une entrée dans la catégorie voulue de `catalogue.json` avec `id`, `title` et `file` (chemin relatif à `sources/`). Utilise `input` pour fournir un exemple ligne par ligne et `packages` pour les bibliothèques nécessaires disponibles dans Pyodide. Lance `python tools/build-python-catalogue.py` depuis le dépôt pour régénérer les pages HTML. Les pages produites s’ouvrent directement depuis le disque ou via GitHub Pages.
 
+Pour une fiche Codewars, renseigne `kata` avec le lien de l’énoncé original, `summary` avec le résumé et `example` avec l’appel Python que l’exécuteur lance après la solution. Les soumissions supplémentaires se déclarent dans `variants`, avec leur propre fichier et un `version_label`. Les adaptations à l’exécuteur se déclarent dans `replacements` ou `setup` pour conserver le fichier source.
+
 Le bouton « Exécuter » charge Pyodide au premier lancement, puis exécute le programme dans un Worker du navigateur. Les calculs longs se poursuivent en arrière-plan jusqu’à la fin du programme, au clic sur « Arrêter » ou au départ de la page. [Pyodide](https://pyodide.org/en/0.29.3/usage/webworker.html)
 
 ## Jeux

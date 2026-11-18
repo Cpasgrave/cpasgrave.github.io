@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Simple Encryption #1 - Alternating Split · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Simple Encryption #1 - Alternating Split · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/simple-encryption-number-1-alternating-split-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/57814d79a56c88e3e0000786">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="simple-encryption-number-1-alternating-split.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Permuter les caractères d’un texte en regroupant les positions alternées, puis appliquer l’opération inverse pour retrouver le texte initial.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def decrypt(text, n):
+    if n &gt; 0:
+        # ordered is a string of characters with ord from 0 to length of text
+        ordered = &#x27;&#x27;.join([str(chr(i)) for i in range(len(text))])
+
+        # ordered is encrypted, to obtain a list with the original index of each char
+        pos = [ord(i) for i in encrypt(ordered, n)]
+
+        # then it&#x27;s easy to reorder the text by giving each char its original position
+        text = &#x27;&#x27;.join(text[pos.index(i)] for i in range(len(pos)))
+    return text
+
+
+def encrypt(text, n):
+    while n &gt; 0:
+        n -= 1
+        text = text[1::2] + text[::2]
+    return text</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>message = encrypt(&quot;Bonjour&quot;, 2)
+print(message)
+print(decrypt(message, 2))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "simple-encryption-number-1-alternating-split-version-2.py", "code": "def decrypt(text, n):\n    if n > 0:\n        # ordered is a string of characters with ord from 0 to length of text\n        ordered = ''.join([str(chr(i)) for i in range(len(text))])\n\n        # ordered is encrypted, to obtain a list with the original index of each char\n        pos = [ord(i) for i in encrypt(ordered, n)]\n\n        # then it's easy to reorder the text by giving each char its original position\n        text = ''.join(text[pos.index(i)] for i in range(len(pos)))\n    return text\n\n\ndef encrypt(text, n):\n    while n > 0:\n        n -= 1\n        text = text[1::2] + text[::2]\n    return text\n\nmessage = encrypt(\"Bonjour\", 2)\nprint(message)\nprint(decrypt(message, 2))\n"}</script>
+  </main>
+</body>
+</html>

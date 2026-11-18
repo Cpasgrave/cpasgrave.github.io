@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Side-Sorting Robot · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Side-Sorting Robot</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/side-sorting-robot.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5e9ce15e9a872f002dc6dc94">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Calculer le nombre minimal de déplacements pour trier les balles par ordre décroissant, chaque déplacement envoyant une balle à l’une des extrémités.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">class Node:
+
+	def __init__(s,value,position):
+		s.value = value
+		s.position = position
+		s.links = []
+
+	def __gt__(s,b):
+		return s.value&gt;b.value
+
+	def __repr__(s):
+		return f&quot;{s.value}&quot;
+
+class Group:
+
+	def __init__(s,node):
+		s.value = node.value
+		s.start = node.position
+		s.end = node.position
+		s.elements = [node]
+
+	def __add__(s,node):
+		if node.position&lt;s.start: s.start = node.position
+		if node.position&gt;s.end: s.end = node.position
+		s.elements += [node]
+		return s
+
+	def __repr__(s):
+		return f&quot;{s.elements}&quot;
+
+def split(arr,n):
+
+		r = 0
+		mx = [0,0]
+		for i,a in enumerate(arr[1:],1):
+			r += [-1,1][a.value!=n]*[1,-1][a.value==arr[i-1].value]
+			mx = max(mx,[r,i])
+		idx = mx[1]
+		res = [e for e in arr[:idx]if e.value==n]+[e for e in arr[idx:]if e.value!=n]
+		return res
+
+class SideSort:
+
+	def __init__(s,arr):
+		s.arr = arr
+		s.nodes = []
+		s.values = set()
+		s.groups = {}
+		for i,v in enumerate(arr):
+			node = Node(v,i)
+			s.nodes += [node]
+			if node.value in s.values:
+				s.groups[v] += node
+				node.group = s.groups[v]
+			else:
+				s.values |= {v}
+				s.groups[v] = Group(node)
+				node.group = s.groups[v]
+
+		for r,v in enumerate(sorted(s.values)[::-1]):
+			s.groups[v].rank = r
+
+		s.ranked_group = {g.rank:g for g in s.groups.values()}
+		s.max_rk = len(s.groups)-1
+
+	def longest_chain(s):
+
+		long_chain = [0,[]]
+		r = range(s.max_rk+1)
+
+		for rank_l,rank_r in zip(r,r[1:]):
+			left = s.ranked_group[rank_l]
+			right = s.ranked_group[rank_r]
+			elements = sorted(left.elements+right.elements,key=lambda x:x.position)
+			if elements: 
+				ch = split(elements,left.value)
+				long_chain = max(long_chain,[len(ch),ch])
+
+		r = sorted(s.groups.values(),key=lambda x:x.rank)
+		open_chains = []
+		for i in range(s.max_rk+1):
+
+			skip = 0
+			mid = r[i]
+			left_out,right_out = [],[]
+			if i:
+				left = r[i-1]
+				left_out = [e for e in left.elements if e.position&lt;mid.start]
+			else: skip = 1
+			if i!=s.max_rk:
+				right = r[i+1]
+				right_out = [e for e in right.elements if e.position&gt;mid.end]
+			else: skip = 1
+
+			ch = left_out+mid.elements+right_out
+			long_chain = max(long_chain,[len(ch),ch])
+
+			if skip: continue
+			if mid.end&lt;right.start:
+				if open_chains:
+					for chain in open_chains:
+						ch = chain[:]+mid.elements+right_out
+						long_chain = max(long_chain,[len(ch),ch])
+						chain += mid.elements+right_out if i==s.max_rk else mid.elements
+				else:
+					ch = left_out+mid.elements+right_out
+					long_chain = max(long_chain,[len(ch),ch])
+					open_chains = [left_out+mid.elements]
+			elif mid.start&gt;left.end:
+				if open_chains:
+					for chain in open_chains:
+						ch = chain[:]+mid.elements+right_out
+						long_chain = max(long_chain,[len(ch),ch])
+						open_chains = []
+				else:
+					ch = left_out+mid.elements+right_out
+					long_chain = max(long_chain,[len(ch),ch])
+			else:
+				for chain in open_chains:
+					ch = chain+[e for e in mid.elements if e.position&gt;left.end]
+					long_chain = max(long_chain,[len(ch),ch])
+				open_chains = []
+
+		return len(s.arr)-len(long_chain[1])
+
+def side_sort(balls):
+	return SideSort(balls).longest_chain()</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(side_sort([4, 1, 3, 2]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "side-sorting-robot.py", "code": "class Node:\n\n\tdef __init__(s,value,position):\n\t\ts.value = value\n\t\ts.position = position\n\t\ts.links = []\n\n\tdef __gt__(s,b):\n\t\treturn s.value>b.value\n\n\tdef __repr__(s):\n\t\treturn f\"{s.value}\"\n\nclass Group:\n\n\tdef __init__(s,node):\n\t\ts.value = node.value\n\t\ts.start = node.position\n\t\ts.end = node.position\n\t\ts.elements = [node]\n\n\tdef __add__(s,node):\n\t\tif node.position\u003cs.start: s.start = node.position\n\t\tif node.position>s.end: s.end = node.position\n\t\ts.elements += [node]\n\t\treturn s\n\n\tdef __repr__(s):\n\t\treturn f\"{s.elements}\"\n\ndef split(arr,n):\n\n\t\tr = 0\n\t\tmx = [0,0]\n\t\tfor i,a in enumerate(arr[1:],1):\n\t\t\tr += [-1,1][a.value!=n]*[1,-1][a.value==arr[i-1].value]\n\t\t\tmx = max(mx,[r,i])\n\t\tidx = mx[1]\n\t\tres = [e for e in arr[:idx]if e.value==n]+[e for e in arr[idx:]if e.value!=n]\n\t\treturn res\n\nclass SideSort:\n\n\tdef __init__(s,arr):\n\t\ts.arr = arr\n\t\ts.nodes = []\n\t\ts.values = set()\n\t\ts.groups = {}\n\t\tfor i,v in enumerate(arr):\n\t\t\tnode = Node(v,i)\n\t\t\ts.nodes += [node]\n\t\t\tif node.value in s.values:\n\t\t\t\ts.groups[v] += node\n\t\t\t\tnode.group = s.groups[v]\n\t\t\telse:\n\t\t\t\ts.values |= {v}\n\t\t\t\ts.groups[v] = Group(node)\n\t\t\t\tnode.group = s.groups[v]\n\n\t\tfor r,v in enumerate(sorted(s.values)[::-1]):\n\t\t\ts.groups[v].rank = r\n\n\t\ts.ranked_group = {g.rank:g for g in s.groups.values()}\n\t\ts.max_rk = len(s.groups)-1\n\n\tdef longest_chain(s):\n\n\t\tlong_chain = [0,[]]\n\t\tr = range(s.max_rk+1)\n\n\t\tfor rank_l,rank_r in zip(r,r[1:]):\n\t\t\tleft = s.ranked_group[rank_l]\n\t\t\tright = s.ranked_group[rank_r]\n\t\t\telements = sorted(left.elements+right.elements,key=lambda x:x.position)\n\t\t\tif elements: \n\t\t\t\tch = split(elements,left.value)\n\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\n\t\tr = sorted(s.groups.values(),key=lambda x:x.rank)\n\t\topen_chains = []\n\t\tfor i in range(s.max_rk+1):\n\n\t\t\tskip = 0\n\t\t\tmid = r[i]\n\t\t\tleft_out,right_out = [],[]\n\t\t\tif i:\n\t\t\t\tleft = r[i-1]\n\t\t\t\tleft_out = [e for e in left.elements if e.position\u003cmid.start]\n\t\t\telse: skip = 1\n\t\t\tif i!=s.max_rk:\n\t\t\t\tright = r[i+1]\n\t\t\t\tright_out = [e for e in right.elements if e.position>mid.end]\n\t\t\telse: skip = 1\n\n\t\t\tch = left_out+mid.elements+right_out\n\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\n\t\t\tif skip: continue\n\t\t\tif mid.end\u003cright.start:\n\t\t\t\tif open_chains:\n\t\t\t\t\tfor chain in open_chains:\n\t\t\t\t\t\tch = chain[:]+mid.elements+right_out\n\t\t\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\t\t\t\t\t\tchain += mid.elements+right_out if i==s.max_rk else mid.elements\n\t\t\t\telse:\n\t\t\t\t\tch = left_out+mid.elements+right_out\n\t\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\t\t\t\t\topen_chains = [left_out+mid.elements]\n\t\t\telif mid.start>left.end:\n\t\t\t\tif open_chains:\n\t\t\t\t\tfor chain in open_chains:\n\t\t\t\t\t\tch = chain[:]+mid.elements+right_out\n\t\t\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\t\t\t\t\t\topen_chains = []\n\t\t\t\telse:\n\t\t\t\t\tch = left_out+mid.elements+right_out\n\t\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\t\t\telse:\n\t\t\t\tfor chain in open_chains:\n\t\t\t\t\tch = chain+[e for e in mid.elements if e.position>left.end]\n\t\t\t\t\tlong_chain = max(long_chain,[len(ch),ch])\n\t\t\t\topen_chains = []\n\n\t\treturn len(s.arr)-len(long_chain[1])\n\ndef side_sort(balls):\n\treturn SideSort(balls).longest_chain()\n\nprint(side_sort([4, 1, 3, 2]))\n"}</script>
+  </main>
+</body>
+</html>

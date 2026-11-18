@@ -1,0 +1,1 @@
+song_decoder=lambda s:' '.join(filter(None,s.split('WUB')))

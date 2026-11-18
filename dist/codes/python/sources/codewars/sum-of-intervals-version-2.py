@@ -1,0 +1,1 @@
+sum_of_intervals = lambda ii:len(set(j for i in ii for j in range(*i)))

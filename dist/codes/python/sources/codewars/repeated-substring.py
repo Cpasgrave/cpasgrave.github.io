@@ -1,0 +1,1 @@
+f = lambda s:(lambda ls:next(((s[:n],ls//n) for n in range(1,ls//2+1)if s in s[:n]*(ls//n+1)),(s,1)))(len(s))

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Repetitive Sequence  - Easy Version · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Repetitive Sequence  - Easy Version</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/repetitive-sequence-easy-version.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5f134651bc9687000f8022c4">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Lire un terme d’une suite où le nombre de répétitions de chaque entier est lui-même donné par la suite.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import count
+
+def find(n,cache = {0:0,1:1,2:2,3:2}):
+	if n in cache: return cache[n]
+	length = i = 2
+	r = 1
+	pg,qg = [(find(i) for i in count(2))for _ in range(2)]
+	while True:
+		p = next(pg)
+		for _ in range(p):
+			q = next(qg)
+			r += 1
+			qr = q*r
+			temp = length+qr
+			if temp&gt;=n:
+				s = i+(n-length)//r
+				cache[n] = s
+				return s
+			length = temp
+			i += q</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(find(10))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "repetitive-sequence-easy-version.py", "code": "from itertools import count\n\ndef find(n,cache = {0:0,1:1,2:2,3:2}):\n\tif n in cache: return cache[n]\n\tlength = i = 2\n\tr = 1\n\tpg,qg = [(find(i) for i in count(2))for _ in range(2)]\n\twhile True:\n\t\tp = next(pg)\n\t\tfor _ in range(p):\n\t\t\tq = next(qg)\n\t\t\tr += 1\n\t\t\tqr = q*r\n\t\t\ttemp = length+qr\n\t\t\tif temp>=n:\n\t\t\t\ts = i+(n-length)//r\n\t\t\t\tcache[n] = s\n\t\t\t\treturn s\n\t\t\tlength = temp\n\t\t\ti += q\n\nprint(find(10))\n"}</script>
+  </main>
+</body>
+</html>

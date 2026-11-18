@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Can you win the codewar  ? · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Can you win the codewar  ? · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/can-you-win-the-codewar-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5e3f043faf934e0024a941d7">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="can-you-win-the-codewar.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Déterminer le meilleur résultat possible lorsqu’on peut réordonner les forces d’une équipe pour les opposer à celles de l’adversaire.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def codewar_result(cw,op):
+    l = len(cw)
+    C,O = sorted(cw), sorted(op)
+    # dic giving the set of all indices for each values of C
+    Ci_per_value = {}
+    Cvs = [set()for _ in range(l)] # possible victories set for each index
+    Ces = [set()for _ in range(l)] # possible equalities set for each index
+    # i are indices for C (sorted codewariors), j for O (sorted opponents)
+    i = j = l-1
+    # Analyzing data, building Cvs, Ces, Ci_per_value
+    while i&gt;-1:
+        Cval,Oval = C[i],O[j]
+        Ci_per_value[Cval] = Ci_per_value.get(Cval,set())|{i}
+        if i&lt;l-1 and Cval==C[i+1]:
+            Cvs[i],Ces[i] = Cvs[i+1],Ces[i+1]
+            i -= 1
+        elif Cval==Oval:
+            Ces[i] |= {j}
+            if j==0: i -= 1
+            else: j -= 1
+        elif Cval&gt;Oval:
+            Cvs[i] = set(range(j+1))
+            i -= 1
+        else:
+            if j==0: i -= 1
+            else: j -= 1
+
+    O_values = sorted(set(O))
+    # dic giving for each value of O, the set of indices where C&#x27;s value is &gt;
+    Ci_gt_Ov = {}
+    # dic giving the set of all indices for each values of O
+    Oj_per_value = {o:set()for o in O_values}
+    for j in range(l): Oj_per_value[O[j]] |= {j}
+    j = 0
+    for Oval in sorted(set(O)):
+        while Cval&lt;=Oval and j&lt;l:
+            j += 1
+            Cval = C[j]if j&lt;l else float(&#x27;inf&#x27;)
+        Ci_gt_Ov[Oval] = {*range(j,l)}
+
+    # pairing victories and equalities 
+    # with the highest possible indices
+    # priority to victories
+    C_vic,O_def,C_eq,O_eq = set(),set(),set(),set()
+    pairs = {} # keys=Ci index of cw, values=Oj index of op
+    score = 0
+    for i in range(l-1,-1,-1):
+        vics = Cvs[i]-O_def-O_eq
+        if vics:
+            j = max(vics)
+            score += 2
+            C_vic |= {i}
+            O_def |= {j}
+            pairs[i] = j
+        else:
+            e = Ces[i]-O_def-O_eq
+            if e:
+                j = max(e)
+                score += 1
+                C_eq |= {i}
+                O_eq |= {j}
+    if score&gt;l: return &#x27;Victory&#x27;
+    # Trying to modify some winning pairs by choosing
+    # lower looser Oj and lower winner Ci when possible 
+    # and, doing so, allow extra equalities if there are.
+    C_may_eq = {i for i in range(l)if Ces[i]}
+    O_may_eq = set.union(*Ces)
+
+    candidates = sorted(C_vic)
+    for ci in candidates:
+        cv = C[ci]
+        # try to lower the looser Oj
+        oj = pairs[ci]
+        left_oj = min({*range(oj)}-O_def-O_eq,default=oj)
+        left_ov = O[left_oj]
+        if left_oj!=oj:
+            # updating O_def
+            O_def = (O_def|{left_oj})-{oj}
+            # check for new equality
+            ov = O[oj]
+            if oj in O_may_eq:
+                eq = min(Ci_per_value[ov]&amp;(C_may_eq-C_vic-C_eq),default=None)
+                if eq!=None:
+                    C_eq |= {eq}
+                    O_eq |= {oj}
+                    score += 1
+        # try to lower the wining Ci
+        left_ci = min(Ci_gt_Ov[left_ov]-C_vic-C_eq,default=ci)
+        left_cv = C[left_ci]
+        if left_ci!=ci:
+            # updating C_vic
+            C_vic = (C_vic|{left_ci})-{ci}
+            # check for new equality
+            if ci in C_may_eq:
+                eq = min(Oj_per_value[cv]&amp;(O_may_eq-O_def-O_eq),default=None)
+                if eq!=None:
+                    O_eq |= {eq}
+                    C_eq |= {ci}
+                    score += 1
+    return (&#x27;Defeat&#x27;,&#x27;Stalemate&#x27;,&#x27;Victory&#x27;)[(score&gt;=l)+(score&gt;l)]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(codewar_result([2, 4, 8], [1, 3, 5]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "can-you-win-the-codewar-version-2.py", "code": "def codewar_result(cw,op):\n    l = len(cw)\n    C,O = sorted(cw), sorted(op)\n    # dic giving the set of all indices for each values of C\n    Ci_per_value = {}\n    Cvs = [set()for _ in range(l)] # possible victories set for each index\n    Ces = [set()for _ in range(l)] # possible equalities set for each index\n    # i are indices for C (sorted codewariors), j for O (sorted opponents)\n    i = j = l-1\n    # Analyzing data, building Cvs, Ces, Ci_per_value\n    while i>-1:\n        Cval,Oval = C[i],O[j]\n        Ci_per_value[Cval] = Ci_per_value.get(Cval,set())|{i}\n        if i\u003cl-1 and Cval==C[i+1]:\n            Cvs[i],Ces[i] = Cvs[i+1],Ces[i+1]\n            i -= 1\n        elif Cval==Oval:\n            Ces[i] |= {j}\n            if j==0: i -= 1\n            else: j -= 1\n        elif Cval>Oval:\n            Cvs[i] = set(range(j+1))\n            i -= 1\n        else:\n            if j==0: i -= 1\n            else: j -= 1\n\n    O_values = sorted(set(O))\n    # dic giving for each value of O, the set of indices where C's value is >\n    Ci_gt_Ov = {}\n    # dic giving the set of all indices for each values of O\n    Oj_per_value = {o:set()for o in O_values}\n    for j in range(l): Oj_per_value[O[j]] |= {j}\n    j = 0\n    for Oval in sorted(set(O)):\n        while Cval\u003c=Oval and j\u003cl:\n            j += 1\n            Cval = C[j]if j\u003cl else float('inf')\n        Ci_gt_Ov[Oval] = {*range(j,l)}\n\n    # pairing victories and equalities \n    # with the highest possible indices\n    # priority to victories\n    C_vic,O_def,C_eq,O_eq = set(),set(),set(),set()\n    pairs = {} # keys=Ci index of cw, values=Oj index of op\n    score = 0\n    for i in range(l-1,-1,-1):\n        vics = Cvs[i]-O_def-O_eq\n        if vics:\n            j = max(vics)\n            score += 2\n            C_vic |= {i}\n            O_def |= {j}\n            pairs[i] = j\n        else:\n            e = Ces[i]-O_def-O_eq\n            if e:\n                j = max(e)\n                score += 1\n                C_eq |= {i}\n                O_eq |= {j}\n    if score>l: return 'Victory'\n    # Trying to modify some winning pairs by choosing\n    # lower looser Oj and lower winner Ci when possible \n    # and, doing so, allow extra equalities if there are.\n    C_may_eq = {i for i in range(l)if Ces[i]}\n    O_may_eq = set.union(*Ces)\n\n    candidates = sorted(C_vic)\n    for ci in candidates:\n        cv = C[ci]\n        # try to lower the looser Oj\n        oj = pairs[ci]\n        left_oj = min({*range(oj)}-O_def-O_eq,default=oj)\n        left_ov = O[left_oj]\n        if left_oj!=oj:\n            # updating O_def\n            O_def = (O_def|{left_oj})-{oj}\n            # check for new equality\n            ov = O[oj]\n            if oj in O_may_eq:\n                eq = min(Ci_per_value[ov]&(C_may_eq-C_vic-C_eq),default=None)\n                if eq!=None:\n                    C_eq |= {eq}\n                    O_eq |= {oj}\n                    score += 1\n        # try to lower the wining Ci\n        left_ci = min(Ci_gt_Ov[left_ov]-C_vic-C_eq,default=ci)\n        left_cv = C[left_ci]\n        if left_ci!=ci:\n            # updating C_vic\n            C_vic = (C_vic|{left_ci})-{ci}\n            # check for new equality\n            if ci in C_may_eq:\n                eq = min(Oj_per_value[cv]&(O_may_eq-O_def-O_eq),default=None)\n                if eq!=None:\n                    O_eq |= {eq}\n                    C_eq |= {ci}\n                    score += 1\n    return ('Defeat','Stalemate','Victory')[(score>=l)+(score>l)]\n\nprint(codewar_result([2, 4, 8], [1, 3, 5]))\n"}</script>
+  </main>
+</body>
+</html>

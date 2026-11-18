@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Earth-mover&#x27;s distance · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Earth-mover&#x27;s distance</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/earth-movers-distance.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/58b34b2951ccdb84f2000093">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Mesurer le coût minimal pour déplacer la masse d’une distribution de probabilités vers l’autre sur une droite.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def earth_movers_distance(x, px, y, py):
+	dx = {e:p for e,p in zip(x,px)}
+	dy = {e:p for e,p in zip(y,py)}
+	work = diff = 0
+	for i in sorted(set(x)|set(y)):
+		if diff: work += abs(diff*(i-prev))
+		pxi,pyi = dx.get(i,0),dy.get(i,0)
+		diff,prev = pxi+diff-pyi,i
+	return work
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(earth_movers_distance([0, 2], [0.5, 0.5], [1, 3], [0.5, 0.5]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "earth-movers-distance.py", "code": "def earth_movers_distance(x, px, y, py):\n\tdx = {e:p for e,p in zip(x,px)}\n\tdy = {e:p for e,p in zip(y,py)}\n\twork = diff = 0\n\tfor i in sorted(set(x)|set(y)):\n\t\tif diff: work += abs(diff*(i-prev))\n\t\tpxi,pyi = dx.get(i,0),dy.get(i,0)\n\t\tdiff,prev = pxi+diff-pyi,i\n\treturn work\n\n\nprint(earth_movers_distance([0, 2], [0.5, 0.5], [1, 3], [0.5, 0.5]))\n"}</script>
+  </main>
+</body>
+</html>

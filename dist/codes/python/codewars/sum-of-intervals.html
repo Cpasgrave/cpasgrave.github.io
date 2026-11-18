@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Sum of Intervals · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Sum of Intervals</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/sum-of-intervals.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/52b7ed099cdc285c300001cd">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="sum-of-intervals-version-2.html">Python · version 2</a>
+      <a href="sum-of-intervals-version-3.html">Python · version 3</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Calculer la longueur couverte par une liste d’intervalles en comptant une seule fois les portions qui se chevauchent.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def sum_of_intervals(intervals):
+    
+	result = 0
+	si = sorted(intervals)
+	l,h = si[0]
+	for a,b in si:
+		if a&gt;h: 
+			result += h-l
+			l,h = a,b
+		elif b&lt;=h: continue
+		else: h = b
+
+	return result+h-l</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(sum_of_intervals([(0, 4), (2, 7), (9, 11)]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "sum-of-intervals.py", "code": "def sum_of_intervals(intervals):\n    \n\tresult = 0\n\tsi = sorted(intervals)\n\tl,h = si[0]\n\tfor a,b in si:\n\t\tif a>h: \n\t\t\tresult += h-l\n\t\t\tl,h = a,b\n\t\telif b\u003c=h: continue\n\t\telse: h = b\n\n\treturn result+h-l\n\nprint(sum_of_intervals([(0, 4), (2, 7), (9, 11)]))\n"}</script>
+  </main>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#9f825a">
-  <title>Your Order Please · Cépagrave</title>
+  <title>Your order,  please · Cépagrave</title>
   <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
   <link rel="stylesheet" href="../../../style.css?v=sections">
   <link rel="stylesheet" href="../catalogue.css">
@@ -16,29 +16,18 @@
       <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
         <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
       </a>
-      <h1>Your Order Please</h1>
+      <h1>Your order,  please</h1>
     </header>
 
     <div class="python-links">
       <a href="index.html">Codewars</a>
-      <a href="../sources/python-challenges/Your%20Order%20Please.py" download>Télécharger le .py</a>
-      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Your%20Order%20Please.py">Source sur GitHub</a>
+      <a href="../sources/codewars/your-order-please.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/55c45be3b2079eccff00010f">Énoncé original sur Codewars</a>
     </div>
+    <h2>Énoncé en bref</h2>
+    <p>Réordonner les mots d’une phrase selon le chiffre de position que contient chaque mot.</p>
     <h2>Code Python</h2>
-    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
-Your task is to sort a given string. Each word in the String will contain a single number. This number is the position the word should have in the result.
-
-Note: Numbers can be from 1 to 9. So 1 will be the first word (not 0).
-
-If the input String is empty, return an empty String. The words in the input String will only contain valid consecutive numbers.
-
-For an input: &quot;is2 Thi1s T4est 3a&quot; the function should return &quot;Thi1s is2 3a T4est&quot;
-&quot;&quot;&quot;
-
-# I&#x27;ve done the same challenge on CodeWars
-# My solution was this one :
-
-def order(s):
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def order(s):
     p = [] ; j = 1
     t = s.split()
     while j &lt; len(t)+1:
@@ -46,10 +35,9 @@ def order(s):
             if str(j) in w:
                 p.append(w)
                 j += 1
-    return &quot; &quot;.join(p)
-
-print(order(&quot;is2 Thi1s T4est 3a&quot;))
-</code></pre>
+    return &quot; &quot;.join(p)</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(order(&quot;beau2 un1 jour3&quot;))</code></pre>
     <form class="python-console" id="python-console">
       <div class="python-controls">
         <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
@@ -60,7 +48,7 @@ print(order(&quot;is2 Thi1s T4est 3a&quot;))
       <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
     </form>
     <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
-    <script type="application/json" id="python-options">{"filename": "Your Order Please.py"}</script>
+    <script type="application/json" id="python-options">{"filename": "your-order-please.py", "code": "def order(s):\n    p = [] ; j = 1\n    t = s.split()\n    while j \u003c len(t)+1:\n         for w in t:\n            if str(j) in w:\n                p.append(w)\n                j += 1\n    return \" \".join(p)\n\nprint(order(\"beau2 un1 jour3\"))\n"}</script>
   </main>
 </body>
 </html>

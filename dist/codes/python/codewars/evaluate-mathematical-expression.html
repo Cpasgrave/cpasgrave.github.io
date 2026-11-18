@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Evaluate mathematical expression · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Evaluate mathematical expression</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/evaluate-mathematical-expression.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/52a78825cdfc2cfc87000005">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Évaluer une expression arithmétique en tenant compte des signes, des parenthèses et des priorités opératoires.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">import re
+from operator import add,sub,mul,truediv
+
+#tools
+op={&#x27;/&#x27;:truediv,&#x27;*&#x27;:mul,&#x27;-&#x27;:sub,&#x27;+&#x27;:add}
+p=r&quot;[(]{1}([^()]+)[)]{1}&quot;
+pat=lambda op:r&quot;(\-*[0-9.]+(e{1}[+-]{1}\d+)*) +([&quot;+op+r&quot;]{1}) +(\-*[0-9.]+(e{1}[+-]{1}\d+)*)&quot;
+clean=lambda x:x.replace(&#x27;--&#x27;,&#x27;+&#x27;)
+s=lambda x:str(op[x[3]](float(recur(x[1])),float(recur(x[4]))))
+
+def recur(exp):
+    print(exp)
+	# send to recursion the inner parenthesis while there are any
+    while &#x27;(&#x27; in exp:
+        exp = re.sub(p,lambda x:str(recur(x[1])),exp)
+    else:
+        # applying * and /
+        while &quot;*&quot; in exp or &quot;/&quot; in exp: 
+            exp = re.sub(pat(&#x27;*/&#x27;),s,exp,1)
+        # applying + and -
+        while re.search(pat(&#x27;+-&#x27;),exp): 
+            exp = re.sub(pat(&#x27;+-&#x27;),s,exp,1)
+        return float(clean(exp))
+
+def prepare(exp):
+	for o in &#x27;+*/&#x27;: exp = exp.replace(o,f&quot; {o} &quot;)
+	while &#x27;  &#x27; in exp: exp = exp.replace(&#x27;  &#x27;,&#x27; &#x27;)
+	prev,i = &#x27;&#x27;,-1
+	while i&lt;len(exp)-1:
+		i += 1
+		c = exp[i]
+		if c==&#x27;-&#x27;:
+			if prev in &#x27;(+-*/&#x27;: continue
+			exp = exp[:i]+&#x27; - &#x27;+exp[i+1:]
+		if c!=&#x27; &#x27;: prev = c
+	return exp
+
+def calc(exp):
+	exp = prepare(exp)
+	exp = recur(exp)
+	return exp</code></pre>
+    <p class="python-note">L’exécuteur passe la limite de remplacement de regex sous forme d’argument nommé.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(calc(&quot;2 * (7 - 4) - 5&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "evaluate-mathematical-expression.py", "code": "import re\nfrom operator import add,sub,mul,truediv\n\n#tools\nop={'/':truediv,'*':mul,'-':sub,'+':add}\np=r\"[(]{1}([^()]+)[)]{1}\"\npat=lambda op:r\"(\\-*[0-9.]+(e{1}[+-]{1}\\d+)*) +([\"+op+r\"]{1}) +(\\-*[0-9.]+(e{1}[+-]{1}\\d+)*)\"\nclean=lambda x:x.replace('--','+')\ns=lambda x:str(op[x[3]](float(recur(x[1])),float(recur(x[4]))))\n\ndef recur(exp):\n    print(exp)\n\t# send to recursion the inner parenthesis while there are any\n    while '(' in exp:\n        exp = re.sub(p,lambda x:str(recur(x[1])),exp)\n    else:\n        # applying * and /\n        while \"*\" in exp or \"/\" in exp: \n            exp = re.sub(pat('*/'),s,exp,count=1)\n        # applying + and -\n        while re.search(pat('+-'),exp): \n            exp = re.sub(pat('+-'),s,exp,count=1)\n        return float(clean(exp))\n\ndef prepare(exp):\n\tfor o in '+*/': exp = exp.replace(o,f\" {o} \")\n\twhile '  ' in exp: exp = exp.replace('  ',' ')\n\tprev,i = '',-1\n\twhile i\u003clen(exp)-1:\n\t\ti += 1\n\t\tc = exp[i]\n\t\tif c=='-':\n\t\t\tif prev in '(+-*/': continue\n\t\t\texp = exp[:i]+' - '+exp[i+1:]\n\t\tif c!=' ': prev = c\n\treturn exp\n\ndef calc(exp):\n\texp = prepare(exp)\n\texp = recur(exp)\n\treturn exp\n\nprint(calc(\"2 * (7 - 4) - 5\"))\n"}</script>
+  </main>
+</body>
+</html>

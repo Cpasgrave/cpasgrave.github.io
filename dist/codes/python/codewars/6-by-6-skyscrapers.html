@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>6 By 6 Skyscrapers · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>6 By 6 Skyscrapers</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/6-by-6-skyscrapers.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5679d5a3f2272011d700000d">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Reconstituer une grille de tours de taille six à partir du nombre de bâtiments visibles depuis chacun de ses bords.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import permutations as perm, product as prod
+def solve_puzzle(clues,size=6):
+  rows,rg = {*perm(range(1,size+1))},range(size)
+  cu,cr,cd,cl = [clues[i*size:(i+1)*size][::1-2*(i&gt;1)]for i in range(4)]
+  left,right = {r:set() for r in range(1,size+1)},{r:set()for r in range(1,size+1)}
+  left[0] = right[0] = rows
+  for row in rows:
+    for side,i in (left,1),(right,-1):
+      s = maxi = 0
+      for x in row[::i]:
+        if x&gt;maxi:
+          maxi = x
+          s += 1
+          if x==size: break
+      side[s] |= {row}
+  hor,ver = [[]]*size,[[]]*size
+  for i in rg:
+    hor[i] = left[cl[i]]&amp;right[cr[i]]
+    ver[i] = left[cu[i]]&amp;right[cd[i]]
+  check = 0
+  while True:
+    for i,j in prod(rg,rg):
+      common = {hi[j]for hi in hor[i]}&amp;{vj[i]for vj in ver[j]}
+      hor[i] = {h for h in hor[i]if h[j]in common}
+      ver[j] = {v for v in ver[j]if v[i]in common}
+    mem,check = check,sum(len(x)for x in hor+ver)
+    if check==2*size or mem==check: break
+  for p in prod(*map(list,hor)):
+    if all({p[j][i]for j in rg}=={*range(1,size+1)} for i in rg): return p</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>clues = (6, 5, 4, 3, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 3, 4, 5, 6)
+for ligne in solve_puzzle(clues):
+    print(*ligne)</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "6-by-6-skyscrapers.py", "code": "from itertools import permutations as perm, product as prod\ndef solve_puzzle(clues,size=6):\n  rows,rg = {*perm(range(1,size+1))},range(size)\n  cu,cr,cd,cl = [clues[i*size:(i+1)*size][::1-2*(i>1)]for i in range(4)]\n  left,right = {r:set() for r in range(1,size+1)},{r:set()for r in range(1,size+1)}\n  left[0] = right[0] = rows\n  for row in rows:\n    for side,i in (left,1),(right,-1):\n      s = maxi = 0\n      for x in row[::i]:\n        if x>maxi:\n          maxi = x\n          s += 1\n          if x==size: break\n      side[s] |= {row}\n  hor,ver = [[]]*size,[[]]*size\n  for i in rg:\n    hor[i] = left[cl[i]]&right[cr[i]]\n    ver[i] = left[cu[i]]&right[cd[i]]\n  check = 0\n  while True:\n    for i,j in prod(rg,rg):\n      common = {hi[j]for hi in hor[i]}&{vj[i]for vj in ver[j]}\n      hor[i] = {h for h in hor[i]if h[j]in common}\n      ver[j] = {v for v in ver[j]if v[i]in common}\n    mem,check = check,sum(len(x)for x in hor+ver)\n    if check==2*size or mem==check: break\n  for p in prod(*map(list,hor)):\n    if all({p[j][i]for j in rg}=={*range(1,size+1)} for i in rg): return p\n\nclues = (6, 5, 4, 3, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 3, 4, 5, 6)\nfor ligne in solve_puzzle(clues):\n    print(*ligne)\n"}</script>
+  </main>
+</body>
+</html>

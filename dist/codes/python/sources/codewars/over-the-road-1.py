@@ -1,0 +1,1 @@
+over_the_road = lambda a,n: n*2-a+1

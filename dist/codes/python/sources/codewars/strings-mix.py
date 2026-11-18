@@ -1,0 +1,1 @@
+mix=lambda s1,s2:'/'.join(sorted([['1:'+c1*c,'2:'+c2*c,'=:'+c1*c][(c2>=c1)+(c2==c1)]for c in set(s1+s2)-{' '}for c1,c2 in[(s1.count(c),s2.count(c))]if max(c1,c2)>1 and ord(c)>96],key=lambda a:len(a)*10000-100*ord(a[0])-ord(a[-1]))[::-1])

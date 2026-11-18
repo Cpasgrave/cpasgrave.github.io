@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Binary Search Trees · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Binary Search Trees</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/binary-search-trees.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/571a551a196bb0567f000603">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Afficher et comparer des arbres de recherche binaires en tenant compte de la structure et des sous-arbres manquants.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">class Tree(object):
+
+	def __init__(self, root, left=None, right=None):
+		assert root and type(root) == Node
+		if left: assert type(left) == Tree and left.root &lt; root
+		if right: assert type(right) == Tree and root &lt; right.root
+
+		self.left = left
+		self.root = root
+		self.right = right
+        
+	def is_leaf(self):
+		return not(self.left or self.right)
+
+	def __str__(self):
+		if self.left or self.right:
+			l = (str(self.left or &#x27;_&#x27;))+&#x27; &#x27;
+			r = &#x27; &#x27;+(str(self.right or &#x27;_&#x27;))
+		else:
+			l = r = &#x27;&#x27;
+		return f&quot;[{l}{self.root}{r}]&quot;
+    
+	def __eq__(self, other):
+		return str(self)==str(other)
+    
+	def __ne__(self, other):
+		return str(self)!=str(other)
+
+class Node(object):
+    
+    def __init__(self, value, weight=1):
+        self.value = value
+        self.weight = weight
+    
+    def __str__(self):
+        return str(self.value)   
+    
+    def __lt__(self, other):
+        return self.value &lt; other.value
+    
+    def __gt__(self, other):
+        return self.value &gt; other.value
+    
+    def __eq__(self, other):
+        return self.value == other.value 
+
+    def __ne__(self, other):
+        return self.value != other.value
+</code></pre>
+    <p class="python-note">Cette soumission contient les classes Tree et Node. L’exemple construit un arbre et affiche sa structure.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>arbre = Tree(Node(2), Tree(Node(1)), Tree(Node(3)))
+print(arbre)
+print(arbre == Tree(Node(2), Tree(Node(1)), Tree(Node(3))))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "binary-search-trees.py", "code": "class Tree(object):\n\n\tdef __init__(self, root, left=None, right=None):\n\t\tassert root and type(root) == Node\n\t\tif left: assert type(left) == Tree and left.root \u003c root\n\t\tif right: assert type(right) == Tree and root \u003c right.root\n\n\t\tself.left = left\n\t\tself.root = root\n\t\tself.right = right\n        \n\tdef is_leaf(self):\n\t\treturn not(self.left or self.right)\n\n\tdef __str__(self):\n\t\tif self.left or self.right:\n\t\t\tl = (str(self.left or '_'))+' '\n\t\t\tr = ' '+(str(self.right or '_'))\n\t\telse:\n\t\t\tl = r = ''\n\t\treturn f\"[{l}{self.root}{r}]\"\n    \n\tdef __eq__(self, other):\n\t\treturn str(self)==str(other)\n    \n\tdef __ne__(self, other):\n\t\treturn str(self)!=str(other)\n\nclass Node(object):\n    \n    def __init__(self, value, weight=1):\n        self.value = value\n        self.weight = weight\n    \n    def __str__(self):\n        return str(self.value)   \n    \n    def __lt__(self, other):\n        return self.value \u003c other.value\n    \n    def __gt__(self, other):\n        return self.value > other.value\n    \n    def __eq__(self, other):\n        return self.value == other.value \n\n    def __ne__(self, other):\n        return self.value != other.value\n\n\narbre = Tree(Node(2), Tree(Node(1)), Tree(Node(3)))\nprint(arbre)\nprint(arbre == Tree(Node(2), Tree(Node(1)), Tree(Node(3))))\n"}</script>
+  </main>
+</body>
+</html>

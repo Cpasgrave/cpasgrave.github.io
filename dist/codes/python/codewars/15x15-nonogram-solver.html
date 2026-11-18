@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>15x15 Nonogram Solver · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>15x15 Nonogram Solver</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/15x15-nonogram-solver.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a5072a6145c46568800004d">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Résoudre un nonogramme de quinze cases de côté à partir des longueurs des groupes de cases remplies en lignes et colonnes.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from functools import lru_cache as lru
+
+class Box:
+
+  def __init__(s,x,y):
+    s.x,s.y = x,y
+    s.status = None
+  def __repr__(s):
+    return f&quot;{s.status}&quot;
+
+@lru(maxsize=1024)
+def split_sum(n,clues,c_num,mask,limit):
+  # this function returns all 
+  # the possible ways to distribute 
+  # the whites/blacks in a line, 
+  # considering the given clues
+  # and a mask (already settled positions).
+  sols = {(n,)}
+
+  for i,clue in enumerate(clues):
+    new = set()
+    for s in sols:
+
+      *s,last = s
+      for k in range(last+1):
+        sk = tuple(s)+(0,)*(k+(i&gt;0))+(1,)*clue+(last-k,)
+        if any(mask[j]!=None and mask[j]!=sk[j] for j in range(len(sk)-1))\
+          or (i==c_num-1 and any(mask[i]==1 for i in range(-sk[-1],0))):
+          continue
+        else:
+          new |= {sk}
+    sols = set(new)
+    if len(sols)&gt;limit: return &#x27;too many&#x27;
+  sols = {s[:-1]+s[-1]*(0,) for s in sols}
+  return sols
+
+@lru(maxsize=1024)
+def npart(n,m):
+    return 0 if n&lt;1 else 1 if m==1 else npart(n-1,m-1)+npart(n-m,m)
+
+class Line:
+
+  def __init__(s,clues,elements,n):
+    s.n = n
+    s.els = elements
+    s.size = len(s.els)
+    s.nones = s.size
+    s.clues = tuple(c==[]and[0]or c for c in clues)
+    s.c_num = len(clues)
+    s.c_sum = sum(clues)
+    s.solutions = set()
+
+  def solve(s,limit):
+    s.mask = tuple(e.status for e in s.els)
+    whites = s.size-s.c_sum
+    s.solutions = split_sum(whites-s.c_num+1,s.clues,s.c_num,s.mask,limit)
+
+    if s.solutions==set(): return None
+    if s.solutions==&quot;too many&quot;: return &quot;too many&quot;
+
+    # checking boxes with same status for all solutions
+    for matches in s.solutions: break
+    rg = range(s.size)
+    indices = set(rg)
+    for sol in s.solutions:
+      garbage = set()
+      for i in rg:
+        if sol[i]!=matches[i]:
+          garbage |= {i}
+      indices -= garbage
+    sol = []
+    for i in indices:
+      if s.els[i].status==None:
+        sol += [s.els[i]]
+        s.els[i].status = matches[i]
+
+    return sol
+
+class Nono:
+
+  def __init__(s,gram):
+    s.x,s.y = gram
+    s.width = len(s.x)
+    s.height = len(s.y)
+    s.rows = [Line(s.y[i],[Box(i,j) for j in range(s.width)],f&quot;row {i}&quot;)for i in range(s.height)]
+    s.cols = [Line(s.x[i],[s.rows[j].els[i] for j in range(s.height)],f&quot;col {i}&quot;)for i in range(s.width)]
+    s.lines = s.rows+s.cols
+    s.solved,s.tot = 0,s.width*s.height
+
+  def solve(s):
+
+    limit = 300
+    side = 0
+    modified = []
+    changes = 0
+
+    while s.solved!=s.tot:
+
+      # alternating sides
+      side = 1-side
+      lines = modified or [s.rows,s.cols][side]
+      modified = []
+
+      for line in lines:
+
+        if line.nones==0: continue
+
+        sol = line.solve(limit)
+        if sol==&quot;too many&quot; or sol==[]: continue
+
+        # Applying solution
+        ls = len(sol)
+        s.solved += ls
+        if ls: changes = 0
+        for box in sol:
+          s.cols[box.y].nones -= 1
+          s.rows[box.x].nones -= 1
+          # the perpendicular lines will be checked first next round:
+          modified += [[s.cols,s.rows][side][[box.y,box.x][side]]]
+
+    return tuple(tuple(e.status for e in r.els) for r in s.rows)
+
+def solve(clues):
+  return Nono(clues).solve()
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>clues = ((15,),) * 15
+for ligne in solve((clues, clues)):
+    print(&quot;&quot;.join(&quot;■&quot; if case else &quot;·&quot; for case in ligne))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "15x15-nonogram-solver.py", "code": "from functools import lru_cache as lru\n\nclass Box:\n\n  def __init__(s,x,y):\n    s.x,s.y = x,y\n    s.status = None\n  def __repr__(s):\n    return f\"{s.status}\"\n\n@lru(maxsize=1024)\ndef split_sum(n,clues,c_num,mask,limit):\n  # this function returns all \n  # the possible ways to distribute \n  # the whites/blacks in a line, \n  # considering the given clues\n  # and a mask (already settled positions).\n  sols = {(n,)}\n\n  for i,clue in enumerate(clues):\n    new = set()\n    for s in sols:\n\n      *s,last = s\n      for k in range(last+1):\n        sk = tuple(s)+(0,)*(k+(i>0))+(1,)*clue+(last-k,)\n        if any(mask[j]!=None and mask[j]!=sk[j] for j in range(len(sk)-1))\\\n          or (i==c_num-1 and any(mask[i]==1 for i in range(-sk[-1],0))):\n          continue\n        else:\n          new |= {sk}\n    sols = set(new)\n    if len(sols)>limit: return 'too many'\n  sols = {s[:-1]+s[-1]*(0,) for s in sols}\n  return sols\n\n@lru(maxsize=1024)\ndef npart(n,m):\n    return 0 if n\u003c1 else 1 if m==1 else npart(n-1,m-1)+npart(n-m,m)\n\nclass Line:\n\n  def __init__(s,clues,elements,n):\n    s.n = n\n    s.els = elements\n    s.size = len(s.els)\n    s.nones = s.size\n    s.clues = tuple(c==[]and[0]or c for c in clues)\n    s.c_num = len(clues)\n    s.c_sum = sum(clues)\n    s.solutions = set()\n\n  def solve(s,limit):\n    s.mask = tuple(e.status for e in s.els)\n    whites = s.size-s.c_sum\n    s.solutions = split_sum(whites-s.c_num+1,s.clues,s.c_num,s.mask,limit)\n\n    if s.solutions==set(): return None\n    if s.solutions==\"too many\": return \"too many\"\n\n    # checking boxes with same status for all solutions\n    for matches in s.solutions: break\n    rg = range(s.size)\n    indices = set(rg)\n    for sol in s.solutions:\n      garbage = set()\n      for i in rg:\n        if sol[i]!=matches[i]:\n          garbage |= {i}\n      indices -= garbage\n    sol = []\n    for i in indices:\n      if s.els[i].status==None:\n        sol += [s.els[i]]\n        s.els[i].status = matches[i]\n\n    return sol\n\nclass Nono:\n\n  def __init__(s,gram):\n    s.x,s.y = gram\n    s.width = len(s.x)\n    s.height = len(s.y)\n    s.rows = [Line(s.y[i],[Box(i,j) for j in range(s.width)],f\"row {i}\")for i in range(s.height)]\n    s.cols = [Line(s.x[i],[s.rows[j].els[i] for j in range(s.height)],f\"col {i}\")for i in range(s.width)]\n    s.lines = s.rows+s.cols\n    s.solved,s.tot = 0,s.width*s.height\n\n  def solve(s):\n\n    limit = 300\n    side = 0\n    modified = []\n    changes = 0\n\n    while s.solved!=s.tot:\n\n      # alternating sides\n      side = 1-side\n      lines = modified or [s.rows,s.cols][side]\n      modified = []\n\n      for line in lines:\n\n        if line.nones==0: continue\n\n        sol = line.solve(limit)\n        if sol==\"too many\" or sol==[]: continue\n\n        # Applying solution\n        ls = len(sol)\n        s.solved += ls\n        if ls: changes = 0\n        for box in sol:\n          s.cols[box.y].nones -= 1\n          s.rows[box.x].nones -= 1\n          # the perpendicular lines will be checked first next round:\n          modified += [[s.cols,s.rows][side][[box.y,box.x][side]]]\n\n    return tuple(tuple(e.status for e in r.els) for r in s.rows)\n\ndef solve(clues):\n  return Nono(clues).solve()\n\n\nclues = ((15,),) * 15\nfor ligne in solve((clues, clues)):\n    print(\"\".join(\"■\" if case else \"·\" for case in ligne))\n"}</script>
+  </main>
+</body>
+</html>

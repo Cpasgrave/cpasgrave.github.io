@@ -851,10 +851,1593 @@
       "title": "Codewars",
       "entries": [
         {
+          "id": "15x15-nonogram-solver",
+          "title": "15x15 Nonogram Solver",
+          "file": "codewars/15x15-nonogram-solver.py",
+          "kata": "https://www.codewars.com/kata/5a5072a6145c46568800004d",
+          "summary": "Résoudre un nonogramme de quinze cases de côté à partir des longueurs des groupes de cases remplies en lignes et colonnes.",
+          "version_label": "Python · version 1",
+          "example": "clues = ((15,),) * 15\nfor ligne in solve((clues, clues)):\n    print(\"\".join(\"■\" if case else \"·\" for case in ligne))"
+        },
+        {
+          "id": "4-by-4-skyscrapers",
+          "title": "4 By 4 Skyscrapers",
+          "file": "codewars/4-by-4-skyscrapers.py",
+          "kata": "https://www.codewars.com/kata/5671d975d81d6c1c87000022",
+          "summary": "Placer les hauteurs de un à quatre dans la grille en respectant les indices de visibilité et l’unicité des hauteurs par ligne et colonne.",
+          "version_label": "Python · version 1",
+          "example": "clues = (4, 3, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 3, 4)\nfor ligne in solve_puzzle(clues):\n    print(*ligne)"
+        },
+        {
+          "id": "5x5-nonogram-solver",
+          "title": "5x5 Nonogram Solver",
+          "file": "codewars/5x5-nonogram-solver.py",
+          "kata": "https://www.codewars.com/kata/5a479247e6be385a41000064",
+          "summary": "Résoudre un nonogramme de cinq cases de côté en faisant concorder les groupes visibles par ligne et colonne.",
+          "version_label": "Python · version 1",
+          "example": "clues = ((5,),) * 5\nfor ligne in Nonogram((clues, clues)).solve():\n    print(\"\".join(\"■\" if case else \"·\" for case in ligne))"
+        },
+        {
+          "id": "6-by-6-skyscrapers",
+          "title": "6 By 6 Skyscrapers",
+          "file": "codewars/6-by-6-skyscrapers.py",
+          "kata": "https://www.codewars.com/kata/5679d5a3f2272011d700000d",
+          "summary": "Reconstituer une grille de tours de taille six à partir du nombre de bâtiments visibles depuis chacun de ses bords.",
+          "version_label": "Python · version 1",
+          "example": "clues = (6, 5, 4, 3, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 3, 4, 5, 6)\nfor ligne in solve_puzzle(clues):\n    print(*ligne)"
+        },
+        {
+          "id": "7x7-skyscrapers",
+          "title": "7×7 Skyscrapers",
+          "file": "codewars/7x7-skyscrapers.py",
+          "kata": "https://www.codewars.com/kata/5917a2205ffc30ec3a0000a8",
+          "summary": "Déduire les hauteurs d’une grille de sept par sept en combinant les indices visibles tout autour de la grille.",
+          "version_label": "Python · version 1",
+          "example": "clues = (7, 6, 5, 4, 3, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 3, 4, 5, 6, 7)\nfor ligne in solve_puzzle(clues):\n    print(*ligne)"
+        },
+        {
+          "id": "a-chain-adding-function",
+          "title": "A Chain adding function",
+          "file": "codewars/a-chain-adding-function.py",
+          "kata": "https://www.codewars.com/kata/539a0e4d85e3425cb0000a88",
+          "summary": "Permettre d’enchaîner plusieurs appels à une fonction d’addition et de lire la somme accumulée à tout moment.",
+          "version_label": "Python · version 1",
+          "example": "print(add(3)(4)(5))"
+        },
+        {
+          "id": "a-knights-tour",
+          "title": "A Knight's Tour",
+          "file": "codewars/a-knights-tour.py",
+          "kata": "https://www.codewars.com/kata/5664740e6072d2eebe00001b",
+          "summary": "Trouver un parcours qui visite chaque case d’un échiquier une seule fois en n’utilisant que les déplacements du cavalier.",
+          "version_label": "Python · version 1",
+          "example": "parcours = knights_tour((0, 0), 8)\nprint(\"Cases visitées\", len(set(parcours)))\nprint(\"Premiers sauts\", parcours[:8])",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "abbreviate-a-two-word-name",
+          "title": "Abbreviate a Two Word Name",
+          "file": "codewars/abbreviate-a-two-word-name.py",
+          "kata": "https://www.codewars.com/kata/57eadb7ecd143f4c9c0000a3",
+          "summary": "Former les deux initiales majuscules d’un nom composé de deux mots.",
+          "version_label": "Python · version 1",
+          "example": "print(abbrevName(\"Alice Martin\"))"
+        },
+        {
+          "id": "alphabetic-anagrams",
+          "title": "Alphabetic Anagrams",
+          "file": "codewars/alphabetic-anagrams.py",
+          "kata": "https://www.codewars.com/kata/53e57dada0cb0400ba000688",
+          "summary": "Déterminer le rang d’un mot parmi les anagrammes distinctes de ses lettres, classées par ordre alphabétique.",
+          "version_label": "Python · version 1",
+          "example": "print(listPosition(\"BANANA\"))",
+          "variants": [
+            {
+              "id": "alphabetic-anagrams-version-2",
+              "title": "Alphabetic Anagrams · Python · version 2",
+              "file": "codewars/alphabetic-anagrams-version-2.py",
+              "kata": "https://www.codewars.com/kata/53e57dada0cb0400ba000688",
+              "summary": "Déterminer le rang d’un mot parmi les anagrammes distinctes de ses lettres, classées par ordre alphabétique.",
+              "version_label": "Python · version 2",
+              "example": "print(listPosition(\"BANANA\"))"
+            }
+          ]
+        },
+        {
+          "id": "alphametics-solver",
+          "title": "Alphametics Solver",
+          "file": "codewars/alphametics-solver.py",
+          "kata": "https://www.codewars.com/kata/5b5fe164b88263ad3d00250b",
+          "summary": "Résoudre une addition de mots en attribuant un chiffre distinct à chaque lettre sans introduire de zéros initiaux.",
+          "version_label": "Python · version 1",
+          "example": "print(alphametics(\"I + BB = ILL\"))",
+          "variants": [
+            {
+              "id": "alphametics-solver-version-2",
+              "title": "Alphametics Solver · Python · version 2",
+              "file": "codewars/alphametics-solver-version-2.py",
+              "kata": "https://www.codewars.com/kata/5b5fe164b88263ad3d00250b",
+              "summary": "Résoudre une addition de mots en attribuant un chiffre distinct à chaque lettre sans introduire de zéros initiaux.",
+              "version_label": "Python · version 2",
+              "example": "print(alphametics(\"I + BB = ILL\"))"
+            },
+            {
+              "id": "alphametics-solver-version-3",
+              "title": "Alphametics Solver · Python · version 3",
+              "file": "codewars/alphametics-solver-version-3.py",
+              "kata": "https://www.codewars.com/kata/5b5fe164b88263ad3d00250b",
+              "summary": "Résoudre une addition de mots en attribuant un chiffre distinct à chaque lettre sans introduire de zéros initiaux.",
+              "version_label": "Python · version 3",
+              "example": "print(alphametics(\"I + BB = ILL\"))"
+            }
+          ]
+        },
+        {
+          "id": "battleship-field-validator",
+          "title": "Battleship field validator",
+          "file": "codewars/battleship-field-validator.py",
+          "kata": "https://www.codewars.com/kata/52bb6539a4cf1b12d90005b7",
+          "summary": "Vérifier que la grille contient une flotte complète et que les navires ne se touchent pas, même en diagonale.",
+          "version_label": "Python · version 1",
+          "example": "grille = [[0] * 10 for _ in range(10)]\nfor ligne, colonne, taille in [(0, 0, 4), (0, 6, 3), (2, 0, 3), (2, 5, 2), (2, 8, 2), (4, 0, 2), (4, 4, 1), (4, 7, 1), (6, 1, 1), (6, 5, 1)]:\n    grille[ligne][colonne:colonne + taille] = [1] * taille\nprint(validate_battlefield(grille))"
+        },
+        {
+          "id": "become-immortal",
+          "title": "BECOME IMMORTAL",
+          "file": "codewars/become-immortal.py",
+          "kata": "https://www.codewars.com/kata/59568be9cc15b57637000054",
+          "summary": "Sommer les valeurs de XOR d’une grille au-delà d’un seuil, puis appliquer le modulo demandé.",
+          "version_label": "Python · version 1",
+          "example": "print(elder_age(4, 5, 1, 1000))"
+        },
+        {
+          "id": "beginner-series-number-3-sum-of-numbers",
+          "title": "Beginner Series #3 Sum of Numbers",
+          "file": "codewars/beginner-series-number-3-sum-of-numbers.py",
+          "kata": "https://www.codewars.com/kata/55f2b110f61eb01779000053",
+          "summary": "Additionner les entiers entre les deux bornes, bornes comprises, quel que soit leur ordre.",
+          "version_label": "Python · version 1",
+          "example": "print(get_sum(4, -2))"
+        },
+        {
+          "id": "binary-search-trees",
+          "title": "Binary Search Trees",
+          "file": "codewars/binary-search-trees.py",
+          "kata": "https://www.codewars.com/kata/571a551a196bb0567f000603",
+          "summary": "Afficher et comparer des arbres de recherche binaires en tenant compte de la structure et des sous-arbres manquants.",
+          "version_label": "Python · version 1",
+          "example": "arbre = Tree(Node(2), Tree(Node(1)), Tree(Node(3)))\nprint(arbre)\nprint(arbre == Tree(Node(2), Tree(Node(1)), Tree(Node(3))))",
+          "note": "Cette soumission contient les classes Tree et Node. L’exemple construit un arbre et affiche sa structure."
+        },
+        {
+          "id": "block-sequence",
+          "title": "Block sequence",
+          "file": "codewars/block-sequence.py",
+          "kata": "https://www.codewars.com/kata/5e1ab1b9fe268c0033680e5f",
+          "summary": "Déterminer un chiffre à une position donnée dans la concaténation des blocs 1, 12, 123 et ainsi de suite.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(21))"
+        },
+        {
+          "id": "braking-well",
+          "title": "Braking well",
+          "file": "codewars/braking-well.py",
+          "kata": "https://www.codewars.com/kata/565c0fa6e3a7d39dee000125",
+          "summary": "Calculer une distance d’arrêt à partir de la vitesse et de l’adhérence, ou retrouver la vitesse à partir de la distance.",
+          "version_label": "Python · version 1",
+          "example": "distance = dist(72, 0.6)\nprint(round(distance, 2))\nprint(round(speed(distance, 0.6), 2))"
+        },
+        {
+          "id": "buddy-pairs",
+          "title": "Buddy Pairs",
+          "file": "codewars/buddy-pairs.py",
+          "kata": "https://www.codewars.com/kata/59ccf051dcc4050f7800008f",
+          "summary": "Trouver une paire d’entiers où chacune des sommes de diviseurs propres vaut l’autre entier plus un.",
+          "version_label": "Python · version 1",
+          "example": "print(buddy(40, 100))"
+        },
+        {
+          "id": "can-you-win-the-codewar",
+          "title": "Can you win the codewar  ?",
+          "file": "codewars/can-you-win-the-codewar.py",
+          "kata": "https://www.codewars.com/kata/5e3f043faf934e0024a941d7",
+          "summary": "Déterminer le meilleur résultat possible lorsqu’on peut réordonner les forces d’une équipe pour les opposer à celles de l’adversaire.",
+          "version_label": "Python · version 1",
+          "example": "print(codewar_result([2, 4, 8], [1, 3, 5]))",
+          "variants": [
+            {
+              "id": "can-you-win-the-codewar-version-2",
+              "title": "Can you win the codewar  ? · Python · version 2",
+              "file": "codewars/can-you-win-the-codewar-version-2.py",
+              "kata": "https://www.codewars.com/kata/5e3f043faf934e0024a941d7",
+              "summary": "Déterminer le meilleur résultat possible lorsqu’on peut réordonner les forces d’une équipe pour les opposer à celles de l’adversaire.",
+              "version_label": "Python · version 2",
+              "example": "print(codewar_result([2, 4, 8], [1, 3, 5]))"
+            }
+          ]
+        },
+        {
+          "id": "castle-of-cubes",
+          "title": "Castle of Cubes",
+          "file": "codewars/castle-of-cubes.py",
+          "kata": "https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79",
+          "summary": "Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.",
+          "version_label": "Python · version 1",
+          "example": "print(panelsCount(8))",
+          "variants": [
+            {
+              "id": "castle-of-cubes-version-2",
+              "title": "Castle of Cubes · Python · version 2",
+              "file": "codewars/castle-of-cubes-version-2.py",
+              "kata": "https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79",
+              "summary": "Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.",
+              "version_label": "Python · version 2",
+              "example": "print(panel_count(8))"
+            },
+            {
+              "id": "castle-of-cubes-version-3",
+              "title": "Castle of Cubes · Python · version 3",
+              "file": "codewars/castle-of-cubes-version-3.py",
+              "kata": "https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79",
+              "summary": "Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.",
+              "version_label": "Python · version 3",
+              "example": "print(panel_count(8))"
+            },
+            {
+              "id": "castle-of-cubes-version-4",
+              "title": "Castle of Cubes · Python · version 4",
+              "file": "codewars/castle-of-cubes-version-4.py",
+              "kata": "https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79",
+              "summary": "Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.",
+              "version_label": "Python · version 4",
+              "example": "print(panel_count(8))"
+            }
+          ]
+        },
+        {
+          "id": "chinese-numeral-encoder",
+          "title": "Chinese Numeral Encoder",
+          "file": "codewars/chinese-numeral-encoder.py",
+          "kata": "https://www.codewars.com/kata/52608f5345d4a19bed000b31",
+          "summary": "Écrire un nombre en chiffres chinois en tenant compte du signe et de la partie décimale.",
+          "version_label": "Python · version 1",
+          "example": "print(to_chinese_numeral(-204.5))"
+        },
+        {
+          "id": "coloured-triangles",
+          "title": "Coloured Triangles",
+          "file": "codewars/coloured-triangles.py",
+          "kata": "https://www.codewars.com/kata/5a25ac6ac5e284cfbe000111",
+          "summary": "Réduire une rangée de couleurs selon la règle du triangle jusqu’à obtenir la couleur de la dernière case.",
+          "version_label": "Python · version 1",
+          "example": "print(triangle(\"RBGG\"))"
+        },
+        {
+          "id": "convert-a-hex-string-to-rgb",
+          "title": "Convert A Hex String To RGB",
+          "file": "codewars/convert-a-hex-string-to-rgb.py",
+          "kata": "https://www.codewars.com/kata/5282b48bb70058e4c4000fa7",
+          "summary": "Convertir une couleur hexadécimale en valeurs rouge, verte et bleue.",
+          "version_label": "Python · version 1",
+          "example": "print(hex_string_to_RGB(\"#3A7FC2\"))"
+        },
+        {
+          "id": "counting-string-subsequences",
+          "title": "Counting String Subsequences",
+          "file": "codewars/counting-string-subsequences.py",
+          "kata": "https://www.codewars.com/kata/52f7892a747862fc9a0009a6",
+          "summary": "Compter les façons de retrouver une chaîne dans une autre en gardant l’ordre des caractères choisis.",
+          "version_label": "Python · version 1",
+          "example": "print(count_subsequences(\"banana\", \"ana\"))"
+        },
+        {
+          "id": "create-phone-number",
+          "title": "Create Phone Number",
+          "file": "codewars/create-phone-number.py",
+          "kata": "https://www.codewars.com/kata/525f50e3b73515a6db000b83",
+          "summary": "Mettre en forme une suite de dix chiffres comme un numéro de téléphone nord-américain.",
+          "version_label": "Python · version 1",
+          "example": "print(create_phone_number([4, 1, 5, 5, 5, 5, 0, 1, 8, 3]))"
+        },
+        {
+          "id": "cubic-equation-solver",
+          "title": "Cubic Equation Solver",
+          "file": "codewars/cubic-equation-solver.py",
+          "kata": "https://www.codewars.com/kata/5f172f440081d200325ef661",
+          "summary": "Lire une équation polynomiale de degré trois au plus et calculer ses racines, réelles ou complexes.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(\"x^3 -8 = 0\"))"
+        },
+        {
+          "id": "decode-the-morse-code",
+          "title": "Decode the Morse code",
+          "file": "codewars/decode-the-morse-code.py",
+          "kata": "https://www.codewars.com/kata/54b724efac3d5402db00065e",
+          "summary": "Transformer un message en code Morse en texte en reconnaissant les séparations entre lettres et mots.",
+          "version_label": "Python · version 1",
+          "example": "MORSE_CODE = {\"...\": \"S\", \"---\": \"O\"}\nprint(decodeMorse(\"... --- ...\"))",
+          "note": "L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration."
+        },
+        {
+          "id": "decode-the-morse-code-advanced",
+          "title": "Decode the Morse code, advanced",
+          "file": "codewars/decode-the-morse-code-advanced.py",
+          "kata": "https://www.codewars.com/kata/54b72c16cd7f5154e9000457",
+          "summary": "Déduire le rythme d’un signal binaire, puis transformer les impulsions et silences en texte à partir du code Morse.",
+          "version_label": "Python · version 1",
+          "example": "MORSE_CODE = {\".-\": \"A\"}\nprint(decodeMorse(decodeBits(\"10111\")))",
+          "note": "L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration."
+        },
+        {
+          "id": "decode-the-morse-code-for-real",
+          "title": "Decode the Morse code, for real",
+          "file": "codewars/decode-the-morse-code-for-real.py",
+          "kata": "https://www.codewars.com/kata/54acd76f7207c6a2880012bb",
+          "summary": "Décoder le Morse à partir d’un signal binaire dont les durées de transmission peuvent varier.",
+          "version_label": "Python · version 1",
+          "example": "MORSE_CODE = {\"...\": \"S\", \"---\": \"O\"}\nbits = \"1\"\nprint(decodeBitsAdvanced(bits))\nMORSE_CODE[\".\"] = \"E\"\nprint(decodeMorse(decodeBitsAdvanced(bits)))",
+          "note": "L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration."
+        },
+        {
+          "id": "directions-reduction",
+          "title": "Directions Reduction",
+          "file": "codewars/directions-reduction.py",
+          "kata": "https://www.codewars.com/kata/550f22f4d758534c1100025a",
+          "summary": "Simplifier un trajet en retirant les pas consécutifs qui s’annulent. Répéter jusqu’à obtenir le trajet réduit.",
+          "version_label": "Python · version 1",
+          "example": "print(dirReduc([\"WEST\", \"NORTH\", \"SOUTH\", \"EAST\", \"NORTH\"]))"
+        },
+        {
+          "id": "dubstep",
+          "title": "Dubstep",
+          "file": "codewars/dubstep.py",
+          "kata": "https://www.codewars.com/kata/551dc350bf4e526099000ae5",
+          "summary": "Nettoyer une chaîne où les mots ont été séparés par des répétitions de WUB.",
+          "version_label": "Python · version 1",
+          "example": "print(song_decoder(\"WUBBONJOURWUBWUBALICEWUB\"))"
+        },
+        {
+          "id": "earth-movers-distance",
+          "title": "Earth-mover's distance",
+          "file": "codewars/earth-movers-distance.py",
+          "kata": "https://www.codewars.com/kata/58b34b2951ccdb84f2000093",
+          "summary": "Mesurer le coût minimal pour déplacer la masse d’une distribution de probabilités vers l’autre sur une droite.",
+          "version_label": "Python · version 1",
+          "example": "print(earth_movers_distance([0, 2], [0.5, 0.5], [1, 3], [0.5, 0.5]))"
+        },
+        {
+          "id": "equal-sides-of-an-array",
+          "title": "Equal Sides Of An Array",
+          "file": "codewars/equal-sides-of-an-array.py",
+          "kata": "https://www.codewars.com/kata/5679aa472b8f57fb8c000047",
+          "summary": "Trouver un indice pour lequel la somme des éléments à gauche est égale à celle des éléments à droite.",
+          "version_label": "Python · version 1",
+          "example": "print(find_even_index([4, 2, 9, 1, 5]))"
+        },
+        {
+          "id": "evaluate-mathematical-expression",
+          "title": "Evaluate mathematical expression",
+          "file": "codewars/evaluate-mathematical-expression.py",
+          "kata": "https://www.codewars.com/kata/52a78825cdfc2cfc87000005",
+          "summary": "Évaluer une expression arithmétique en tenant compte des signes, des parenthèses et des priorités opératoires.",
+          "version_label": "Python · version 1",
+          "example": "print(calc(\"2 * (7 - 4) - 5\"))",
+          "replacements": [
+            [
+              "re.sub(pat('*/'),s,exp,1)",
+              "re.sub(pat('*/'),s,exp,count=1)"
+            ],
+            [
+              "re.sub(pat('+-'),s,exp,1)",
+              "re.sub(pat('+-'),s,exp,count=1)"
+            ]
+          ],
+          "note": "L’exécuteur passe la limite de remplacement de regex sous forme d’argument nommé."
+        },
+        {
+          "id": "evaluating-prefix-polish-notation",
+          "title": "Evaluating prefix Polish notation",
+          "file": "codewars/evaluating-prefix-polish-notation.py",
+          "kata": "https://www.codewars.com/kata/5e5b7f55c2e8ae0016f42339",
+          "summary": "Évaluer une expression écrite avec les opérateurs placés avant leurs arguments, sans parenthèses.",
+          "version_label": "Python · version 1",
+          "example": "print(calculate(\"+ 3 * 4 2\"))"
+        },
+        {
+          "id": "faberge-easter-eggs-crush-test-linear",
+          "title": "Faberge easter eggs crush test [linear]",
+          "file": "codewars/faberge-easter-eggs-crush-test-linear.py",
+          "kata": "https://www.codewars.com/kata/5976c5a5cd933a7bbd000029",
+          "summary": "Calculer, modulo le nombre demandé, la hauteur maximale qu’on peut déterminer avec un nombre donné d’œufs et d’essais.",
+          "version_label": "Python · version 1",
+          "example": "print(height(2, 5))"
+        },
+        {
+          "id": "faberge-easter-eggs-crush-test",
+          "title": "Fabergé Easter Eggs crush test",
+          "file": "codewars/faberge-easter-eggs-crush-test.py",
+          "kata": "https://www.codewars.com/kata/54cb771c9b30e8b5250011d4",
+          "summary": "Déterminer le nombre d’étages qu’on peut tester avec un stock donné d’œufs et un nombre limité de tentatives.",
+          "version_label": "Python · version 1",
+          "example": "print(height(2, 5))"
+        },
+        {
+          "id": "factorial-tail",
+          "title": "Factorial tail",
+          "file": "codewars/factorial-tail.py",
+          "kata": "https://www.codewars.com/kata/55c4eb777e07c13528000021",
+          "summary": "Compter les zéros finaux de l’écriture d’une factorielle dans la base demandée.",
+          "version_label": "Python · version 1",
+          "example": "print(zeroes(10, 25))"
+        },
+        {
+          "id": "fastest-code-equal-to-24",
+          "title": "Fastest Code : Equal to 24",
+          "file": "codewars/fastest-code-equal-to-24.py",
+          "kata": "https://www.codewars.com/kata/574e890e296e412a0400149c",
+          "summary": "Combiner quatre nombres et des opérations arithmétiques pour obtenir une expression de valeur 24.",
+          "version_label": "Python · version 1",
+          "example": "print(equal_to_24(2, 3, 4, 6))"
+        },
+        {
+          "id": "find-the-lines",
+          "title": "Find the lines!",
+          "file": "codewars/find-the-lines.py",
+          "kata": "https://www.codewars.com/kata/5a2d376ec5e2845ec20000bd",
+          "summary": "Retrouver la ligne, la colonne et les deux diagonales passant par une case d’une grille carrée.",
+          "version_label": "Python · version 1",
+          "example": "print(check_grid([[1, 4, 9], [2, 5, 8], [3, 6, 7]], [1, 1], 3))"
+        },
+        {
+          "id": "find-the-missing-letter",
+          "title": "Find the missing letter",
+          "file": "codewars/find-the-missing-letter.py",
+          "kata": "https://www.codewars.com/kata/5839edaa6754d6fec10000a2",
+          "summary": "Retrouver la lettre manquante dans une suite de lettres consécutives.",
+          "version_label": "Python · version 1",
+          "example": "print(find_missing_letter([\"m\", \"n\", \"p\", \"q\"]))"
+        },
+        {
+          "id": "find-the-smallest-integer-in-the-array",
+          "title": "Find the smallest integer in the array",
+          "file": "codewars/find-the-smallest-integer-in-the-array.py",
+          "kata": "https://www.codewars.com/kata/55a2d7ebe362935a210000b2",
+          "summary": "Trouver le plus petit élément d’une liste d’entiers.",
+          "version_label": "Python · version 1",
+          "example": "print(findSmallestInt([8, -3, 12, 0]))"
+        },
+        {
+          "id": "find-the-unknown-digit",
+          "title": "Find the unknown digit",
+          "file": "codewars/find-the-unknown-digit.py",
+          "kata": "https://www.codewars.com/kata/546d15cebed2e10334000ed9",
+          "summary": "Trouver le chiffre qui remplace tous les points d’interrogation d’une équation, sans réutiliser un chiffre déjà écrit.",
+          "version_label": "Python · version 1",
+          "example": "print(solve_runes(\"?+5=9\"))"
+        },
+        {
+          "id": "gcd-sum",
+          "title": "GCD sum",
+          "file": "codewars/gcd-sum.py",
+          "kata": "https://www.codewars.com/kata/5dd259444228280032b1ed2a",
+          "summary": "Retrouver une paire d’entiers positifs en connaissant sa somme et son plus grand commun diviseur.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(18, 6))"
+        },
+        {
+          "id": "gerrymander-solver",
+          "title": "Gerrymander Solver",
+          "file": "codewars/gerrymander-solver.py",
+          "kata": "https://www.codewars.com/kata/5a70285ab17101627a000024",
+          "summary": "Découper une grille de vingt-cinq cases en cinq districts contigus pour satisfaire la condition de majorité du casse-tête.",
+          "version_label": "Python · version 1",
+          "example": "region = \"\\n\".join([\"OOOOO\", \"OOXOO\", \"OOOOO\", \"OOOOO\", \"OOOOO\"])\nprint(gerrymander(region))"
+        },
+        {
+          "id": "get-the-middle-character",
+          "title": "Get the Middle Character",
+          "file": "codewars/get-the-middle-character.py",
+          "kata": "https://www.codewars.com/kata/56747fd5cb988479af000028",
+          "summary": "Extraire la lettre centrale d’un mot, ou les deux lettres centrales si sa longueur est paire.",
+          "version_label": "Python · version 1",
+          "example": "print(get_middle(\"soleil\"), get_middle(\"train\"))"
+        },
+        {
+          "id": "give-me-a-diamond",
+          "title": "Give me a Diamond",
+          "file": "codewars/give-me-a-diamond.py",
+          "kata": "https://www.codewars.com/kata/5503013e34137eeeaa001648",
+          "summary": "Dessiner un losange de largeur impaire à l’aide d’astérisques.",
+          "version_label": "Python · version 1",
+          "example": "print(diamond(7))"
+        },
+        {
+          "id": "grocer-grouping",
+          "title": "Grocer Grouping",
+          "file": "codewars/grocer-grouping.py",
+          "kata": "https://www.codewars.com/kata/593c0ebf8b90525a62000221",
+          "summary": "Regrouper les articles par catégorie et les trier dans chaque groupe.",
+          "version_label": "Python · version 1",
+          "example": "print(group_groceries(\"fruit_poire,meat_poulet,vegetable_carotte,fruit_pomme\"))"
+        },
+        {
+          "id": "hamming-numbers",
+          "title": "Hamming Numbers",
+          "file": "codewars/hamming-numbers.py",
+          "kata": "https://www.codewars.com/kata/526d84b98f428f14a60008da",
+          "summary": "Trouver le n-ième entier positif dont tous les facteurs premiers sont 2, 3 ou 5.",
+          "version_label": "Python · version 1",
+          "example": "print(hamming(12))"
+        },
+        {
+          "id": "hofstadter-q",
+          "title": "Hofstadter Q",
+          "file": "codewars/hofstadter-q.py",
+          "kata": "https://www.codewars.com/kata/5897cdc26551af891c000124",
+          "summary": "Calculer un terme de la suite de Hofstadter Q, dont chaque nouvel indice dépend des deux termes précédents.",
+          "version_label": "Python · version 1",
+          "example": "print(hofstadter_Q(12))"
+        },
+        {
+          "id": "human-readable-duration-format",
+          "title": "Human readable duration format",
+          "file": "codewars/human-readable-duration-format.py",
+          "kata": "https://www.codewars.com/kata/52742f58faf5485cae000b9a",
+          "summary": "Afficher une durée en secondes sous une forme lisible, avec les années, jours, heures, minutes et secondes utiles.",
+          "version_label": "Python · version 1",
+          "example": "print(format_duration(3665))"
+        },
+        {
+          "id": "integers-recreation-one",
+          "title": "Integers: Recreation One",
+          "file": "codewars/integers-recreation-one.py",
+          "kata": "https://www.codewars.com/kata/55aa075506463dac6600010d",
+          "summary": "Trouver les entiers d’un intervalle dont la somme des carrés de leurs diviseurs est un carré parfait.",
+          "version_label": "Python · version 1",
+          "example": "print(list_squared(1, 75))",
+          "variants": [
+            {
+              "id": "integers-recreation-one-version-2",
+              "title": "Integers: Recreation One · Python · version 2",
+              "file": "codewars/integers-recreation-one-version-2.py",
+              "kata": "https://www.codewars.com/kata/55aa075506463dac6600010d",
+              "summary": "Trouver les entiers d’un intervalle dont la somme des carrés de leurs diviseurs est un carré parfait.",
+              "version_label": "Python · version 2",
+              "example": "print(list_squared(1, 75))"
+            }
+          ]
+        },
+        {
+          "id": "is-there-an-odd-bit",
+          "title": "Is There an Odd Bit?",
+          "file": "codewars/is-there-an-odd-bit.py",
+          "kata": "https://www.codewars.com/kata/5d6f49d85e45290016bf4718",
+          "summary": "Tester si un des bits situés aux positions impaires de l’entier est égal à un.",
+          "version_label": "Python · version 1",
+          "example": "print(any_odd(8), any_odd(4))"
+        },
+        {
+          "id": "is-this-a-triangle",
+          "title": "Is this a triangle?",
+          "file": "codewars/is-this-a-triangle.py",
+          "kata": "https://www.codewars.com/kata/56606694ec01347ce800001b",
+          "summary": "Vérifier si trois longueurs positives peuvent former un triangle non aplati.",
+          "version_label": "Python · version 1",
+          "example": "print(is_triangle(3, 4, 5), is_triangle(1, 2, 9))"
+        },
+        {
+          "id": "last-digit-of-a-huge-number",
+          "title": "Last digit of a huge number",
+          "file": "codewars/last-digit-of-a-huge-number.py",
+          "kata": "https://www.codewars.com/kata/5518a860a73e708c0a000027",
+          "summary": "Calculer le dernier chiffre d’une tour de puissances sans construire sa valeur entière.",
+          "version_label": "Python · version 1",
+          "example": "print(last_digit([3, 4, 2]))",
+          "variants": [
+            {
+              "id": "last-digit-of-a-huge-number-version-2",
+              "title": "Last digit of a huge number · Python · version 2",
+              "file": "codewars/last-digit-of-a-huge-number-version-2.py",
+              "kata": "https://www.codewars.com/kata/5518a860a73e708c0a000027",
+              "summary": "Calculer le dernier chiffre d’une tour de puissances sans construire sa valeur entière.",
+              "version_label": "Python · version 2",
+              "example": "print(last_digit([3, 4, 2]))"
+            }
+          ]
+        },
+        {
+          "id": "linear-equations-n-x-m-complete-solution-space-fraction-representation",
+          "title": "Linear equations N x M, complete solution space,  fraction representation",
+          "file": "codewars/linear-equations-n-x-m-complete-solution-space-fraction-representation.py",
+          "kata": "https://www.codewars.com/kata/56464cf3f982b2e10d000015",
+          "summary": "Résoudre un système linéaire et représenter l’ensemble de ses solutions à l’aide de fractions exactes.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(\"1 1 7\\n2 -1 2\"))",
+          "packages": [
+            "numpy"
+          ],
+          "replacements": [
+            [
+              "int(ones)",
+              "int(ones.item())"
+            ]
+          ],
+          "note": "L’exécuteur adapte la conversion d’une valeur NumPy pour les versions récentes."
+        },
+        {
+          "id": "london-cityhacker",
+          "title": "London CityHacker",
+          "file": "codewars/london-cityhacker.py",
+          "kata": "https://www.codewars.com/kata/5bce125d3bb2adff0d000245",
+          "summary": "Calculer le prix d’un trajet londonien à partir des étapes en bus et en métro, en tenant compte des trajets groupés.",
+          "version_label": "Python · version 1",
+          "example": "print(london_city_hacker([12, 16, \"Central\", 8]))"
+        },
+        {
+          "id": "loopover",
+          "title": "Loopover",
+          "file": "codewars/loopover.py",
+          "kata": "https://www.codewars.com/kata/5c1d796370fee68b1e000611",
+          "summary": "Résoudre un plateau en décalant cycliquement ses lignes et ses colonnes, puis renvoyer les mouvements effectués.",
+          "version_label": "Python · version 1",
+          "example": "depart = [list(\"ABC\"), list(\"EFD\"), list(\"GHI\")]\nbut = [list(\"ABC\"), list(\"DEF\"), list(\"GHI\")]\nprint(loopover(depart, but))"
+        },
+        {
+          "id": "magnet-particules-in-boxes",
+          "title": "Magnet particules in boxes",
+          "file": "codewars/magnet-particules-in-boxes.py",
+          "kata": "https://www.codewars.com/kata/56c04261c3fcf33f2d000534",
+          "summary": "Additionner les contributions d’une grille d’indices pour approcher la valeur d’une série double.",
+          "version_label": "Python · version 1",
+          "example": "print(doubles(3, 10))"
+        },
+        {
+          "id": "make-a-spiral",
+          "title": "Make a spiral",
+          "file": "codewars/make-a-spiral.py",
+          "kata": "https://www.codewars.com/kata/534e01fbbb17187c7e0000c6",
+          "summary": "Produire une grille de zéros et de uns où les uns forment une spirale séparée par un couloir.",
+          "version_label": "Python · version 1",
+          "example": "for ligne in spiralize(7):\n    print(*ligne)"
+        },
+        {
+          "id": "matrix-determinant",
+          "title": "Matrix Determinant",
+          "file": "codewars/matrix-determinant.py",
+          "kata": "https://www.codewars.com/kata/52a382ee44408cea2500074c",
+          "summary": "Calculer le déterminant d’une matrice carrée représentée par une liste de lignes.",
+          "version_label": "Python · version 1",
+          "example": "print(determinant([[4, 1], [2, 3]]))"
+        },
+        {
+          "id": "message-from-aliens",
+          "title": "Message from Aliens",
+          "file": "codewars/message-from-aliens.py",
+          "kata": "https://www.codewars.com/kata/598980a41e55117d93000015",
+          "summary": "Déchiffrer le message en séparant ses symboles, en les convertissant en lettres et en remettant les caractères dans l’ordre.",
+          "version_label": "Python · version 1",
+          "example": "print(decode(\"#|#|-|\"))"
+        },
+        {
+          "id": "most-frequently-used-words-in-a-text",
+          "title": "Most frequently used words in a text",
+          "file": "codewars/most-frequently-used-words-in-a-text.py",
+          "kata": "https://www.codewars.com/kata/51e056fe544cf36c410000fb",
+          "summary": "Trouver jusqu’à trois mots parmi les plus fréquents d’un texte, en ignorant la casse et en gérant les apostrophes.",
+          "version_label": "Python · version 1",
+          "example": "print(top_3_words(\"Chat, chien, chat. Oiseau, chien et chat.\"))"
+        },
+        {
+          "id": "moving-zeros-to-the-end",
+          "title": "Moving Zeros To The End",
+          "file": "codewars/moving-zeros-to-the-end.py",
+          "kata": "https://www.codewars.com/kata/52597aa56021e91c93000cb0",
+          "summary": "Déplacer les zéros à la fin d’une liste en gardant l’ordre des autres éléments.",
+          "version_label": "Python · version 1",
+          "example": "print(move_zeros([4, 0, 2, 0, 7]))",
+          "variants": [
+            {
+              "id": "moving-zeros-to-the-end-version-2",
+              "title": "Moving Zeros To The End · Python · version 2",
+              "file": "codewars/moving-zeros-to-the-end-version-2.py",
+              "kata": "https://www.codewars.com/kata/52597aa56021e91c93000cb0",
+              "summary": "Déplacer les zéros à la fin d’une liste en gardant l’ordre des autres éléments.",
+              "version_label": "Python · version 2",
+              "example": "print(move_zeros([4, 0, 2, 0, 7]))"
+            }
+          ]
+        },
+        {
+          "id": "multi-line-task-hello-world-easy-one",
+          "title": "Multi Line Task: Hello World (Easy one)",
+          "file": "codewars/multi-line-task-hello-world-easy-one.py",
+          "kata": "https://www.codewars.com/kata/5e41c408b72541002eda0982",
+          "summary": "Produire une salutation imposée avec une limite très stricte de caractères par ligne de code.",
+          "version_label": "Python · version 1",
+          "example": "print(f())",
+          "setup": "t = type\nk = lambda x: lambda _: x",
+          "note": "L’exécuteur fournit les deux noms prédéfinis par le kata."
+        },
+        {
+          "id": "multiply",
+          "title": "Multiply",
+          "file": "codewars/multiply.py",
+          "kata": "https://www.codewars.com/kata/50654ddff44f800200000004",
+          "summary": "Multiplier deux nombres et retourner le produit.",
+          "version_label": "Python · version 1",
+          "example": "print(multiply(7, 8))"
+        },
+        {
+          "id": "mumbling",
+          "title": "Mumbling",
+          "file": "codewars/mumbling.py",
+          "kata": "https://www.codewars.com/kata/5667e8f4e3f572a8f2000039",
+          "summary": "Répéter chaque lettre selon sa position puis assembler les groupes avec des tirets.",
+          "version_label": "Python · version 1",
+          "example": "print(accum(\"abcd\"))"
+        },
+        {
+          "id": "n-queens-problem-with-one-mandatory-queen-position-challenge-version",
+          "title": "N queens problem (with one mandatory queen position) - challenge version",
+          "file": "codewars/n-queens-problem-with-one-mandatory-queen-position-challenge-version.py",
+          "kata": "https://www.codewars.com/kata/5985ea20695be6079e000003",
+          "summary": "Placer une reine par rangée sur un échiquier, sans attaque entre elles, en respectant la position d’une reine imposée.",
+          "version_label": "Python · version 1",
+          "example": "import random\nrandom.seed(0)\nprint(solve_n_queens(8, (0, 0)))"
+        },
+        {
+          "id": "next-bigger-number-with-the-same-digits",
+          "title": "Next bigger number with the same digits",
+          "file": "codewars/next-bigger-number-with-the-same-digits.py",
+          "kata": "https://www.codewars.com/kata/55983863da40caa2c900004e",
+          "summary": "Trouver le plus petit entier strictement supérieur qui réutilise exactement les mêmes chiffres.",
+          "version_label": "Python · version 1",
+          "example": "print(next_bigger(1342))"
+        },
+        {
+          "id": "one-line-task-circle-intersection",
+          "title": "One Line Task: Circle Intersection",
+          "file": "codewars/one-line-task-circle-intersection.py",
+          "kata": "https://www.codewars.com/kata/5908242330e4f567e90000a3",
+          "summary": "Calculer l’aire commune de deux cercles de même rayon puis l’arrondir à l’entier inférieur, avec une solution de longueur limitée.",
+          "version_label": "Python · version 1",
+          "example": "print(circleIntersection([0, 0], [3, 0], 3))",
+          "packages": [
+            "numpy"
+          ],
+          "replacements": [
+            [
+              "//1for",
+              "//1 for"
+            ]
+          ],
+          "note": "L’exécuteur ajoute une espace de séparation pour la version actuelle de Python."
+        },
+        {
+          "id": "one-line-task-element-wise-maximum",
+          "title": "One Line Task: Element-wise Maximum",
+          "file": "codewars/one-line-task-element-wise-maximum.py",
+          "kata": "https://www.codewars.com/kata/5c2dbc63bfc6ec0001d2fcf9",
+          "summary": "Modifier le premier tableau pour qu’il contienne, case par case, le maximum des deux tableaux.",
+          "version_label": "Python · version 1",
+          "example": "valeurs = [2, 7, 3]\nfmax(valeurs, [5, 1, 4])\nprint(valeurs)"
+        },
+        {
+          "id": "one-line-task-squirrel-and-tree",
+          "title": "One Line Task: Squirrel And Tree",
+          "file": "codewars/one-line-task-squirrel-and-tree.py",
+          "kata": "https://www.codewars.com/kata/59016379ee5456d8cc00000f",
+          "summary": "Calculer la longueur de la trajectoire en spirale d’un écureuil autour d’un tronc.",
+          "version_label": "Python · version 1",
+          "example": "print(squirrel(4, 12, 3))"
+        },
+        {
+          "id": "over-the-road-1",
+          "title": "Over The Road",
+          "file": "codewars/over-the-road-1.py",
+          "kata": "https://www.codewars.com/kata/5f0ed36164f2bc00283aed07",
+          "summary": "Retrouver le numéro de la maison qui se trouve en face de celle donnée dans une rue numérotée des deux côtés.",
+          "version_label": "Python · version 1",
+          "example": "print(over_the_road(3, 5))"
+        },
+        {
+          "id": "path-finder-number-1-can-you-reach-the-exit",
+          "title": "Path Finder #1: can you reach the exit?",
+          "file": "codewars/path-finder-number-1-can-you-reach-the-exit.py",
+          "kata": "https://www.codewars.com/kata/5765870e190b1472ec0022a2",
+          "summary": "Vérifier si un trajet existe entre l’entrée et la sortie d’un labyrinthe, en évitant les murs.",
+          "version_label": "Python · version 1",
+          "example": "print(path_finder(\"...\\nWW.\\n...\"))"
+        },
+        {
+          "id": "positive-to-negative-binary-numbers",
+          "title": "Positive to negative binary numbers",
+          "file": "codewars/positive-to-negative-binary-numbers.py",
+          "kata": "https://www.codewars.com/kata/5becace7063291bebf0001d5",
+          "summary": "Transformer les bits d’un entier positif en représentation du nombre opposé en complément à deux.",
+          "version_label": "Python · version 1",
+          "example": "print(positive_to_negative([0, 0, 1, 1]))"
+        },
+        {
+          "id": "quarter-of-the-year",
+          "title": "Quarter of the year",
+          "file": "codewars/quarter-of-the-year.py",
+          "kata": "https://www.codewars.com/kata/5ce9c1000bab0b001134f5af",
+          "summary": "Retrouver le trimestre correspondant à un mois numéroté de un à douze.",
+          "version_label": "Python · version 1",
+          "example": "print(quarter_of(10))"
+        },
+        {
+          "id": "range-extraction",
+          "title": "Range Extraction",
+          "file": "codewars/range-extraction.py",
+          "kata": "https://www.codewars.com/kata/51ba717bb08c1cd60f00002f",
+          "summary": "Écrire des entiers triés sous une forme compacte en regroupant les suites suffisamment longues en intervalles.",
+          "version_label": "Python · version 1",
+          "example": "print(solution([-8, -7, -6, 0, 1, 3, 4, 5]))"
+        },
+        {
+          "id": "range-of-integers-in-an-unsorted-string",
+          "title": "Range of Integers in an Unsorted String",
+          "file": "codewars/range-of-integers-in-an-unsorted-string.py",
+          "kata": "https://www.codewars.com/kata/5b6b67a5ecd0979e5b00000e",
+          "summary": "Trouver les bornes d’une suite d’entiers consécutifs dont les chiffres ont été réunis dans le désordre.",
+          "version_label": "Python · version 1",
+          "example": "print(mystery_range(\"131211\", 3))"
+        },
+        {
+          "id": "recover-a-secret-string-from-random-triplets",
+          "title": "Recover a secret string from random triplets",
+          "file": "codewars/recover-a-secret-string-from-random-triplets.py",
+          "kata": "https://www.codewars.com/kata/53f40dff5f9d31b813000774",
+          "summary": "Reconstruire une chaîne de lettres à partir de triples qui en indiquent l’ordre relatif.",
+          "version_label": "Python · version 1",
+          "example": "print(recoverSecret([list(\"abc\"), list(\"bcd\"), list(\"ade\")]))"
+        },
+        {
+          "id": "regex-for-a-decimal-number-divisible-by-4",
+          "title": "Regex for a decimal number divisible by 4",
+          "file": "codewars/regex-for-a-decimal-number-divisible-by-4.py",
+          "kata": "https://www.codewars.com/kata/5bf6bd7a3efceeda4700011f",
+          "summary": "Écrire une expression régulière qui reconnaît les écritures décimales des multiples de quatre.",
+          "version_label": "Python · version 1",
+          "example": "import re\nprint(bool(re.fullmatch(div_4, \"104\")))\nprint(bool(re.fullmatch(div_4, \"105\")))",
+          "replacements": [
+            [
+              "div_4 = '",
+              "div_4 = r'"
+            ]
+          ],
+          "note": "L’exécuteur utilise une chaîne brute pour la notation de l’expression régulière."
+        },
+        {
+          "id": "regex-password-validation",
+          "title": "Regex Password Validation",
+          "file": "codewars/regex-password-validation.py",
+          "kata": "https://www.codewars.com/kata/52e1476c8147a7547a000811",
+          "summary": "Construire une expression régulière qui reconnaît les mots de passe respectant les contraintes de longueur et de caractères du kata.",
+          "version_label": "Python · version 1",
+          "example": "import re\nprint(bool(re.fullmatch(regex, \"Exemple72\")))\nprint(bool(re.fullmatch(regex, \"court\")))",
+          "replacements": [
+            [
+              "regex = \"",
+              "regex = r\""
+            ]
+          ],
+          "note": "L’exécuteur utilise une chaîne brute pour interpréter l’expression régulière."
+        },
+        {
+          "id": "regex-pattern-to-check-if-string-has-all-characters",
+          "title": "regex pattern to check if string has all characters",
+          "file": "codewars/regex-pattern-to-check-if-string-has-all-characters.py",
+          "kata": "https://www.codewars.com/kata/5e4eb72bb95d28002dbbecde",
+          "summary": "Produire une expression régulière qui vérifie la présence de toutes les lettres demandées, quel que soit leur ordre.",
+          "version_label": "Python · version 1",
+          "example": "import re\nmotif = regex_contains_all(\"abc\")\nprint(bool(re.fullmatch(motif, \"cavalier blanc\")))",
+          "variants": [
+            {
+              "id": "regex-pattern-to-check-if-string-has-all-characters-version-2",
+              "title": "regex pattern to check if string has all characters · Python · version 2",
+              "file": "codewars/regex-pattern-to-check-if-string-has-all-characters-version-2.py",
+              "kata": "https://www.codewars.com/kata/5e4eb72bb95d28002dbbecde",
+              "summary": "Produire une expression régulière qui vérifie la présence de toutes les lettres demandées, quel que soit leur ordre.",
+              "version_label": "Python · version 2",
+              "example": "import re\nmotif = regex_contains_all(\"abc\")\nprint(bool(re.fullmatch(motif, \"cavalier blanc\")))"
+            },
+            {
+              "id": "regex-pattern-to-check-if-string-has-all-characters-version-3",
+              "title": "regex pattern to check if string has all characters · Python · version 3",
+              "file": "codewars/regex-pattern-to-check-if-string-has-all-characters-version-3.py",
+              "kata": "https://www.codewars.com/kata/5e4eb72bb95d28002dbbecde",
+              "summary": "Produire une expression régulière qui vérifie la présence de toutes les lettres demandées, quel que soit leur ordre.",
+              "version_label": "Python · version 3",
+              "example": "import re\nmotif = regex_contains_all(\"abc\")\nprint(bool(re.fullmatch(motif, \"cavalier blanc\")))"
+            }
+          ]
+        },
+        {
+          "id": "regex-tic-tac-toe-win-checker",
+          "title": "Regex Tic Tac Toe Win Checker",
+          "file": "codewars/regex-tic-tac-toe-win-checker.py",
+          "kata": "https://www.codewars.com/kata/582e0450fe38013dbc0002d3",
+          "summary": "Identifier par une expression régulière les alignements gagnants dans une grille de morpion encodée sur neuf caractères.",
+          "version_label": "Python · version 1",
+          "example": "print(regex_tic_tac_toe_win_checker(\"OO-XXXO--\"))",
+          "packages": [
+            "regex"
+          ]
+        },
+        {
+          "id": "regexp-basics-is-it-a-eight-bit-unsigned-number",
+          "title": "Regexp Basics - is it a eight bit unsigned number?",
+          "file": "codewars/regexp-basics-is-it-a-eight-bit-unsigned-number.py",
+          "kata": "https://www.codewars.com/kata/567e8f7b4096f2b4b1000005",
+          "summary": "Reconnaître les écritures canoniques des entiers de 0 à 255, sans signe ni zéro superflu.",
+          "version_label": "Python · version 1",
+          "example": "print(eight_bit_number(\"254\"), eight_bit_number(\"025\"))"
+        },
+        {
+          "id": "regexp-basics-is-it-ipv4-address",
+          "title": "Regexp Basics - is it IPv4 address?",
+          "file": "codewars/regexp-basics-is-it-ipv4-address.py",
+          "kata": "https://www.codewars.com/kata/567fe8b50c201947bc000056",
+          "summary": "Valider la forme décimale d’une adresse IPv4 et vérifier les quatre valeurs de 0 à 255.",
+          "version_label": "Python · version 1",
+          "example": "print(ipv4_address(\"192.0.2.42\"), ipv4_address(\"192.0.2.256\"))",
+          "packages": [
+            "regex"
+          ]
+        },
+        {
+          "id": "regexp-basics-parsing-integers",
+          "title": "Regexp basics - parsing integers",
+          "file": "codewars/regexp-basics-parsing-integers.py",
+          "kata": "https://www.codewars.com/kata/5682e1082cc7862db5000039",
+          "summary": "Convertir une chaîne valide en entier, en reconnaissant les préfixes de bases binaire, octale et hexadécimale.",
+          "version_label": "Python · version 1",
+          "example": "print(to_integer(\"-0x2a\"), to_integer(\"0b10101\"), to_integer(\" 12\"))"
+        },
+        {
+          "id": "remove-string-spaces",
+          "title": "Remove String Spaces",
+          "file": "codewars/remove-string-spaces.py",
+          "kata": "https://www.codewars.com/kata/57eae20f5500ad98e50002c5",
+          "summary": "Retirer les espaces d’une chaîne de caractères.",
+          "version_label": "Python · version 1",
+          "example": "print(no_space(\"un mot après l autre\"))"
+        },
+        {
+          "id": "remove-the-minimum",
+          "title": "Remove the minimum",
+          "file": "codewars/remove-the-minimum.py",
+          "kata": "https://www.codewars.com/kata/563cf89eb4747c5fb100001b",
+          "summary": "Renvoyer la liste sans la première occurrence de sa plus petite valeur.",
+          "version_label": "Python · version 1",
+          "example": "print(remove_smallest([5, 2, 7, 2, 8]))"
+        },
+        {
+          "id": "repeated-substring",
+          "title": "Repeated  Substring",
+          "file": "codewars/repeated-substring.py",
+          "kata": "https://www.codewars.com/kata/5491689aff74b9b292000334",
+          "summary": "Réduire une chaîne à son motif répété le plus court et au nombre de fois où il apparaît.",
+          "version_label": "Python · version 1",
+          "example": "print(f(\"tictictic\"))"
+        },
+        {
+          "id": "repetitive-sequence-easy-version",
+          "title": "Repetitive Sequence  - Easy Version",
+          "file": "codewars/repetitive-sequence-easy-version.py",
+          "kata": "https://www.codewars.com/kata/5f134651bc9687000f8022c4",
+          "summary": "Lire un terme d’une suite où le nombre de répétitions de chaque entier est lui-même donné par la suite.",
+          "version_label": "Python · version 1",
+          "example": "print(find(10))"
+        },
+        {
+          "id": "reversing-a-process",
+          "title": "Reversing a Process",
+          "file": "codewars/reversing-a-process.py",
+          "kata": "https://www.codewars.com/kata/5dad6e5264e25a001918a1fc",
+          "summary": "Retrouver une chaîne à partir d’un codage alphabétique multiplicatif ou signaler qu’il ne permet pas de retrouver un résultat unique.",
+          "version_label": "Python · version 1",
+          "example": "print(decode(\"1bonjour\"))"
+        },
+        {
+          "id": "roman-numerals-decoder",
+          "title": "Roman Numerals Decoder",
+          "file": "codewars/roman-numerals-decoder.py",
+          "kata": "https://www.codewars.com/kata/51b6249c4612257ac0000005",
+          "summary": "Convertir un nombre écrit en chiffres romains en entier en tenant compte des notations soustractives.",
+          "version_label": "Python · version 1",
+          "example": "print(solution(\"CDXLIV\"))",
+          "variants": [
+            {
+              "id": "roman-numerals-decoder-version-2",
+              "title": "Roman Numerals Decoder · Python · version 2",
+              "file": "codewars/roman-numerals-decoder-version-2.py",
+              "kata": "https://www.codewars.com/kata/51b6249c4612257ac0000005",
+              "summary": "Convertir un nombre écrit en chiffres romains en entier en tenant compte des notations soustractives.",
+              "version_label": "Python · version 2",
+              "example": "print(solution(\"CDXLIV\"))"
+            }
+          ]
+        },
+        {
+          "id": "roman-numerals-encoder",
+          "title": "Roman Numerals Encoder",
+          "file": "codewars/roman-numerals-encoder.py",
+          "kata": "https://www.codewars.com/kata/51b62bf6a9c58071c600001b",
+          "summary": "Écrire un entier en chiffres romains en utilisant la notation soustractive lorsque nécessaire.",
+          "version_label": "Python · version 1",
+          "example": "print(solution(2468))",
+          "variants": [
+            {
+              "id": "roman-numerals-encoder-version-2",
+              "title": "Roman Numerals Encoder · Python · version 2",
+              "file": "codewars/roman-numerals-encoder-version-2.py",
+              "kata": "https://www.codewars.com/kata/51b62bf6a9c58071c600001b",
+              "summary": "Écrire un entier en chiffres romains en utilisant la notation soustractive lorsque nécessaire.",
+              "version_label": "Python · version 2",
+              "example": "print(solution(2468))"
+            }
+          ]
+        },
+        {
+          "id": "roman-numerals-helper",
+          "title": "Roman Numerals Helper",
+          "file": "codewars/roman-numerals-helper.py",
+          "kata": "https://www.codewars.com/kata/51b66044bce5799a7f000003",
+          "summary": "Convertir des entiers en chiffres romains et relire la notation romaine dans l’autre sens.",
+          "version_label": "Python · version 1",
+          "example": "print(RomanNumerals.to_roman(1984))\nprint(RomanNumerals.from_roman(\"MMXXVI\"))"
+        },
+        {
+          "id": "screen-locking-patterns",
+          "title": "Screen Locking Patterns",
+          "file": "codewars/screen-locking-patterns.py",
+          "kata": "https://www.codewars.com/kata/585894545a8a07255e0002f1",
+          "summary": "Compter les tracés autorisés sur une grille de neuf points, pour un départ et un nombre de points donnés.",
+          "version_label": "Python · version 1",
+          "example": "print(count_patterns_from(\"A\", 3))",
+          "variants": [
+            {
+              "id": "screen-locking-patterns-version-2",
+              "title": "Screen Locking Patterns · Python · version 2",
+              "file": "codewars/screen-locking-patterns-version-2.py",
+              "kata": "https://www.codewars.com/kata/585894545a8a07255e0002f1",
+              "summary": "Compter les tracés autorisés sur une grille de neuf points, pour un départ et un nombre de points donnés.",
+              "version_label": "Python · version 2",
+              "example": "print(count_patterns_from(\"A\", 3))"
+            }
+          ]
+        },
+        {
+          "id": "shortest-word",
+          "title": "Shortest Word",
+          "file": "codewars/shortest-word.py",
+          "kata": "https://www.codewars.com/kata/57cebe1dc6fdc20c57000ac9",
+          "summary": "Donner la longueur du mot le plus court d’une phrase.",
+          "version_label": "Python · version 1",
+          "example": "print(find_short(\"Une phrase avec un mot court\"))"
+        },
+        {
+          "id": "shuffle-it-up",
+          "title": "Shuffle It Up",
+          "file": "codewars/shuffle-it-up.py",
+          "kata": "https://www.codewars.com/kata/5b997b066c77d521880001bd",
+          "summary": "Compter les permutations dans lesquelles aucun élément ne reste à sa position de départ.",
+          "version_label": "Python · version 1",
+          "example": "print(all_permuted(5))"
+        },
+        {
+          "id": "side-sorting-robot",
+          "title": "Side-Sorting Robot",
+          "file": "codewars/side-sorting-robot.py",
+          "kata": "https://www.codewars.com/kata/5e9ce15e9a872f002dc6dc94",
+          "summary": "Calculer le nombre minimal de déplacements pour trier les balles par ordre décroissant, chaque déplacement envoyant une balle à l’une des extrémités.",
+          "version_label": "Python · version 1",
+          "example": "print(side_sort([4, 1, 3, 2]))"
+        },
+        {
+          "id": "simple-encryption-number-1-alternating-split",
+          "title": "Simple Encryption #1 - Alternating Split",
+          "file": "codewars/simple-encryption-number-1-alternating-split.py",
+          "kata": "https://www.codewars.com/kata/57814d79a56c88e3e0000786",
+          "summary": "Permuter les caractères d’un texte en regroupant les positions alternées, puis appliquer l’opération inverse pour retrouver le texte initial.",
+          "version_label": "Python · version 1",
+          "example": "message = encrypt(\"Bonjour\", 2)\nprint(message)\nprint(decrypt(message, 2))",
+          "variants": [
+            {
+              "id": "simple-encryption-number-1-alternating-split-version-2",
+              "title": "Simple Encryption #1 - Alternating Split · Python · version 2",
+              "file": "codewars/simple-encryption-number-1-alternating-split-version-2.py",
+              "kata": "https://www.codewars.com/kata/57814d79a56c88e3e0000786",
+              "summary": "Permuter les caractères d’un texte en regroupant les positions alternées, puis appliquer l’opération inverse pour retrouver le texte initial.",
+              "version_label": "Python · version 2",
+              "example": "message = encrypt(\"Bonjour\", 2)\nprint(message)\nprint(decrypt(message, 2))"
+            }
+          ]
+        },
+        {
+          "id": "simple-fun-number-159-middle-permutation",
+          "title": "Simple Fun #159: Middle Permutation",
+          "file": "codewars/simple-fun-number-159-middle-permutation.py",
+          "kata": "https://www.codewars.com/kata/58ad317d1541651a740000c5",
+          "summary": "Trouver la permutation centrale des lettres distinctes d’une chaîne dans l’ordre alphabétique.",
+          "version_label": "Python · version 1",
+          "example": "print(middle_permutation(\"abcd\"))"
+        },
+        {
+          "id": "simple-fun-number-358-vertical-histogram-of-letters",
+          "title": "Simple Fun #358: Vertical Histogram Of Letters",
+          "file": "codewars/simple-fun-number-358-vertical-histogram-of-letters.py",
+          "kata": "https://www.codewars.com/kata/59cf0ba5d751dffef300001f",
+          "summary": "Dessiner un histogramme vertical à partir des fréquences des lettres majuscules d’une chaîne.",
+          "version_label": "Python · version 1",
+          "example": "print(vertical_histogram_of(\"BANANA 2026\"))"
+        },
+        {
+          "id": "simple-pig-latin",
+          "title": "Simple Pig Latin",
+          "file": "codewars/simple-pig-latin.py",
+          "kata": "https://www.codewars.com/kata/520b9d2ad5c005041100000f",
+          "summary": "Déplacer la première lettre de chaque mot à la fin et ajouter le suffixe prévu, tout en laissant la ponctuation isolée.",
+          "version_label": "Python · version 1",
+          "example": "print(pig_it(\"Bonjour tout le monde !\"))"
+        },
+        {
+          "id": "simple-square-numbers",
+          "title": "Simple square numbers",
+          "file": "codewars/simple-square-numbers.py",
+          "kata": "https://www.codewars.com/kata/5edc8c53d7cede0032eb6029",
+          "summary": "Trouver le plus petit carré positif qui, ajouté à l’entier donné, forme un autre carré parfait.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(15))"
+        },
+        {
+          "id": "sliding-puzzle-verification",
+          "title": "Sliding Puzzle Verification",
+          "file": "codewars/sliding-puzzle-verification.py",
+          "kata": "https://www.codewars.com/kata/5e28b3ff0acfbb001f348ccc",
+          "summary": "Vérifier que les tuiles d’une grille carrée sont déjà rangées dans l’ordre croissant, de gauche à droite puis de haut en bas.",
+          "version_label": "Python · version 1",
+          "example": "print(is_solved([[0, 1, 2], [3, 4, 5], [6, 7, 8]]))"
+        },
+        {
+          "id": "smallest-possible-sum",
+          "title": "Smallest possible sum",
+          "file": "codewars/smallest-possible-sum.py",
+          "kata": "https://www.codewars.com/kata/52f677797c461daaf7000740",
+          "summary": "Déterminer la plus petite somme qu’un tableau d’entiers positifs peut atteindre par soustractions répétées entre ses éléments.",
+          "version_label": "Python · version 1",
+          "example": "print(solution([12, 18, 30]))"
+        },
+        {
+          "id": "snail",
+          "title": "Snail",
+          "file": "codewars/snail.py",
+          "kata": "https://www.codewars.com/kata/521c2db8ddc89b9b7a0000c1",
+          "summary": "Lire les éléments d’une matrice carrée en spirale, de l’extérieur vers l’intérieur.",
+          "version_label": "Python · version 1",
+          "example": "print(snail([[1, 2, 3], [4, 5, 6], [7, 8, 9]]))",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "so-many-permutations",
+          "title": "So Many Permutations!",
+          "file": "codewars/so-many-permutations.py",
+          "kata": "https://www.codewars.com/kata/5254ca2719453dcc0b00027d",
+          "summary": "Renvoyer les permutations distinctes des caractères d’une chaîne, même lorsqu’elle contient des lettres répétées.",
+          "version_label": "Python · version 1",
+          "example": "print(sorted(permutations(\"aab\")))"
+        },
+        {
+          "id": "square-sums",
+          "title": "Square sums",
+          "file": "codewars/square-sums.py",
+          "kata": "https://www.codewars.com/kata/5a667236145c462103000091",
+          "summary": "Construire une permutation des entiers de 1 à n dont chaque paire de voisins a pour somme un carré parfait.",
+          "version_label": "Python · version 1",
+          "example": "print(square_sums(15))"
+        },
+        {
+          "id": "square-sums-simple",
+          "title": "Square sums (simple)",
+          "file": "codewars/square-sums-simple.py",
+          "kata": "https://www.codewars.com/kata/5a6b24d4e626c59d5b000066",
+          "summary": "Trouver un ordre des nombres de 1 à n avec une somme carrée entre voisins, ou signaler qu’aucun ordre ne convient.",
+          "version_label": "Python · version 1",
+          "example": "print(square_sums_row(15))"
+        },
+        {
+          "id": "stop-gninnips-my-sdrow",
+          "title": "Stop gninnipS My sdroW!",
+          "file": "codewars/stop-gninnips-my-sdrow.py",
+          "kata": "https://www.codewars.com/kata/5264d2b162488dc400000001",
+          "summary": "Inverser les mots de cinq lettres ou plus en laissant les mots plus courts et l’ordre des mots tels quels.",
+          "version_label": "Python · version 1",
+          "example": "print(spin_words(\"Une petite phrase toute simple\"))"
+        },
+        {
+          "id": "strings-mix",
+          "title": "Strings Mix",
+          "file": "codewars/strings-mix.py",
+          "kata": "https://www.codewars.com/kata/5629db57620258aa9d000014",
+          "summary": "Comparer les fréquences des lettres minuscules de deux chaînes et mettre en forme les répétitions dominantes.",
+          "version_label": "Python · version 1",
+          "example": "print(mix(\"aabccc\", \"abbbbbcc\"))"
+        },
+        {
+          "id": "strip-comments",
+          "title": "Strip Comments",
+          "file": "codewars/strip-comments.py",
+          "kata": "https://www.codewars.com/kata/51c8e37cee245da6b40000bd",
+          "summary": "Couper le texte de chaque ligne à partir du premier marqueur de commentaire reconnu et retirer les espaces de fin.",
+          "version_label": "Python · version 1",
+          "example": "print(solution(\"pomme # note\\npoire ! remarque\\nprune\", [\"#\", \"!\"]))"
+        },
+        {
+          "id": "substring-near-match",
+          "title": "Substring Near Match",
+          "file": "codewars/substring-near-match.py",
+          "kata": "https://www.codewars.com/kata/5f1a9e7293f079002fc4ca59",
+          "summary": "Repérer dans un texte les occurrences exactes ou suffisamment proches d’une sous-chaîne, selon les transformations autorisées.",
+          "version_label": "Python · version 1",
+          "example": "print(near_matches(\"chat\", \"un chat, un caht et un chaat\"))"
+        },
+        {
+          "id": "sudoku-solution-validator",
+          "title": "Sudoku Solution Validator",
+          "file": "codewars/sudoku-solution-validator.py",
+          "kata": "https://www.codewars.com/kata/529bf0e9bdf7657179000008",
+          "summary": "Vérifier une grille de Sudoku complétée en contrôlant les chiffres de chaque ligne, colonne et bloc.",
+          "version_label": "Python · version 1",
+          "example": "grille = [[1 + (3 * r + r // 3 + c) % 9 for c in range(9)] for r in range(9)]\nprint(validSolution(grille))"
+        },
+        {
+          "id": "sum-by-factors",
+          "title": "Sum by Factors",
+          "file": "codewars/sum-by-factors.py",
+          "kata": "https://www.codewars.com/kata/54d496788776e49e6b00052f",
+          "summary": "Pour chaque facteur premier présent, additionner les nombres de la liste qui sont divisibles par ce facteur.",
+          "version_label": "Python · version 1",
+          "example": "print(sum_for_list([21, -14, 10]))",
+          "variants": [
+            {
+              "id": "sum-by-factors-version-2",
+              "title": "Sum by Factors · Python · version 2",
+              "file": "codewars/sum-by-factors-version-2.py",
+              "kata": "https://www.codewars.com/kata/54d496788776e49e6b00052f",
+              "summary": "Pour chaque facteur premier présent, additionner les nombres de la liste qui sont divisibles par ce facteur.",
+              "version_label": "Python · version 2",
+              "example": "print(sum_for_list([21, -14, 10]))"
+            }
+          ]
+        },
+        {
+          "id": "sum-of-digits-slash-digital-root",
+          "title": "Sum of Digits / Digital Root",
+          "file": "codewars/sum-of-digits-slash-digital-root.py",
+          "kata": "https://www.codewars.com/kata/541c8630095125aba6000c00",
+          "summary": "Additionner les chiffres à plusieurs reprises jusqu’à obtenir un seul chiffre.",
+          "version_label": "Python · version 1",
+          "example": "print(digital_root(9875))"
+        },
+        {
+          "id": "sum-of-intervals",
+          "title": "Sum of Intervals",
+          "file": "codewars/sum-of-intervals.py",
+          "kata": "https://www.codewars.com/kata/52b7ed099cdc285c300001cd",
+          "summary": "Calculer la longueur couverte par une liste d’intervalles en comptant une seule fois les portions qui se chevauchent.",
+          "version_label": "Python · version 1",
+          "example": "print(sum_of_intervals([(0, 4), (2, 7), (9, 11)]))",
+          "variants": [
+            {
+              "id": "sum-of-intervals-version-2",
+              "title": "Sum of Intervals · Python · version 2",
+              "file": "codewars/sum-of-intervals-version-2.py",
+              "kata": "https://www.codewars.com/kata/52b7ed099cdc285c300001cd",
+              "summary": "Calculer la longueur couverte par une liste d’intervalles en comptant une seule fois les portions qui se chevauchent.",
+              "version_label": "Python · version 2",
+              "example": "print(sum_of_intervals([(0, 4), (2, 7), (9, 11)]))"
+            },
+            {
+              "id": "sum-of-intervals-version-3",
+              "title": "Sum of Intervals · Python · version 3",
+              "file": "codewars/sum-of-intervals-version-3.py",
+              "kata": "https://www.codewars.com/kata/52b7ed099cdc285c300001cd",
+              "summary": "Calculer la longueur couverte par une liste d’intervalles en comptant une seule fois les portions qui se chevauchent.",
+              "version_label": "Python · version 3",
+              "example": "print(sum_of_intervals([(0, 4), (2, 7), (9, 11)]))"
+            }
+          ]
+        },
+        {
+          "id": "sum-of-pairs",
+          "title": "Sum of Pairs",
+          "file": "codewars/sum-of-pairs.py",
+          "kata": "https://www.codewars.com/kata/54d81488b981293527000c8f",
+          "summary": "Trouver deux éléments dont la somme vaut la cible. Si plusieurs paires conviennent, retenir celle dont le second élément apparaît en premier.",
+          "version_label": "Python · version 1",
+          "example": "print(sum_pairs([8, 1, 5, 3, 4, 7], 9))",
+          "variants": [
+            {
+              "id": "sum-of-pairs-version-2",
+              "title": "Sum of Pairs · Python · version 2",
+              "file": "codewars/sum-of-pairs-version-2.py",
+              "kata": "https://www.codewars.com/kata/54d81488b981293527000c8f",
+              "summary": "Trouver deux éléments dont la somme vaut la cible. Si plusieurs paires conviennent, retenir celle dont le second élément apparaît en premier.",
+              "version_label": "Python · version 2",
+              "example": "print(sum_pairs([8, 1, 5, 3, 4, 7], 9))"
+            }
+          ]
+        },
+        {
+          "id": "summation-of-primes",
+          "title": "Summation Of Primes",
+          "file": "codewars/summation-of-primes.py",
+          "kata": "https://www.codewars.com/kata/59ab0ca4243eae9fec000088",
+          "summary": "Additionner les nombres premiers qui respectent la borne du kata.",
+          "version_label": "Python · version 1",
+          "example": "print(summationOfPrimes(20))"
+        },
+        {
+          "id": "sums-of-perfect-squares",
+          "title": "Sums of Perfect Squares",
+          "file": "codewars/sums-of-perfect-squares.py",
+          "kata": "https://www.codewars.com/kata/5a3af5b1ee1aaeabfe000084",
+          "summary": "Trouver le nombre minimal de carrés parfaits dont la somme vaut l’entier donné.",
+          "version_label": "Python · version 1",
+          "example": "print(sum_of_squares(43))"
+        },
+        {
+          "id": "t-dot-t-t-dot-38-the-sum-of-each-digits",
+          "title": "T.T.T.38: The sum of each digits",
+          "file": "codewars/t-dot-t-t-dot-38-the-sum-of-each-digits.py",
+          "kata": "https://www.codewars.com/kata/57b1f617b69bfc08cf00042a",
+          "summary": "Additionner les chiffres décimaux de tous les entiers compris dans un intervalle inclusif.",
+          "version_label": "Python · version 1",
+          "example": "print(sum_of_digits(8, 14))"
+        },
+        {
+          "id": "telephone-words",
+          "title": "telephone words",
+          "file": "codewars/telephone-words.py",
+          "kata": "https://www.codewars.com/kata/5653d33e78e3d9dfe600004e",
+          "summary": "Énumérer les combinaisons de lettres correspondant à des chiffres sur un clavier téléphonique.",
+          "version_label": "Python · version 1",
+          "example": "print(telephone_words(\"2013\"))"
+        },
+        {
+          "id": "the-millionth-fibonacci-kata",
+          "title": "The Millionth Fibonacci Kata",
+          "file": "codewars/the-millionth-fibonacci-kata.py",
+          "kata": "https://www.codewars.com/kata/53d40c1e2f13e331fc000c26",
+          "summary": "Calculer un nombre de Fibonacci, y compris pour des indices très grands ou négatifs.",
+          "version_label": "Python · version 1",
+          "example": "print(fib(25))\nprint(fib(-8))",
+          "packages": [
+            "numpy"
+          ],
+          "replacements": [
+            [
+              "np.object",
+              "object"
+            ]
+          ],
+          "note": "L’exécuteur utilise le type object, compatible avec la version actuelle de NumPy."
+        },
+        {
+          "id": "the-observed-pin",
+          "title": "The observed PIN",
+          "file": "codewars/the-observed-pin.py",
+          "kata": "https://www.codewars.com/kata/5263c6999e0f40dee200059d",
+          "summary": "Lister les suites possibles sur le clavier du kata en autorisant, pour chaque touche observée, les touches immédiatement voisines.",
+          "version_label": "Python · version 1",
+          "example": "print(get_pins(\"5\"))",
+          "variants": [
+            {
+              "id": "the-observed-pin-version-2",
+              "title": "The observed PIN · Python · version 2",
+              "file": "codewars/the-observed-pin-version-2.py",
+              "kata": "https://www.codewars.com/kata/5263c6999e0f40dee200059d",
+              "summary": "Lister les suites possibles sur le clavier du kata en autorisant, pour chaque touche observée, les touches immédiatement voisines.",
+              "version_label": "Python · version 2",
+              "example": "print(get_pins(\"5\"))"
+            }
+          ]
+        },
+        {
+          "id": "the-position-of-a-digital-string-in-a-infinite-digital-string",
+          "title": "The position of a digital string in a infinite digital string",
+          "file": "codewars/the-position-of-a-digital-string-in-a-infinite-digital-string.py",
+          "kata": "https://www.codewars.com/kata/582c1092306063791c000c00",
+          "summary": "Trouver la première position d’une suite de chiffres parmi les entiers positifs écrits les uns à la suite des autres.",
+          "version_label": "Python · version 1",
+          "example": "print(find_position(\"91011\"))"
+        },
+        {
+          "id": "total-increasing-or-decreasing-numbers-up-to-a-power-of-10",
+          "title": "Total increasing or decreasing numbers up to a power of 10",
+          "file": "codewars/total-increasing-or-decreasing-numbers-up-to-a-power-of-10.py",
+          "kata": "https://www.codewars.com/kata/55b195a69a6cc409ba000053",
+          "summary": "Compter les entiers sous une puissance de dix dont les chiffres sont monotones dans un sens ou dans l’autre.",
+          "version_label": "Python · version 1",
+          "example": "print(total_inc_dec(3))"
+        },
+        {
+          "id": "twice-linear",
+          "title": "Twice linear",
+          "file": "codewars/twice-linear.py",
+          "kata": "https://www.codewars.com/kata/5672682212c8ecf83e000050",
+          "summary": "Trouver un terme de la suite triée engendrée à partir de 1 par les transformations 2x + 1 et 3x + 1.",
+          "version_label": "Python · version 1",
+          "example": "print(dbl_linear(10))"
+        },
+        {
+          "id": "two-to-one",
+          "title": "Two to One",
+          "file": "codewars/two-to-one.py",
+          "kata": "https://www.codewars.com/kata/5656b6906de340bd1b0000ac",
+          "summary": "Rassembler les lettres de deux chaînes en retirant les doublons et en les triant.",
+          "version_label": "Python · version 1",
+          "example": "print(longest(\"banane\", \"abricot\"))"
+        },
+        {
+          "id": "unique-digits-sequence",
+          "title": "Unique digits sequence",
+          "file": "codewars/unique-digits-sequence.py",
+          "kata": "https://www.codewars.com/kata/599688d0e2800dda4e0001b0",
+          "summary": "Lire un terme de la suite qui choisit à chaque étape le plus petit entier encore inutilisé ne partageant aucun chiffre avec le terme précédent.",
+          "version_label": "Python · version 1",
+          "example": "print(find_num(12))",
+          "variants": [
+            {
+              "id": "unique-digits-sequence-version-2",
+              "title": "Unique digits sequence · Python · version 2",
+              "file": "codewars/unique-digits-sequence-version-2.py",
+              "kata": "https://www.codewars.com/kata/599688d0e2800dda4e0001b0",
+              "summary": "Lire un terme de la suite qui choisit à chaque étape le plus petit entier encore inutilisé ne partageant aucun chiffre avec le terme précédent.",
+              "version_label": "Python · version 2",
+              "example": "print(find_num(12))"
+            }
+          ]
+        },
+        {
+          "id": "unique-in-order",
+          "title": "Unique In Order",
+          "file": "codewars/unique-in-order.py",
+          "kata": "https://www.codewars.com/kata/54e6533c92449cc251001667",
+          "summary": "Retirer les répétitions consécutives d’une séquence tout en gardant l’ordre des éléments.",
+          "version_label": "Python · version 1",
+          "example": "print(unique_in_order(\"AAABCCCAAB\"))"
+        },
+        {
+          "id": "upside-down-numbers-challenge-edition",
+          "title": "Upside-Down Numbers - Challenge Edition",
+          "file": "codewars/upside-down-numbers-challenge-edition.py",
+          "kata": "https://www.codewars.com/kata/59f98052120be4abfa000304",
+          "summary": "Compter dans un intervalle les nombres qui se lisent de la même façon après une rotation de 180 degrés.",
+          "version_label": "Python · version 1",
+          "example": "print(upsidedown(\"10\", \"200\"))"
+        },
+        {
+          "id": "validate-a-pin-code",
+          "title": "Validate a PIN code",
+          "file": "codewars/validate-a-pin-code.py",
+          "kata": "https://www.codewars.com/kata/55f8a9c06c018a0d6e000132",
+          "summary": "Vérifier que la chaîne contient uniquement quatre ou six chiffres décimaux.",
+          "version_label": "Python · version 1",
+          "example": "print(validate_pin(\"123456\"), validate_pin(\"12a4\"))"
+        },
+        {
+          "id": "validate-sudoku-with-size-nxn",
+          "title": "Validate Sudoku with size `NxN`",
+          "file": "codewars/validate-sudoku-with-size-nxn.py",
+          "kata": "https://www.codewars.com/kata/540afbe2dc9f615d5e000425",
+          "summary": "Vérifier un Sudoku carré de taille variable en contrôlant les lignes, les colonnes et les blocs.",
+          "version_label": "Python · version 1",
+          "example": "grille = [[1, 2, 3, 4], [3, 4, 1, 2], [2, 1, 4, 3], [4, 3, 2, 1]]\nprint(Sudoku(grille).is_valid())"
+        },
+        {
+          "id": "vasya-clerk",
+          "title": "Vasya - Clerk",
+          "file": "codewars/vasya-clerk.py",
+          "kata": "https://www.codewars.com/kata/555615a77ebc7c2c8a0000b8",
+          "summary": "Simuler une file au guichet et vérifier que le caissier peut rendre la monnaie à tous les clients dans l’ordre.",
+          "version_label": "Python · version 1",
+          "example": "print(tickets([25, 50, 25, 100]))"
+        },
+        {
+          "id": "which-are-in",
+          "title": "Which are  in?",
+          "file": "codewars/which-are-in.py",
+          "kata": "https://www.codewars.com/kata/550554fd08b86f84fe000a58",
+          "summary": "Trier les chaînes d’une liste qui apparaissent à l’intérieur d’au moins une chaîne d’une autre liste.",
+          "version_label": "Python · version 1",
+          "example": "print(in_array([\"lac\", \"ver\", \"mer\"], [\"versant\", \"amer\", \"prairie\"]))"
+        },
+        {
+          "id": "which-x-for-that-sum",
+          "title": "Which x for that sum?",
+          "file": "codewars/which-x-for-that-sum.py",
+          "kata": "https://www.codewars.com/kata/5b1cd19fcd206af728000056",
+          "summary": "Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.",
+          "version_label": "Python · version 1",
+          "example": "print(solve(2))",
+          "variants": [
+            {
+              "id": "which-x-for-that-sum-version-c",
+              "title": "Which x for that sum? · C",
+              "file": "codewars/which-x-for-that-sum-version-c.c",
+              "kata": "https://www.codewars.com/kata/5b1cd19fcd206af728000056",
+              "summary": "Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.",
+              "version_label": "C",
+              "language": "C",
+              "note": "L’exécuteur de ce kata est disponible sur sa fiche Python."
+            },
+            {
+              "id": "which-x-for-that-sum-version-cpp",
+              "title": "Which x for that sum? · C++",
+              "file": "codewars/which-x-for-that-sum-version-cpp.cpp",
+              "kata": "https://www.codewars.com/kata/5b1cd19fcd206af728000056",
+              "summary": "Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.",
+              "version_label": "C++",
+              "language": "C++",
+              "note": "L’exécuteur de ce kata est disponible sur sa fiche Python."
+            },
+            {
+              "id": "which-x-for-that-sum-version-csharp",
+              "title": "Which x for that sum? · C#",
+              "file": "codewars/which-x-for-that-sum-version-csharp.cs",
+              "kata": "https://www.codewars.com/kata/5b1cd19fcd206af728000056",
+              "summary": "Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.",
+              "version_label": "C#",
+              "language": "C#",
+              "note": "L’exécuteur de ce kata est disponible sur sa fiche Python."
+            },
+            {
+              "id": "which-x-for-that-sum-version-coffeescript",
+              "title": "Which x for that sum? · CoffeeScript",
+              "file": "codewars/which-x-for-that-sum-version-coffeescript.coffee",
+              "kata": "https://www.codewars.com/kata/5b1cd19fcd206af728000056",
+              "summary": "Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.",
+              "version_label": "CoffeeScript",
+              "language": "CoffeeScript",
+              "note": "L’exécuteur de ce kata est disponible sur sa fiche Python."
+            }
+          ]
+        },
+        {
+          "id": "wumpus-world",
+          "title": "Wumpus world",
+          "file": "codewars/wumpus-world.py",
+          "kata": "https://www.codewars.com/kata/625c70f8a071210030c8e22a",
+          "summary": "Décider si l’or reste accessible dans une grotte à partir des informations disponibles sur les dangers et les cases adjacentes.",
+          "version_label": "Python · version 1",
+          "example": "grotte = [list(ligne) for ligne in (\"____\", \"____\", \"____\", \"_W_G\")]\nprint(wumpus_world(grotte))"
+        },
+        {
+          "id": "youre-a-square",
+          "title": "You're a square!",
+          "file": "codewars/youre-a-square.py",
+          "kata": "https://www.codewars.com/kata/54c27a33fb7da0db0100040e",
+          "summary": "Déterminer si l’entier donné est le carré d’un autre entier.",
+          "version_label": "Python · version 1",
+          "example": "print(is_square(49), is_square(50))"
+        },
+        {
           "id": "your-order-please",
-          "title": "Your Order Please",
-          "file": "python-challenges/Your Order Please.py",
-          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Your%20Order%20Please.py"
+          "title": "Your order,  please",
+          "file": "codewars/your-order-please.py",
+          "kata": "https://www.codewars.com/kata/55c45be3b2079eccff00010f",
+          "summary": "Réordonner les mots d’une phrase selon le chiffre de position que contient chaque mot.",
+          "version_label": "Python · version 1",
+          "example": "print(order(\"beau2 un1 jour3\"))"
         }
       ]
     },

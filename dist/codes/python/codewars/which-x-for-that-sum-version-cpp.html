@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Which x for that sum? · C++ · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Which x for that sum? · C++</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/which-x-for-that-sum-version-cpp.cpp" download>Télécharger le .cpp</a>
+      <a href="https://www.codewars.com/kata/5b1cd19fcd206af728000056">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="which-x-for-that-sum.html">Python · version 1</a>
+      <a href="which-x-for-that-sum-version-c.html">C</a>
+      <a href="which-x-for-that-sum-version-csharp.html">C#</a>
+      <a href="which-x-for-that-sum-version-coffeescript.html">CoffeeScript</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.</p>
+    <h2>Code C++</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code C++"><code id="python-source">#include &lt;cmath&gt;
+using namespace std;
+
+double solve(double m)
+{
+    return (2*m+1-pow(4*m+1,0.5))/2/m;
+}</code></pre>
+    <p class="python-note">L’exécuteur de ce kata est disponible sur sa fiche Python.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Magnet particules in boxes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Magnet particules in boxes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/magnet-particules-in-boxes.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/56c04261c3fcf33f2d000534">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Additionner les contributions d’une grille d’indices pour approcher la valeur d’une série double.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">cache = {}
+
+def doubles(maxk, maxn):
+    S = 0
+    for k in range(1,maxk+1):
+        for n in range(1,maxn+1):
+        	if (k,n) in cache: 
+        		S += cache[(k,n)]
+        	else:
+        		kn = 1/(k*(n+1)**(2*k))
+        		cache[(k,n)] = kn
+        		S += kn
+    return S</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(doubles(3, 10))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "magnet-particules-in-boxes.py", "code": "cache = {}\n\ndef doubles(maxk, maxn):\n    S = 0\n    for k in range(1,maxk+1):\n        for n in range(1,maxn+1):\n        \tif (k,n) in cache: \n        \t\tS += cache[(k,n)]\n        \telse:\n        \t\tkn = 1/(k*(n+1)**(2*k))\n        \t\tcache[(k,n)] = kn\n        \t\tS += kn\n    return S\n\nprint(doubles(3, 10))\n"}</script>
+  </main>
+</body>
+</html>

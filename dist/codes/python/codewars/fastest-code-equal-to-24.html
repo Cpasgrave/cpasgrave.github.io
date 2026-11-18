@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Fastest Code : Equal to 24 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Fastest Code : Equal to 24</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/fastest-code-equal-to-24.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/574e890e296e412a0400149c">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Combiner quatre nombres et des opérations arithmétiques pour obtenir une expression de valeur 24.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import combinations as comb
+from operator import add, sub, mul, truediv as div
+
+def equal_to_24(a,b,c,d):
+
+    ints,exp = [a,b,c,d],[]
+    ops = [mul,add,sub,div]
+
+    def rec(ints,exp,it=0):
+        if it==3 and ints == [24]: return exp
+        for i,j in comb(range(4-it),2):
+            m,n = ints[i],ints[j]
+            rest = [ints[k]for k in range(4-it)if k not in (i,j)]
+            for op in ops:
+                for p,q in [((m,n),),((m,n),(n,m))][op in (sub,div)]:
+                    if op==div and q==0: continue
+                    res = op(p,q)
+                    r = rec(rest+[res],exp+[op,p,q,res],it+1)
+                    if r: return r         
+        return None
+
+    def write(ints,exp):
+        symb = {add:&#x27;+&#x27;, sub:&#x27;-&#x27;, mul:&#x27;*&#x27;,div:&#x27;/&#x27;}
+        I = {i:iter([i]*ints.count(i)) for i in ints}
+        for i in range(3):
+            op,a,b,res = exp[i*4:i*4+4]
+            I[res] = iter([f&quot;({next(I[a])}{symb[op]}{next(I[b])})&quot;]+[*I.get(res,iter([]))])
+        return next(I[res])
+
+    sol = rec(ints,[])
+    if sol: return write([a,b,c,d],sol)
+    else: return &quot;It&#x27;s not possible!&quot;
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(equal_to_24(2, 3, 4, 6))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "fastest-code-equal-to-24.py", "code": "from itertools import combinations as comb\nfrom operator import add, sub, mul, truediv as div\n\ndef equal_to_24(a,b,c,d):\n\n    ints,exp = [a,b,c,d],[]\n    ops = [mul,add,sub,div]\n\n    def rec(ints,exp,it=0):\n        if it==3 and ints == [24]: return exp\n        for i,j in comb(range(4-it),2):\n            m,n = ints[i],ints[j]\n            rest = [ints[k]for k in range(4-it)if k not in (i,j)]\n            for op in ops:\n                for p,q in [((m,n),),((m,n),(n,m))][op in (sub,div)]:\n                    if op==div and q==0: continue\n                    res = op(p,q)\n                    r = rec(rest+[res],exp+[op,p,q,res],it+1)\n                    if r: return r         \n        return None\n\n    def write(ints,exp):\n        symb = {add:'+', sub:'-', mul:'*',div:'/'}\n        I = {i:iter([i]*ints.count(i)) for i in ints}\n        for i in range(3):\n            op,a,b,res = exp[i*4:i*4+4]\n            I[res] = iter([f\"({next(I[a])}{symb[op]}{next(I[b])})\"]+[*I.get(res,iter([]))])\n        return next(I[res])\n\n    sol = rec(ints,[])\n    if sol: return write([a,b,c,d],sol)\n    else: return \"It's not possible!\"\n\n\nprint(equal_to_24(2, 3, 4, 6))\n"}</script>
+  </main>
+</body>
+</html>

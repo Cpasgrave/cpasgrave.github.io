@@ -1,0 +1,1 @@
+pig_it=lambda s:' '.join(w[1:]+w[0]+'ay'*w.isalpha()for w in s.split())

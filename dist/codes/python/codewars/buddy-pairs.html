@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Buddy Pairs · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Buddy Pairs</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/buddy-pairs.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/59ccf051dcc4050f7800008f">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Trouver une paire d’entiers où chacune des sommes de diviseurs propres vaut l’autre entier plus un.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def divz(x):
+    div = {1}
+    for i in range(2,int(x**.5)+1):
+        if x%i==0:
+            div |= {i,x//i}
+    return sum(div)-1
+
+def buddy(a,b):
+    for m in range(a,b):
+        n = divz(m)
+        if n&lt;a: continue
+        if divz(n)==m: return [m,n]
+    return &#x27;Nothing&#x27;
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(buddy(40, 100))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "buddy-pairs.py", "code": "def divz(x):\n    div = {1}\n    for i in range(2,int(x**.5)+1):\n        if x%i==0:\n            div |= {i,x//i}\n    return sum(div)-1\n\ndef buddy(a,b):\n    for m in range(a,b):\n        n = divz(m)\n        if n\u003ca: continue\n        if divz(n)==m: return [m,n]\n    return 'Nothing'\n\n\nprint(buddy(40, 100))\n"}</script>
+  </main>
+</body>
+</html>

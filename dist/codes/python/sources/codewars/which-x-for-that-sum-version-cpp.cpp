@@ -1,0 +1,7 @@
+#include <cmath>
+using namespace std;
+
+double solve(double m)
+{
+    return (2*m+1-pow(4*m+1,0.5))/2/m;
+}

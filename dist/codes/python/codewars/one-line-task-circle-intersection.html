@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>One Line Task: Circle Intersection · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>One Line Task: Circle Intersection</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/one-line-task-circle-intersection.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5908242330e4f567e90000a3">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Calculer l’aire commune de deux cercles de même rayon puis l’arrondir à l’entier inférieur, avec une solution de longueur limitée.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from numpy import*;circleIntersection=lambda A,B,r:[(g-sin(g))*r*r//1for g in[2*emath.arccos(linalg.norm(r_[A]-r_[B])/2/r)]][0]</code></pre>
+    <p class="python-note">L’exécuteur ajoute une espace de séparation pour la version actuelle de Python.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(circleIntersection([0, 0], [3, 0], 3))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["numpy"], "filename": "one-line-task-circle-intersection.py", "code": "from numpy import*;circleIntersection=lambda A,B,r:[(g-sin(g))*r*r//1 for g in[2*emath.arccos(linalg.norm(r_[A]-r_[B])/2/r)]][0]\n\nprint(circleIntersection([0, 0], [3, 0], 3))\n"}</script>
+  </main>
+</body>
+</html>

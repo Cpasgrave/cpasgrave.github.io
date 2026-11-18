@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Strings Mix · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Strings Mix</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/strings-mix.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5629db57620258aa9d000014">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Comparer les fréquences des lettres minuscules de deux chaînes et mettre en forme les répétitions dominantes.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">mix=lambda s1,s2:&#x27;/&#x27;.join(sorted([[&#x27;1:&#x27;+c1*c,&#x27;2:&#x27;+c2*c,&#x27;=:&#x27;+c1*c][(c2&gt;=c1)+(c2==c1)]for c in set(s1+s2)-{&#x27; &#x27;}for c1,c2 in[(s1.count(c),s2.count(c))]if max(c1,c2)&gt;1 and ord(c)&gt;96],key=lambda a:len(a)*10000-100*ord(a[0])-ord(a[-1]))[::-1])
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(mix(&quot;aabccc&quot;, &quot;abbbbbcc&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "strings-mix.py", "code": "mix=lambda s1,s2:'/'.join(sorted([['1:'+c1*c,'2:'+c2*c,'=:'+c1*c][(c2>=c1)+(c2==c1)]for c in set(s1+s2)-{' '}for c1,c2 in[(s1.count(c),s2.count(c))]if max(c1,c2)>1 and ord(c)>96],key=lambda a:len(a)*10000-100*ord(a[0])-ord(a[-1]))[::-1])\n\n\nprint(mix(\"aabccc\", \"abbbbbcc\"))\n"}</script>
+  </main>
+</body>
+</html>

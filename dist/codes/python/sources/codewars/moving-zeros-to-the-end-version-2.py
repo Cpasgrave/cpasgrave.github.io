@@ -1,0 +1,1 @@
+move_zeros=lambda a,g=lambda a,f=lambda x:str(x)[0]!='0'or x:[*filter(f,a)]:g(a)+[0]*(len(a)-len(g(a)))

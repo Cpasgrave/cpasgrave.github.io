@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Decode the Morse code · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Decode the Morse code</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/decode-the-morse-code.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/54b724efac3d5402db00065e">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Transformer un message en code Morse en texte en reconnaissant les séparations entre lettres et mots.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def decodeMorse(morseCode):
+    phrase = []
+    for word in list(w.split() for w in morseCode.split(&#x27;   &#x27;)):
+        mot=[]
+        for c in word:
+            mot.append(MORSE_CODE[c])
+        phrase.append(&#x27;&#x27;.join(mot))
+    while phrase[0] == &quot;&quot;:
+        phrase.remove(&quot;&quot;)
+    return &quot; &quot;.join(phrase)</code></pre>
+    <p class="python-note">L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>MORSE_CODE = {&quot;...&quot;: &quot;S&quot;, &quot;---&quot;: &quot;O&quot;}
+print(decodeMorse(&quot;... --- ...&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "decode-the-morse-code.py", "code": "def decodeMorse(morseCode):\n    phrase = []\n    for word in list(w.split() for w in morseCode.split('   ')):\n        mot=[]\n        for c in word:\n            mot.append(MORSE_CODE[c])\n        phrase.append(''.join(mot))\n    while phrase[0] == \"\":\n        phrase.remove(\"\")\n    return \" \".join(phrase)\n\nMORSE_CODE = {\"...\": \"S\", \"---\": \"O\"}\nprint(decodeMorse(\"... --- ...\"))\n"}</script>
+  </main>
+</body>
+</html>

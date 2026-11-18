@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Integers: Recreation One · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Integers: Recreation One · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/integers-recreation-one-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/55aa075506463dac6600010d">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="integers-recreation-one.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Trouver les entiers d’un intervalle dont la somme des carrés de leurs diviseurs est un carré parfait.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def list_squared(m,n):
+  res = []
+  for N in range(m,n+1):   
+    div = set()
+    for d in range(1,int(N**.5)+1):
+        if N%d==0: 
+          m = N//d
+          div|={d*d,m*m}
+    s = sum(div)
+    r = int(s**.5)
+    if r*r==s:res.append([N,s])
+  return res</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(list_squared(1, 75))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "integers-recreation-one-version-2.py", "code": "def list_squared(m,n):\n  res = []\n  for N in range(m,n+1):   \n    div = set()\n    for d in range(1,int(N**.5)+1):\n        if N%d==0: \n          m = N//d\n          div|={d*d,m*m}\n    s = sum(div)\n    r = int(s**.5)\n    if r*r==s:res.append([N,s])\n  return res\n\nprint(list_squared(1, 75))\n"}</script>
+  </main>
+</body>
+</html>

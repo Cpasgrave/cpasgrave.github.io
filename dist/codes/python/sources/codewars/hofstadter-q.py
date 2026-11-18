@@ -1,0 +1,1 @@
+hofstadter_Q = lambda n,a=[0,1,1]:[a.append(a[i-a[i-1]]+a[i-a[i-2]])for i in range(len(a),len(a)+n)] and a[n]

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Block sequence · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Block sequence</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/block-sequence.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5e1ab1b9fe268c0033680e5f">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Déterminer un chiffre à une position donnée dans la concaténation des blocs 1, 12, 123 et ainsi de suite.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from decimal import Decimal as D
+
+rangesum = lambda x:x*(x+1)/2
+
+def x_index(x,per_dn,dn):
+
+    base = per_dn[dn-1]
+    rest = x-10**(dn-1)+1
+    return D(base)+D(rest*sum(i*9*10**(i-1) for i in range(1,dn)))+D(rangesum(rest)*dn)
+
+def solve(n):
+
+    # x est l&#x27;entier le plus bas pour lequel la série 
+    # 112123123412345...(ici 5) contient un nombre de chiffres &gt; n
+    digit_number = 0
+    index = D(0)
+    previous = 0
+    per_digit_number = {0:0}
+    # la première boucle cherche le nombre de chiffres qui composent x
+    while True:
+        digit_number += 1
+        multiplicator = 9*10**(digit_number-1)
+        index = D(previous) + D(multiplicator*sum(i*9*10**(i-1)for i in range(1,digit_number))) + D(digit_number*rangesum(multiplicator))
+        per_digit_number[digit_number] = index
+        if index&gt;n: break
+        previous = index
+
+    # a partir de ce point, le nombre de chiffres de x est connu
+    # let&#x27;s go half by half ...
+    lo = D(10**(digit_number-1)-1)
+    hi = D(10**(digit_number)-1)
+    while hi-lo&gt;1:
+        mid = (lo+hi)//2
+        test = x_index(mid,per_digit_number,digit_number)
+        if test&gt;n: hi = mid
+        else: lo = mid
+
+    index = x_index(lo,per_digit_number,digit_number)
+    x = lo
+    to_go = n-index
+    if to_go==0: return int(str(x)[-1])
+    # le x qu&#x27;on cherchait est donc le &#x27;lo&#x27; trouvé.
+    # et on a l&#x27;index à la fin de cette série (index)
+
+    # reste à chercher y, premier entier pour lequel la série 
+    # 123456...(y-1)(y) sera la première série (incomplète)
+    # qui, ajoutée à l&#x27;index donné par x, mène à l&#x27;index n
+
+    # on cherche d&#x27;abord le nombre de chiffres de y:
+    ydn = 0
+    jump = 0
+    while True:
+        ydn += 1
+        test = jump+ydn*9*(10**(ydn-1))
+        if test&gt;to_go: break
+        jump = test
+
+    # finalement, on peut chercher y
+    lo = D(10**(ydn-1))
+    hi = D(10**(ydn)-1)
+    base = sum(9*i*10**(i-1)for i in range(1,ydn))
+    while hi-lo&gt;1:
+        mid = (lo+hi)//2
+        test = base+ydn*(mid-10**(ydn-1)+1)
+        if test&gt;to_go: hi = mid
+        else: lo = mid
+
+    idx = base+ydn*(hi-10**(ydn-1)+1)
+    diff = int(idx-to_go)
+    y = hi
+    print(n)
+    return int(&#x27;&#x27;.join(str(y-i)for i in range(diff//ydn,-1,-1))[-diff-1])
+    
+    
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(solve(21))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "block-sequence.py", "code": "from decimal import Decimal as D\n\nrangesum = lambda x:x*(x+1)/2\n\ndef x_index(x,per_dn,dn):\n\n    base = per_dn[dn-1]\n    rest = x-10**(dn-1)+1\n    return D(base)+D(rest*sum(i*9*10**(i-1) for i in range(1,dn)))+D(rangesum(rest)*dn)\n\ndef solve(n):\n\n    # x est l'entier le plus bas pour lequel la série \n    # 112123123412345...(ici 5) contient un nombre de chiffres > n\n    digit_number = 0\n    index = D(0)\n    previous = 0\n    per_digit_number = {0:0}\n    # la première boucle cherche le nombre de chiffres qui composent x\n    while True:\n        digit_number += 1\n        multiplicator = 9*10**(digit_number-1)\n        index = D(previous) + D(multiplicator*sum(i*9*10**(i-1)for i in range(1,digit_number))) + D(digit_number*rangesum(multiplicator))\n        per_digit_number[digit_number] = index\n        if index>n: break\n        previous = index\n\n    # a partir de ce point, le nombre de chiffres de x est connu\n    # let's go half by half ...\n    lo = D(10**(digit_number-1)-1)\n    hi = D(10**(digit_number)-1)\n    while hi-lo>1:\n        mid = (lo+hi)//2\n        test = x_index(mid,per_digit_number,digit_number)\n        if test>n: hi = mid\n        else: lo = mid\n\n    index = x_index(lo,per_digit_number,digit_number)\n    x = lo\n    to_go = n-index\n    if to_go==0: return int(str(x)[-1])\n    # le x qu'on cherchait est donc le 'lo' trouvé.\n    # et on a l'index à la fin de cette série (index)\n\n    # reste à chercher y, premier entier pour lequel la série \n    # 123456...(y-1)(y) sera la première série (incomplète)\n    # qui, ajoutée à l'index donné par x, mène à l'index n\n\n    # on cherche d'abord le nombre de chiffres de y:\n    ydn = 0\n    jump = 0\n    while True:\n        ydn += 1\n        test = jump+ydn*9*(10**(ydn-1))\n        if test>to_go: break\n        jump = test\n\n    # finalement, on peut chercher y\n    lo = D(10**(ydn-1))\n    hi = D(10**(ydn)-1)\n    base = sum(9*i*10**(i-1)for i in range(1,ydn))\n    while hi-lo>1:\n        mid = (lo+hi)//2\n        test = base+ydn*(mid-10**(ydn-1)+1)\n        if test>to_go: hi = mid\n        else: lo = mid\n\n    idx = base+ydn*(hi-10**(ydn-1)+1)\n    diff = int(idx-to_go)\n    y = hi\n    print(n)\n    return int(''.join(str(y-i)for i in range(diff//ydn,-1,-1))[-diff-1])\n    \n    \n\n\nprint(solve(21))\n"}</script>
+  </main>
+</body>
+</html>

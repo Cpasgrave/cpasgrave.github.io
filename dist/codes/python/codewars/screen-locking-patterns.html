@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Screen Locking Patterns · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Screen Locking Patterns</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/screen-locking-patterns.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/585894545a8a07255e0002f1">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="screen-locking-patterns-version-2.html">Python · version 2</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Compter les tracés autorisés sur une grille de neuf points, pour un départ et un nombre de points donnés.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def count_patterns_from(firstPoint, length):
+    link = {
+    &quot;A&quot;: [&quot;BC&quot;,&quot;F&quot;,&quot;EI&quot;,&quot;H&quot;,&quot;DG&quot;],
+    &quot;B&quot;: [&quot;C&quot;,&quot;F&quot;,&quot;I&quot;,&quot;EH&quot;,&quot;G&quot;,&quot;D&quot;,&quot;A&quot;],
+    &quot;C&quot;: [&quot;FI&quot;,&quot;H&quot;,&quot;EG&quot;,&quot;D&quot;,&quot;BA&quot;],
+    &quot;D&quot;: [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;EF&quot;,&quot;I&quot;,&quot;H&quot;,&quot;G&quot;],
+    &quot;E&quot;: [&quot;B&quot;,&quot;C&quot;,&quot;F&quot;,&quot;I&quot;,&quot;H&quot;,&quot;G&quot;,&quot;D&quot;,&quot;A&quot;],
+    &quot;F&quot;: [&quot;C&quot;,&quot;I&quot;,&quot;H&quot;,&quot;G&quot;,&quot;ED&quot;,&quot;A&quot;,&quot;B&quot;],
+    &quot;G&quot;: [&quot;DA&quot;,&quot;B&quot;,&quot;EC&quot;,&quot;F&quot;,&quot;HI&quot;],
+    &quot;H&quot;: [&quot;EB&quot;,&quot;C&quot;,&quot;F&quot;,&quot;I&quot;,&quot;G&quot;,&quot;D&quot;,&quot;A&quot;],
+    &quot;I&quot;: [&quot;FC&quot;,&quot;HG&quot;,&quot;D&quot;,&quot;EA&quot;,&quot;B&quot;],
+    }
+    count = 0
+    paths = [firstPoint]
+    while paths:
+        path = paths.pop()
+        if len(path)==length:
+            count += 1
+            continue
+        for nxt in link[path[-1]]:
+            nx = nxt[0]
+            if nx in path:
+                if len(nxt)==2:
+                    nx = nxt[1]
+                    if nx in path: continue
+                    else: paths.append(path+nx)
+                else: continue
+            else: paths.append(path+nx)
+    return count</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(count_patterns_from(&quot;A&quot;, 3))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "screen-locking-patterns.py", "code": "def count_patterns_from(firstPoint, length):\n    link = {\n    \"A\": [\"BC\",\"F\",\"EI\",\"H\",\"DG\"],\n    \"B\": [\"C\",\"F\",\"I\",\"EH\",\"G\",\"D\",\"A\"],\n    \"C\": [\"FI\",\"H\",\"EG\",\"D\",\"BA\"],\n    \"D\": [\"A\",\"B\",\"C\",\"EF\",\"I\",\"H\",\"G\"],\n    \"E\": [\"B\",\"C\",\"F\",\"I\",\"H\",\"G\",\"D\",\"A\"],\n    \"F\": [\"C\",\"I\",\"H\",\"G\",\"ED\",\"A\",\"B\"],\n    \"G\": [\"DA\",\"B\",\"EC\",\"F\",\"HI\"],\n    \"H\": [\"EB\",\"C\",\"F\",\"I\",\"G\",\"D\",\"A\"],\n    \"I\": [\"FC\",\"HG\",\"D\",\"EA\",\"B\"],\n    }\n    count = 0\n    paths = [firstPoint]\n    while paths:\n        path = paths.pop()\n        if len(path)==length:\n            count += 1\n            continue\n        for nxt in link[path[-1]]:\n            nx = nxt[0]\n            if nx in path:\n                if len(nxt)==2:\n                    nx = nxt[1]\n                    if nx in path: continue\n                    else: paths.append(path+nx)\n                else: continue\n            else: paths.append(path+nx)\n    return count\n\nprint(count_patterns_from(\"A\", 3))\n"}</script>
+  </main>
+</body>
+</html>

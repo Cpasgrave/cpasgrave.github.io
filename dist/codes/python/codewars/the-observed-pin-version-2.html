@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>The observed PIN · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>The observed PIN · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/the-observed-pin-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5263c6999e0f40dee200059d">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="the-observed-pin.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Lister les suites possibles sur le clavier du kata en autorisant, pour chaque touche observée, les touches immédiatement voisines.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def get_pins(observed):
+    adj = {
+    &#x27;1&#x27;:&#x27;24&#x27;,
+    &#x27;2&#x27;:&#x27;135&#x27;,
+    &#x27;3&#x27;:&#x27;26&#x27;,
+    &#x27;4&#x27;:&#x27;157&#x27;,
+    &#x27;5&#x27;:&#x27;2468&#x27;,
+    &#x27;6&#x27;:&#x27;359&#x27;,
+    &#x27;7&#x27;:&#x27;48&#x27;,
+    &#x27;8&#x27;:&#x27;5790&#x27;,
+    &#x27;9&#x27;:&#x27;68&#x27;,
+    &#x27;0&#x27;:&#x27;8&#x27;,
+    }
+    possible = [&#x27;&#x27;]
+    for i in range(len(observed)):
+        oi = observed[i]
+        for j in range(len(possible)):
+            possible += [possible[j]+a for a in adj[oi]]
+            possible[j] += oi
+    return possible</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(get_pins(&quot;5&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "the-observed-pin-version-2.py", "code": "def get_pins(observed):\n    adj = {\n    '1':'24',\n    '2':'135',\n    '3':'26',\n    '4':'157',\n    '5':'2468',\n    '6':'359',\n    '7':'48',\n    '8':'5790',\n    '9':'68',\n    '0':'8',\n    }\n    possible = ['']\n    for i in range(len(observed)):\n        oi = observed[i]\n        for j in range(len(possible)):\n            possible += [possible[j]+a for a in adj[oi]]\n            possible[j] += oi\n    return possible\n\nprint(get_pins(\"5\"))\n"}</script>
+  </main>
+</body>
+</html>

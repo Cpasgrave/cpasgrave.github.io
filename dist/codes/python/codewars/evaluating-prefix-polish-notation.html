@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Evaluating prefix Polish notation · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Evaluating prefix Polish notation</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/evaluating-prefix-polish-notation.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5e5b7f55c2e8ae0016f42339">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Évaluer une expression écrite avec les opérateurs placés avant leurs arguments, sans parenthèses.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def calculate(exp):
+	exp,stack,flag=exp.split(),[],0
+	if len(exp)&lt;2: return float(*exp)
+	for e in exp:
+		if e not in &#x27;+-*/&#x27;:
+			stack+=[e]
+			flag+=1
+			while flag==2:
+				b,a,op=[stack.pop()for _ in [0]*3]
+				e=eval(a+op+b)
+				if not stack: return e
+				flag=1+(stack[-1]not in&#x27;+-*/&#x27;)
+				stack+=[str(e)]
+		else: 
+			flag=0
+			stack+=[e]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(calculate(&quot;+ 3 * 4 2&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "evaluating-prefix-polish-notation.py", "code": "def calculate(exp):\n\texp,stack,flag=exp.split(),[],0\n\tif len(exp)\u003c2: return float(*exp)\n\tfor e in exp:\n\t\tif e not in '+-*/':\n\t\t\tstack+=[e]\n\t\t\tflag+=1\n\t\t\twhile flag==2:\n\t\t\t\tb,a,op=[stack.pop()for _ in [0]*3]\n\t\t\t\te=eval(a+op+b)\n\t\t\t\tif not stack: return e\n\t\t\t\tflag=1+(stack[-1]not in'+-*/')\n\t\t\t\tstack+=[str(e)]\n\t\telse: \n\t\t\tflag=0\n\t\t\tstack+=[e]\n\nprint(calculate(\"+ 3 * 4 2\"))\n"}</script>
+  </main>
+</body>
+</html>

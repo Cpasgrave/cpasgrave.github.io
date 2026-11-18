@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Human readable duration format · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Human readable duration format</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/human-readable-duration-format.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/52742f58faf5485cae000b9a">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Afficher une durée en secondes sous une forme lisible, avec les années, jours, heures, minutes et secondes utiles.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def format_duration(t):
+	q=[60,60,24,365,9**9]
+	s=[&quot;second&quot;,&quot;minute&quot;,&quot;hour&quot;,&quot;day&quot;,&quot;year&quot;]
+	r=[f&quot;{m} {s[i]}{&#x27;s&#x27;*(m&gt;1)}&quot;for t in[t]for i in range(5)for t,m in[divmod(t,q[i])]if m][::-1]
+	return r and f&quot;{&#x27; and &#x27;*(len(r)&gt;1)}&quot;.join([&#x27;, &#x27;.join(r[:-1]),r[-1]])or&#x27;now&#x27;</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(format_duration(3665))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "human-readable-duration-format.py", "code": "def format_duration(t):\n\tq=[60,60,24,365,9**9]\n\ts=[\"second\",\"minute\",\"hour\",\"day\",\"year\"]\n\tr=[f\"{m} {s[i]}{'s'*(m>1)}\"for t in[t]for i in range(5)for t,m in[divmod(t,q[i])]if m][::-1]\n\treturn r and f\"{' and '*(len(r)>1)}\".join([', '.join(r[:-1]),r[-1]])or'now'\n\nprint(format_duration(3665))\n"}</script>
+  </main>
+</body>
+</html>

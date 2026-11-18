@@ -1,0 +1,1 @@
+solve=lambda s,g:next(((a,b)for a in range(g,s,g)for b in[s-a]if b%g==0),-1)

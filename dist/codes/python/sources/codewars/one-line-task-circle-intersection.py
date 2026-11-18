@@ -1,0 +1,1 @@
+from numpy import*;circleIntersection=lambda A,B,r:[(g-sin(g))*r*r//1for g in[2*emath.arccos(linalg.norm(r_[A]-r_[B])/2/r)]][0]

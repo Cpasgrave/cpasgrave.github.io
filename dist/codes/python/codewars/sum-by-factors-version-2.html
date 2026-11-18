@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Sum by Factors · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Sum by Factors · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/sum-by-factors-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/54d496788776e49e6b00052f">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="sum-by-factors.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Pour chaque facteur premier présent, additionner les nombres de la liste qui sont divisibles par ce facteur.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from collections import defaultdict as dd
+def pFac(n):
+    if n&lt;2: return {}
+    fac = dd(int)
+    while n%2==0:
+        n //= 2
+        fac[2] += 1
+    p = 3
+    while p &lt;= n:
+        if n%p==0:
+            n //= p
+            fac[p] += 1
+        else: p += 2
+    return fac
+
+def sum_for_list(lst):
+  dic = {}
+  for n in lst:
+  	primes = pFac(abs(n))
+  	for p in primes:
+  	  dic[p]=dic.get(p,0)+n
+  return [[k,v]for k,v in sorted(dic.items())]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(sum_for_list([21, -14, 10]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "sum-by-factors-version-2.py", "code": "from collections import defaultdict as dd\ndef pFac(n):\n    if n\u003c2: return {}\n    fac = dd(int)\n    while n%2==0:\n        n //= 2\n        fac[2] += 1\n    p = 3\n    while p \u003c= n:\n        if n%p==0:\n            n //= p\n            fac[p] += 1\n        else: p += 2\n    return fac\n\ndef sum_for_list(lst):\n  dic = {}\n  for n in lst:\n  \tprimes = pFac(abs(n))\n  \tfor p in primes:\n  \t  dic[p]=dic.get(p,0)+n\n  return [[k,v]for k,v in sorted(dic.items())]\n\nprint(sum_for_list([21, -14, 10]))\n"}</script>
+  </main>
+</body>
+</html>

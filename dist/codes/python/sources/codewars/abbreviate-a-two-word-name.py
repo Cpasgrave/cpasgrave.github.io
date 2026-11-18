@@ -1,0 +1,1 @@
+abbrevName=lambda n:'.'.join(map(lambda x:x.upper()[0],n.split()))

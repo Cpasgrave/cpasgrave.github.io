@@ -1,0 +1,1 @@
+hex_string_to_RGB = lambda h:{c:int(h[i:i+2],16)for c,i in zip('rgb',(1,3,5))}

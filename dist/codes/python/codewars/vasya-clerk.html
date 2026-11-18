@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Vasya - Clerk · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Vasya - Clerk</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/vasya-clerk.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/555615a77ebc7c2c8a0000b8">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Simuler une file au guichet et vérifier que le caissier peut rendre la monnaie à tous les clients dans l’ordre.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def tickets(people):
+    change = {25: 0, 50: 0}
+    for i in people:
+        if i == 25:
+            change[25] += 1
+        if i == 50:
+            change[25] -= 1
+            change[50] += 1
+        if i == 100:
+            if change[50] &gt; 0:
+                change[50] -= 1
+                change[25] -= 1
+            else:
+                change[25] -= 3
+        if change[25] &lt; 0 or change[50] &lt; 0:
+            return &quot;NO&quot;
+    return &quot;YES&quot;</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(tickets([25, 50, 25, 100]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "vasya-clerk.py", "code": "def tickets(people):\n    change = {25: 0, 50: 0}\n    for i in people:\n        if i == 25:\n            change[25] += 1\n        if i == 50:\n            change[25] -= 1\n            change[50] += 1\n        if i == 100:\n            if change[50] > 0:\n                change[50] -= 1\n                change[25] -= 1\n            else:\n                change[25] -= 3\n        if change[25] \u003c 0 or change[50] \u003c 0:\n            return \"NO\"\n    return \"YES\"\n\nprint(tickets([25, 50, 25, 100]))\n"}</script>
+  </main>
+</body>
+</html>

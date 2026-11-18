@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Factorial tail · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Factorial tail</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/factorial-tail.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/55c4eb777e07c13528000021">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Compter les zéros finaux de l’écriture d’une factorielle dans la base demandée.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">primz = [2]+[pz.append(n) or n for pz in[[2]]for n in range(3,256)if all(n%p for p in pz)]
+
+def primecomp(b):
+	pc = {}
+	for p in primz:
+		if p&gt;b: break
+		while b%p==0:
+			pc[p] = pc.get(p,0)+1
+			b //= p
+	return pc
+
+def zeroes(b,n):
+	b_pc = primecomp(b)
+	fac_n_pc = {}
+	for p in b_pc:
+		k = 1
+		pk = p**k
+		while pk&lt;=n:
+			fac_n_pc[p] = fac_n_pc.get(p,0)+n//pk
+			k += 1
+			pk = p**k
+	return min([fac_n_pc[p]//b_pc[p]for p in fac_n_pc],default=0)</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(zeroes(10, 25))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "factorial-tail.py", "code": "primz = [2]+[pz.append(n) or n for pz in[[2]]for n in range(3,256)if all(n%p for p in pz)]\n\ndef primecomp(b):\n\tpc = {}\n\tfor p in primz:\n\t\tif p>b: break\n\t\twhile b%p==0:\n\t\t\tpc[p] = pc.get(p,0)+1\n\t\t\tb //= p\n\treturn pc\n\ndef zeroes(b,n):\n\tb_pc = primecomp(b)\n\tfac_n_pc = {}\n\tfor p in b_pc:\n\t\tk = 1\n\t\tpk = p**k\n\t\twhile pk\u003c=n:\n\t\t\tfac_n_pc[p] = fac_n_pc.get(p,0)+n//pk\n\t\t\tk += 1\n\t\t\tpk = p**k\n\treturn min([fac_n_pc[p]//b_pc[p]for p in fac_n_pc],default=0)\n\nprint(zeroes(10, 25))\n"}</script>
+  </main>
+</body>
+</html>

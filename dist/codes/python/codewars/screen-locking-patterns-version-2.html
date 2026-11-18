@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Screen Locking Patterns · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Screen Locking Patterns · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/screen-locking-patterns-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/585894545a8a07255e0002f1">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="screen-locking-patterns.html">Python · version 1</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Compter les tracés autorisés sur une grille de neuf points, pour un départ et un nombre de points donnés.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def count_patterns_from(firstPoint, length):
+  if length in [0,1]: return length
+  nextPoints = {&#x27;A&#x27;:[&#x27;BC&#x27;,&#x27;F&#x27;,&#x27;EI&#x27;,&#x27;H&#x27;,&#x27;DG&#x27;],
+                &#x27;B&#x27;:[&#x27;C&#x27;,&#x27;F&#x27;,&#x27;I&#x27;,&#x27;EH&#x27;,&#x27;G&#x27;,&#x27;D&#x27;,&#x27;A&#x27;],
+                &#x27;C&#x27;:[&#x27;FI&#x27;,&#x27;H&#x27;,&#x27;EG&#x27;,&#x27;D&#x27;,&#x27;BA&#x27;],
+                &#x27;D&#x27;:[&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;EF&#x27;,&#x27;I&#x27;,&#x27;H&#x27;,&#x27;G&#x27;],
+                &#x27;E&#x27;:[&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;F&#x27;,&#x27;I&#x27;,&#x27;H&#x27;,&#x27;G&#x27;,&#x27;D&#x27;],
+                &#x27;F&#x27;:[&#x27;C&#x27;,&#x27;B&#x27;,&#x27;A&#x27;,&#x27;ED&#x27;,&#x27;G&#x27;,&#x27;H&#x27;,&#x27;I&#x27;],
+                &#x27;G&#x27;:[&#x27;DA&#x27;,&#x27;B&#x27;,&#x27;EC&#x27;,&#x27;F&#x27;,&#x27;HI&#x27;],
+                &#x27;H&#x27;:[&#x27;G&#x27;,&#x27;D&#x27;,&#x27;A&#x27;,&#x27;EB&#x27;,&#x27;C&#x27;,&#x27;F&#x27;,&#x27;I&#x27;],
+                &#x27;I&#x27;:[&#x27;HG&#x27;,&#x27;D&#x27;,&#x27;EA&#x27;,&#x27;B&#x27;,&#x27;FC&#x27;]}
+  patterns = [firstPoint]
+  for i in range(length-1):
+    temp = []
+    for p in patterns:
+      temp.extend([p+c for c in[next((i for i in g if i not in p),&#x27;&#x27;) for g in nextPoints[p[-1]]]if c!=&#x27;&#x27;])
+    patterns = temp
+  return len(patterns)</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(count_patterns_from(&quot;A&quot;, 3))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "screen-locking-patterns-version-2.py", "code": "def count_patterns_from(firstPoint, length):\n  if length in [0,1]: return length\n  nextPoints = {'A':['BC','F','EI','H','DG'],\n                'B':['C','F','I','EH','G','D','A'],\n                'C':['FI','H','EG','D','BA'],\n                'D':['A','B','C','EF','I','H','G'],\n                'E':['A','B','C','F','I','H','G','D'],\n                'F':['C','B','A','ED','G','H','I'],\n                'G':['DA','B','EC','F','HI'],\n                'H':['G','D','A','EB','C','F','I'],\n                'I':['HG','D','EA','B','FC']}\n  patterns = [firstPoint]\n  for i in range(length-1):\n    temp = []\n    for p in patterns:\n      temp.extend([p+c for c in[next((i for i in g if i not in p),'') for g in nextPoints[p[-1]]]if c!=''])\n    patterns = temp\n  return len(patterns)\n\nprint(count_patterns_from(\"A\", 3))\n"}</script>
+  </main>
+</body>
+</html>

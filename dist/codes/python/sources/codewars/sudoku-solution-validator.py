@@ -1,0 +1,1 @@
+validSolution=lambda s,r=range(9):all({*s[i]}=={*[*zip(*s)][i]}=={*sum([s[i//3*3+j][i%3*3:i%3*3+3]for j in r[:3]],[])}=={*r}-{0}|{9}for i in r)

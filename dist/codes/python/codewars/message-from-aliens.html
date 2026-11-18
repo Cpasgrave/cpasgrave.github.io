@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Message from Aliens · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Message from Aliens</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/message-from-aliens.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/598980a41e55117d93000015">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Déchiffrer le message en séparant ses symboles, en les convertissant en lettres et en remettant les caractères dans l’ordre.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">decode =lambda m:&#x27;&#x27;.join([{&quot;&quot;:&#x27;&#x27;,&quot;__&quot;:&#x27; &#x27;,&quot;/\\&quot;:&#x27;a&#x27;,&quot;]3&quot;:&#x27;b&#x27;,&quot;(&quot;:&#x27;c&#x27;,&quot;|)&quot;:&#x27;d&#x27;,&quot;[-&quot;:&#x27;e&#x27;,&quot;/=&quot;:&#x27;f&#x27;,&quot;(_,&quot;:&#x27;g&#x27;,
+&quot;|-|&quot;:&#x27;h&#x27;,&quot;|&quot;:&#x27;i&#x27;,&quot;_T&quot;:&#x27;j&#x27;,&quot;/&lt;&quot;:&#x27;k&#x27;,&quot;|_&quot;:&#x27;l&#x27;,&quot;|\\/|&quot;:&#x27;m&#x27;,&quot;|\\|&quot;:&#x27;n&#x27;,&quot;()&quot;:&#x27;o&#x27;,&quot;|^&quot;:&#x27;p&#x27;,&quot;()_&quot;:&#x27;q&#x27;,&quot;/?&quot;:&#x27;r&#x27;,
+&quot;_\\~&quot;:&#x27;s&#x27;,&quot;~|~&quot;:&#x27;t&#x27;,&quot;|_|&quot;:&#x27;u&#x27;,&quot;\\/&quot;:&#x27;v&#x27;,&quot;\\/\\/&quot;:&#x27;w&#x27;,&quot;&gt;&lt;&quot;:&#x27;x&#x27;,&quot;`/&quot;:&#x27;y&#x27;,&quot;~/_&quot;:&#x27;z&#x27;}[c]for c in m.split(m[0])][::-1])</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(decode(&quot;#|#|-|&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "message-from-aliens.py", "code": "decode =lambda m:''.join([{\"\":'',\"__\":' ',\"/\\\\\":'a',\"]3\":'b',\"(\":'c',\"|)\":'d',\"[-\":'e',\"/=\":'f',\"(_,\":'g',\n\"|-|\":'h',\"|\":'i',\"_T\":'j',\"/\u003c\":'k',\"|_\":'l',\"|\\\\/|\":'m',\"|\\\\|\":'n',\"()\":'o',\"|^\":'p',\"()_\":'q',\"/?\":'r',\n\"_\\\\~\":'s',\"~|~\":'t',\"|_|\":'u',\"\\\\/\":'v',\"\\\\/\\\\/\":'w',\">\u003c\":'x',\"`/\":'y',\"~/_\":'z'}[c]for c in m.split(m[0])][::-1])\n\nprint(decode(\"#|#|-|\"))\n"}</script>
+  </main>
+</body>
+</html>

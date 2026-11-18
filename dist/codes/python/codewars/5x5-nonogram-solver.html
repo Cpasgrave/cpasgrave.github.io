@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>5x5 Nonogram Solver · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>5x5 Nonogram Solver</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/5x5-nonogram-solver.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a479247e6be385a41000064">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Résoudre un nonogramme de cinq cases de côté en faisant concorder les groupes visibles par ligne et colonne.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># Nonogram solver
+
+from functools import lru_cache as lru
+from itertools import groupby
+
+class Box:
+
+	def __init__(s,x,y):
+		s.x,s.y = x,y
+		s.status = None
+	def __repr__(s):
+		return f&quot;{s.status}&quot;
+
+@lru(maxsize=1024)
+def split_sum(n,clues,c_num,mask):
+	# this function returns all 
+	# the possible ways to distribute 
+	# the whites in a line, considering
+	# the clues
+	sols = [[n]]
+	limit = 100 # should be dynamised ...
+
+	for i,clue in enumerate(clues):
+		new = []
+		for s in sols:
+			*s,last = s
+			for k in range(last+1):
+				sk = s+[0]*(k+(i&gt;0))+[1]*clue+[last-k]
+				if any(mask[j]!=None and mask[j]!=sk[j] for j in range(len(sk)-1))\
+					or (i==c_num-1 and any(mask[i]==1 for i in range(-sk[-1],0))):
+					# print(&#x27;mask&#x27;,sk,mask)
+					continue
+				else:
+					# print(&#x27;ok&#x27;,sk,mask)
+					new.append(sk)	
+		sols = new[:]
+		if len(sols)&gt;limit: return []
+	sols = [tuple(s[:-1]+s[-1]*[0])for s in sols]
+	return sols
+
+class Line:
+
+	def __init__(s,clues,elements):
+		s.els = elements
+		s.size = len(s.els)
+		s.clues = tuple(clues)
+		s.c_num = len(clues)
+		s.c_sum = sum(clues)
+		s.solutions = []
+		s.n_sols = 0
+		s.tried = set()
+
+	def __repr__(s):
+		return f&quot;{s.els}&quot;
+
+	def solve(s):
+		s.mask = tuple(e.status for e in s.els)
+		whites = s.size-s.c_sum
+		sols = split_sum(whites-s.c_num+1,s.clues,s.c_num,s.mask)
+		s.solutions = []
+		if sols==[]:
+			return s.solutions,0
+		matches = [*sols[0]]
+		indices = set(range(s.size))
+		# checking for common box for all solutions
+		# and removing already tried solutions
+		for sol in sols:
+			if sol in s.tried: continue
+			s.solutions += [sol]
+			garbage = set()
+			for i in indices:
+				if sol[i]!=matches[i]:
+					matches[i] = None
+					garbage |= {i}
+			indices -= garbage
+		mod = 0
+		for i in indices:
+			if s.els[i].status==None: mod += 1
+			s.els[i].status = matches[i]
+			
+		return s.solutions,mod
+
+	def fill(s):
+		attempt = s.solutions.pop()
+		s.tried |= {attempt}
+		mod = 0
+		for i,e in enumerate(attempt):
+			if e!=None: mod += 1
+			if s.els[i].status!=None: mod -= 1
+			s.els[i].status = e
+		return mod
+
+	def back(s):
+		pass
+
+
+
+class Nonogram:
+
+	def __init__(s,gram):
+		s.x,s.y = gram
+		s.width = len(s.x)
+		s.height = len(s.y)
+		s.rows = [Line(s.y[i],[Box(i,j) for j in range(s.width)])for i in range(s.height)]
+		s.cols = [Line(s.x[i],[s.rows[j].els[i] for j in range(s.height)])for i in range(s.width)]
+		s.lines = s.rows+s.cols
+		s.solved,s.tot = 0,s.width*s.height
+
+	def check_sol(s):
+		for line in s.lines:
+			clues = line.clues
+			gb = groupby([e.status for e in line.els])
+			if clues!=tuple(len([*v]) for k,v in gb if k):
+				print(&quot;\nWRONG SOLUTION !\n&quot;)
+				return 
+		print(&#x27;\nCHECKED OK !\n&#x27;)
+		return
+
+	def solve(s):
+
+		while s.solved&lt;s.tot:
+
+			for line in s.lines:
+				sols,mod = line.solve()
+				s.solved += mod
+				line.solutions = sols
+				ls = len(sols)
+				line.n_sols = ls&gt;0 and ls or float(&#x27;inf&#x27;)
+
+			best = min(s.lines,key=lambda x:x.n_sols)
+
+			if best.solutions==[]:
+				# backtracking
+				print(&quot;backtracking under construction ...&quot;)
+				return
+
+			else:
+				mod = best.fill()
+				s.solved += mod
+
+		return tuple(tuple(1 if e.status else 0 for e in r.els)for r in s.rows)
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>clues = ((5,),) * 5
+for ligne in Nonogram((clues, clues)).solve():
+    print(&quot;&quot;.join(&quot;■&quot; if case else &quot;·&quot; for case in ligne))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "5x5-nonogram-solver.py", "code": "# Nonogram solver\n\nfrom functools import lru_cache as lru\nfrom itertools import groupby\n\nclass Box:\n\n\tdef __init__(s,x,y):\n\t\ts.x,s.y = x,y\n\t\ts.status = None\n\tdef __repr__(s):\n\t\treturn f\"{s.status}\"\n\n@lru(maxsize=1024)\ndef split_sum(n,clues,c_num,mask):\n\t# this function returns all \n\t# the possible ways to distribute \n\t# the whites in a line, considering\n\t# the clues\n\tsols = [[n]]\n\tlimit = 100 # should be dynamised ...\n\n\tfor i,clue in enumerate(clues):\n\t\tnew = []\n\t\tfor s in sols:\n\t\t\t*s,last = s\n\t\t\tfor k in range(last+1):\n\t\t\t\tsk = s+[0]*(k+(i>0))+[1]*clue+[last-k]\n\t\t\t\tif any(mask[j]!=None and mask[j]!=sk[j] for j in range(len(sk)-1))\\\n\t\t\t\t\tor (i==c_num-1 and any(mask[i]==1 for i in range(-sk[-1],0))):\n\t\t\t\t\t# print('mask',sk,mask)\n\t\t\t\t\tcontinue\n\t\t\t\telse:\n\t\t\t\t\t# print('ok',sk,mask)\n\t\t\t\t\tnew.append(sk)\t\n\t\tsols = new[:]\n\t\tif len(sols)>limit: return []\n\tsols = [tuple(s[:-1]+s[-1]*[0])for s in sols]\n\treturn sols\n\nclass Line:\n\n\tdef __init__(s,clues,elements):\n\t\ts.els = elements\n\t\ts.size = len(s.els)\n\t\ts.clues = tuple(clues)\n\t\ts.c_num = len(clues)\n\t\ts.c_sum = sum(clues)\n\t\ts.solutions = []\n\t\ts.n_sols = 0\n\t\ts.tried = set()\n\n\tdef __repr__(s):\n\t\treturn f\"{s.els}\"\n\n\tdef solve(s):\n\t\ts.mask = tuple(e.status for e in s.els)\n\t\twhites = s.size-s.c_sum\n\t\tsols = split_sum(whites-s.c_num+1,s.clues,s.c_num,s.mask)\n\t\ts.solutions = []\n\t\tif sols==[]:\n\t\t\treturn s.solutions,0\n\t\tmatches = [*sols[0]]\n\t\tindices = set(range(s.size))\n\t\t# checking for common box for all solutions\n\t\t# and removing already tried solutions\n\t\tfor sol in sols:\n\t\t\tif sol in s.tried: continue\n\t\t\ts.solutions += [sol]\n\t\t\tgarbage = set()\n\t\t\tfor i in indices:\n\t\t\t\tif sol[i]!=matches[i]:\n\t\t\t\t\tmatches[i] = None\n\t\t\t\t\tgarbage |= {i}\n\t\t\tindices -= garbage\n\t\tmod = 0\n\t\tfor i in indices:\n\t\t\tif s.els[i].status==None: mod += 1\n\t\t\ts.els[i].status = matches[i]\n\t\t\t\n\t\treturn s.solutions,mod\n\n\tdef fill(s):\n\t\tattempt = s.solutions.pop()\n\t\ts.tried |= {attempt}\n\t\tmod = 0\n\t\tfor i,e in enumerate(attempt):\n\t\t\tif e!=None: mod += 1\n\t\t\tif s.els[i].status!=None: mod -= 1\n\t\t\ts.els[i].status = e\n\t\treturn mod\n\n\tdef back(s):\n\t\tpass\n\n\n\nclass Nonogram:\n\n\tdef __init__(s,gram):\n\t\ts.x,s.y = gram\n\t\ts.width = len(s.x)\n\t\ts.height = len(s.y)\n\t\ts.rows = [Line(s.y[i],[Box(i,j) for j in range(s.width)])for i in range(s.height)]\n\t\ts.cols = [Line(s.x[i],[s.rows[j].els[i] for j in range(s.height)])for i in range(s.width)]\n\t\ts.lines = s.rows+s.cols\n\t\ts.solved,s.tot = 0,s.width*s.height\n\n\tdef check_sol(s):\n\t\tfor line in s.lines:\n\t\t\tclues = line.clues\n\t\t\tgb = groupby([e.status for e in line.els])\n\t\t\tif clues!=tuple(len([*v]) for k,v in gb if k):\n\t\t\t\tprint(\"\\nWRONG SOLUTION !\\n\")\n\t\t\t\treturn \n\t\tprint('\\nCHECKED OK !\\n')\n\t\treturn\n\n\tdef solve(s):\n\n\t\twhile s.solved\u003cs.tot:\n\n\t\t\tfor line in s.lines:\n\t\t\t\tsols,mod = line.solve()\n\t\t\t\ts.solved += mod\n\t\t\t\tline.solutions = sols\n\t\t\t\tls = len(sols)\n\t\t\t\tline.n_sols = ls>0 and ls or float('inf')\n\n\t\t\tbest = min(s.lines,key=lambda x:x.n_sols)\n\n\t\t\tif best.solutions==[]:\n\t\t\t\t# backtracking\n\t\t\t\tprint(\"backtracking under construction ...\")\n\t\t\t\treturn\n\n\t\t\telse:\n\t\t\t\tmod = best.fill()\n\t\t\t\ts.solved += mod\n\n\t\treturn tuple(tuple(1 if e.status else 0 for e in r.els)for r in s.rows)\n\n\nclues = ((5,),) * 5\nfor ligne in Nonogram((clues, clues)).solve():\n    print(\"\".join(\"■\" if case else \"·\" for case in ligne))\n"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Simple Fun #358: Vertical Histogram Of Letters · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Simple Fun #358: Vertical Histogram Of Letters</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/simple-fun-number-358-vertical-histogram-of-letters.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/59cf0ba5d751dffef300001f">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Dessiner un histogramme vertical à partir des fréquences des lettres majuscules d’une chaîne.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def vertical_histogram_of(s):
+    d = {c:s.count(c)for c in sorted({*s})if 64&lt;ord(c)&lt;91}
+    h = [&#x27; &#x27;.join(&#x27;*&#x27; if d[k]&gt;=i else &#x27; &#x27;for k in d.keys()).rstrip()for i in range(max(d.values(),default=0),0,-1)]
+    return &#x27;\n&#x27;.join(h+[&#x27; &#x27;.join(d.keys())])</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(vertical_histogram_of(&quot;BANANA 2026&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "simple-fun-number-358-vertical-histogram-of-letters.py", "code": "def vertical_histogram_of(s):\n    d = {c:s.count(c)for c in sorted({*s})if 64\u003cord(c)\u003c91}\n    h = [' '.join('*' if d[k]>=i else ' 'for k in d.keys()).rstrip()for i in range(max(d.values(),default=0),0,-1)]\n    return '\\n'.join(h+[' '.join(d.keys())])\n\nprint(vertical_histogram_of(\"BANANA 2026\"))\n"}</script>
+  </main>
+</body>
+</html>

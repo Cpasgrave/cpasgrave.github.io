@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Reversing a Process · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Reversing a Process</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/reversing-a-process.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5dad6e5264e25a001918a1fc">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Retrouver une chaîne à partir d’un codage alphabétique multiplicatif ou signaler qu’il ne permet pas de retrouver un résultat unique.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def decode(s):
+	alphabet = &quot;abcdefghijklmnopqrstuvwxyz&quot;
+	m,n = &#x27;&#x27;,&#x27;&#x27;
+	for c in s:
+		if c in alphabet: m += c
+		else: n += c
+	n,conv = int(n),{}
+	for i,c in enumerate(alphabet):
+		j = i*n%26
+		c2 = alphabet[j]
+		if c2 in conv: return &quot;Impossible to decode&quot;
+		conv[c2] = c
+	return &#x27;&#x27;.join([conv[c]for c in m])</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(decode(&quot;1bonjour&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "reversing-a-process.py", "code": "def decode(s):\n\talphabet = \"abcdefghijklmnopqrstuvwxyz\"\n\tm,n = '',''\n\tfor c in s:\n\t\tif c in alphabet: m += c\n\t\telse: n += c\n\tn,conv = int(n),{}\n\tfor i,c in enumerate(alphabet):\n\t\tj = i*n%26\n\t\tc2 = alphabet[j]\n\t\tif c2 in conv: return \"Impossible to decode\"\n\t\tconv[c2] = c\n\treturn ''.join([conv[c]for c in m])\n\nprint(decode(\"1bonjour\"))\n"}</script>
+  </main>
+</body>
+</html>

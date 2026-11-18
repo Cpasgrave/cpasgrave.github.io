@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Castle of Cubes · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Castle of Cubes · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/castle-of-cubes-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="castle-of-cubes.html">Python · version 1</a>
+      <a href="castle-of-cubes-version-3.html">Python · version 3</a>
+      <a href="castle-of-cubes-version-4.html">Python · version 4</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import combinations_with_replacement as cwr, permutations as perm
+from functools import reduce as red
+from operator import mul
+
+def panel_count(n,dim=3):
+  if n==0: return 0
+  b=lambda g,d,n,k=lambda x,n:max(x,key=lambda y,z=lambda r:r*(r&lt;=n)or 0:z(red(mul,y))):k([*cwr([g,g+1],d)],n)
+  c=lambda t,d:sum([red(mul,[*map(sum,zip(t,u))])for u in[[0]*i+[-1]+[0]*(d-i-1)for i in range(d)]])
+  tot = 2*dim*n
+  rest = n
+  for d in range(dim,0,-1):
+    hp = int((rest-.1)**(1/d))
+    box = b(hp,d,rest)
+    ct = c(box,d)
+    contact = red(mul,sorted(box),1)*(dim-d)
+    tot -= (ct+contact)
+    rest -= red(mul,box)
+    if rest==0: break
+  return tot
+  </code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(panel_count(8))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "castle-of-cubes-version-2.py", "code": "from itertools import combinations_with_replacement as cwr, permutations as perm\nfrom functools import reduce as red\nfrom operator import mul\n\ndef panel_count(n,dim=3):\n  if n==0: return 0\n  b=lambda g,d,n,k=lambda x,n:max(x,key=lambda y,z=lambda r:r*(r\u003c=n)or 0:z(red(mul,y))):k([*cwr([g,g+1],d)],n)\n  c=lambda t,d:sum([red(mul,[*map(sum,zip(t,u))])for u in[[0]*i+[-1]+[0]*(d-i-1)for i in range(d)]])\n  tot = 2*dim*n\n  rest = n\n  for d in range(dim,0,-1):\n    hp = int((rest-.1)**(1/d))\n    box = b(hp,d,rest)\n    ct = c(box,d)\n    contact = red(mul,sorted(box),1)*(dim-d)\n    tot -= (ct+contact)\n    rest -= red(mul,box)\n    if rest==0: break\n  return tot\n  \n\nprint(panel_count(8))\n"}</script>
+  </main>
+</body>
+</html>

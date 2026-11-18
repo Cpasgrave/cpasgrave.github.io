@@ -1,0 +1,1 @@
+is_solved=lambda b:all(b[i][j]==i*l+j for l in[len(b)]for i,j in zip(*[range(l)]*2))

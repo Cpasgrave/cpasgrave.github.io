@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Alphabetic Anagrams · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Alphabetic Anagrams</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/alphabetic-anagrams.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/53e57dada0cb0400ba000688">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="alphabetic-anagrams-version-2.html">Python · version 2</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Déterminer le rang d’un mot parmi les anagrammes distinctes de ses lettres, classées par ordre alphabétique.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from functools import lru_cache as cache
+
+@cache(maxsize=1024)
+def fac(x): return x and x*fac(x-1) or 1
+
+def listPosition(word):
+  lw,chars,res = len(word),set(word),1
+  lower = {c:{d for d in chars if c&gt;d}for c in chars}
+  for i,c in enumerate(word):
+  	end = word[i:]
+  	for l in lower[c]&amp;set(end):
+  	  num = fac(lw-i-1)
+  	  for f in[fac(v-1 if k==l else v)for k,v in{c:end.count(c)for c in set(end)}.items()]:
+  	    num //= f
+  	  res += num
+  return res</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(listPosition(&quot;BANANA&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "alphabetic-anagrams.py", "code": "from functools import lru_cache as cache\n\n@cache(maxsize=1024)\ndef fac(x): return x and x*fac(x-1) or 1\n\ndef listPosition(word):\n  lw,chars,res = len(word),set(word),1\n  lower = {c:{d for d in chars if c>d}for c in chars}\n  for i,c in enumerate(word):\n  \tend = word[i:]\n  \tfor l in lower[c]&set(end):\n  \t  num = fac(lw-i-1)\n  \t  for f in[fac(v-1 if k==l else v)for k,v in{c:end.count(c)for c in set(end)}.items()]:\n  \t    num //= f\n  \t  res += num\n  return res\n\nprint(listPosition(\"BANANA\"))\n"}</script>
+  </main>
+</body>
+</html>

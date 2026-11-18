@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Regexp Basics - is it IPv4 address? · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Regexp Basics - is it IPv4 address?</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/regexp-basics-is-it-ipv4-address.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/567fe8b50c201947bc000056">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Valider la forme décimale d’une adresse IPv4 et vérifier les quatre valeurs de 0 à 255.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from regex import *
+
+def ipv4_address(ad):
+	rg =  r&quot;([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])&quot;
+	return fullmatch(r&#x27;\.&#x27;.join([rg]*4),ad)!=None
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(ipv4_address(&quot;192.0.2.42&quot;), ipv4_address(&quot;192.0.2.256&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["regex"], "filename": "regexp-basics-is-it-ipv4-address.py", "code": "from regex import *\n\ndef ipv4_address(ad):\n\trg =  r\"([1-9]?\\d|1\\d\\d|2[0-4]\\d|25[0-5])\"\n\treturn fullmatch(r'\\.'.join([rg]*4),ad)!=None\n\n\nprint(ipv4_address(\"192.0.2.42\"), ipv4_address(\"192.0.2.256\"))\n"}</script>
+  </main>
+</body>
+</html>

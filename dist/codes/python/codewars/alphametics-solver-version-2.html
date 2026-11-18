@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Alphametics Solver · Python · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Alphametics Solver · Python · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/alphametics-solver-version-2.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5b5fe164b88263ad3d00250b">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="alphametics-solver.html">Python · version 1</a>
+      <a href="alphametics-solver-version-3.html">Python · version 3</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Résoudre une addition de mots en attribuant un chiffre distinct à chaque lettre sans introduire de zéros initiaux.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import permutations as perm
+
+def alphametics(alphaM):
+
+  # digits
+  rg = range(10)
+
+  # making input useable
+  els, res = alphaM.replace(&#x27; &#x27;,&#x27;&#x27;).split(&#x27;=&#x27;)
+  els = els.split(&quot;+&quot;)
+  chars = [*set(alphaM)-{*&#x27;= +&#x27;}]
+  lr = len(res)
+
+  # storing first character for each line 
+  # to avoid turning one of them into zero
+  leading = {el[0] for el in els+[res]}
+
+  # columns of added numbers, in reverse order
+  # (to work from left to right)
+  columns = [[els[j][-i-1] for j in range(len(els))if len(els[j])&gt;i]for i in range(lr)]
+
+  # reverse result line
+  res_rev = res[::-1]
+
+  # correspondance dictionary
+  dic = {c:None for c in chars}
+
+  # for each column, characters that have
+  # not been seen yet in previous columns
+  col_charsets = []
+  for i in range(lr):
+    prev = set().union(*col_charsets[:i])
+    col_charsets.append(list({*columns[i],res_rev[i]}-prev))
+
+  # Following are values that are
+  # going to be dynamically updated
+
+  # starting before first column
+  col = -1
+  # remaining digits
+  remain = set(rg)
+  # carry per column
+  carry = [0]*lr
+  # permutation generator for each column
+  p_gen = [None]*lr
+  
+  # back flag
+  back = 0
+
+  while True:
+
+    if not back:
+      # stepping up to new column
+      col += 1
+      chars = col_charsets[col]
+      p_gen[col] = perm(remain,len(chars))
+
+    # new permutation applied
+    p = next(p_gen[col],None)
+    if p==None:
+      # all permutations have been tried,
+      # back to previous column
+      col -= 1
+      remain |= set([dic[c] for c in col_charsets[col]])
+      back = 1
+      continue
+
+    # applying permutation
+    leading_zero = 0
+    for i,c in enumerate(col_charsets[col]):
+      pi = p[i]
+      if pi==0 and c in leading:
+        leading_zero = 1
+        back = 1
+        break
+      dic[c] = pi
+    if leading_zero: continue
+
+    back = 0
+    # checking the column&#x27;s sum
+    s = sum([dic[c]for c in columns[col]]) + carry[col]
+    if s%10 == dic[res_rev[col]]:
+      # permutations fits till here
+      if col == lr-1:
+        if s//10:
+          # shouldn&#x27;t be a carry at last column:
+          back = 1
+          continue
+        else:
+          # solved
+          break
+      # up to next column
+      carry[col+1] = s//10
+      # digits used for this column 
+      # won&#x27;t be available
+      remain -= {*p}
+
+    else:
+      # sum of column and result line
+      # digit don&#x27;t fit
+      back = 1
+
+  sol = &#x27;&#x27;.join([str(dic[a])if a in dic else a for a in alphaM])
+  return sol</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(alphametics(&quot;I + BB = ILL&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "alphametics-solver-version-2.py", "code": "from itertools import permutations as perm\n\ndef alphametics(alphaM):\n\n  # digits\n  rg = range(10)\n\n  # making input useable\n  els, res = alphaM.replace(' ','').split('=')\n  els = els.split(\"+\")\n  chars = [*set(alphaM)-{*'= +'}]\n  lr = len(res)\n\n  # storing first character for each line \n  # to avoid turning one of them into zero\n  leading = {el[0] for el in els+[res]}\n\n  # columns of added numbers, in reverse order\n  # (to work from left to right)\n  columns = [[els[j][-i-1] for j in range(len(els))if len(els[j])>i]for i in range(lr)]\n\n  # reverse result line\n  res_rev = res[::-1]\n\n  # correspondance dictionary\n  dic = {c:None for c in chars}\n\n  # for each column, characters that have\n  # not been seen yet in previous columns\n  col_charsets = []\n  for i in range(lr):\n    prev = set().union(*col_charsets[:i])\n    col_charsets.append(list({*columns[i],res_rev[i]}-prev))\n\n  # Following are values that are\n  # going to be dynamically updated\n\n  # starting before first column\n  col = -1\n  # remaining digits\n  remain = set(rg)\n  # carry per column\n  carry = [0]*lr\n  # permutation generator for each column\n  p_gen = [None]*lr\n  \n  # back flag\n  back = 0\n\n  while True:\n\n    if not back:\n      # stepping up to new column\n      col += 1\n      chars = col_charsets[col]\n      p_gen[col] = perm(remain,len(chars))\n\n    # new permutation applied\n    p = next(p_gen[col],None)\n    if p==None:\n      # all permutations have been tried,\n      # back to previous column\n      col -= 1\n      remain |= set([dic[c] for c in col_charsets[col]])\n      back = 1\n      continue\n\n    # applying permutation\n    leading_zero = 0\n    for i,c in enumerate(col_charsets[col]):\n      pi = p[i]\n      if pi==0 and c in leading:\n        leading_zero = 1\n        back = 1\n        break\n      dic[c] = pi\n    if leading_zero: continue\n\n    back = 0\n    # checking the column's sum\n    s = sum([dic[c]for c in columns[col]]) + carry[col]\n    if s%10 == dic[res_rev[col]]:\n      # permutations fits till here\n      if col == lr-1:\n        if s//10:\n          # shouldn't be a carry at last column:\n          back = 1\n          continue\n        else:\n          # solved\n          break\n      # up to next column\n      carry[col+1] = s//10\n      # digits used for this column \n      # won't be available\n      remain -= {*p}\n\n    else:\n      # sum of column and result line\n      # digit don't fit\n      back = 1\n\n  sol = ''.join([str(dic[a])if a in dic else a for a in alphaM])\n  return sol\n\nprint(alphametics(\"I + BB = ILL\"))\n"}</script>
+  </main>
+</body>
+</html>

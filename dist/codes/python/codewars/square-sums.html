@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Square sums · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Square sums</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/square-sums.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a667236145c462103000091">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Construire une permutation des entiers de 1 à n dont chaque paire de voisins a pour somme un carré parfait.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from math import ceil
+
+class Node:
+
+	def __init__(s,val):
+		s.val = val
+		s.links = set()
+		s.n_links = 0
+		s.tried_links = set()
+
+	def __repr__(s):
+		return f&quot;{s.val}&quot;
+
+	def __gt__(s,x):
+		return s.val&gt;x.val
+
+class Square_Chain:
+
+	def __init__(s,N):
+
+		s.N = N
+		s.rg = set(range(1,s.N+1))
+		s.nodes = {i:Node(i) for i in s.rg}
+		s.nodeset = set(s.nodes.values())
+		s.squares = {i**2 for i in range(2,ceil((2*s.N)**.5))}
+		for node in s.nodeset:
+			node.links = {s.nodes[n] for n in links[node.val]&amp;s.rg}
+			node.n_links = len(node.links)
+			node.tried_links = set()
+
+	def solve(s):
+
+		start = Node(0)
+		start.links = s.nodeset
+		start.tried_links = set()
+
+		node = start
+		chain = [start]
+		chainset = set()
+
+		while True:
+
+			ways = sorted(node.links-chainset-node.tried_links,key=lambda x:[len(x.links-chainset),x.val])
+
+			if ways==[]:
+				off = chain.pop()
+				off.tried_links = set()
+				chainset -= {off}
+				if chain==[]: break
+				node = chain[-1]
+			else:
+				nxt = ways[0]
+				chain += [nxt]
+				chainset |= {nxt}
+				node.tried_links |= {nxt}
+
+				if len(chain)==s.N+1: return [c.val for c in chain][1:]
+				node = nxt
+
+		return False
+
+limit = 1300
+
+rg = set(range(1,limit+1))
+squares = {i**2 for i in range(2,ceil((2*limit)**.5))}
+links = {n:{m for sq in [s for s in squares if s&gt;n] for m in [sq-n] if m in rg-{n}}for n in rg}
+
+def square_sums(N):
+	return Square_Chain(N).solve()</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(square_sums(15))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "square-sums.py", "code": "from math import ceil\n\nclass Node:\n\n\tdef __init__(s,val):\n\t\ts.val = val\n\t\ts.links = set()\n\t\ts.n_links = 0\n\t\ts.tried_links = set()\n\n\tdef __repr__(s):\n\t\treturn f\"{s.val}\"\n\n\tdef __gt__(s,x):\n\t\treturn s.val>x.val\n\nclass Square_Chain:\n\n\tdef __init__(s,N):\n\n\t\ts.N = N\n\t\ts.rg = set(range(1,s.N+1))\n\t\ts.nodes = {i:Node(i) for i in s.rg}\n\t\ts.nodeset = set(s.nodes.values())\n\t\ts.squares = {i**2 for i in range(2,ceil((2*s.N)**.5))}\n\t\tfor node in s.nodeset:\n\t\t\tnode.links = {s.nodes[n] for n in links[node.val]&s.rg}\n\t\t\tnode.n_links = len(node.links)\n\t\t\tnode.tried_links = set()\n\n\tdef solve(s):\n\n\t\tstart = Node(0)\n\t\tstart.links = s.nodeset\n\t\tstart.tried_links = set()\n\n\t\tnode = start\n\t\tchain = [start]\n\t\tchainset = set()\n\n\t\twhile True:\n\n\t\t\tways = sorted(node.links-chainset-node.tried_links,key=lambda x:[len(x.links-chainset),x.val])\n\n\t\t\tif ways==[]:\n\t\t\t\toff = chain.pop()\n\t\t\t\toff.tried_links = set()\n\t\t\t\tchainset -= {off}\n\t\t\t\tif chain==[]: break\n\t\t\t\tnode = chain[-1]\n\t\t\telse:\n\t\t\t\tnxt = ways[0]\n\t\t\t\tchain += [nxt]\n\t\t\t\tchainset |= {nxt}\n\t\t\t\tnode.tried_links |= {nxt}\n\n\t\t\t\tif len(chain)==s.N+1: return [c.val for c in chain][1:]\n\t\t\t\tnode = nxt\n\n\t\treturn False\n\nlimit = 1300\n\nrg = set(range(1,limit+1))\nsquares = {i**2 for i in range(2,ceil((2*limit)**.5))}\nlinks = {n:{m for sq in [s for s in squares if s>n] for m in [sq-n] if m in rg-{n}}for n in rg}\n\ndef square_sums(N):\n\treturn Square_Chain(N).solve()\n\nprint(square_sums(15))\n"}</script>
+  </main>
+</body>
+</html>

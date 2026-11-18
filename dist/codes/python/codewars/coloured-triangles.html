@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Coloured Triangles · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Coloured Triangles</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/coloured-triangles.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a25ac6ac5e284cfbe000111">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Réduire une rangée de couleurs selon la règle du triangle jusqu’à obtenir la couleur de la dernière case.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def triangle(s):
+    d = {&#x27;R&#x27;:{&#x27;R&#x27;:&#x27;R&#x27;,&#x27;G&#x27;:&#x27;B&#x27;,&#x27;B&#x27;:&#x27;G&#x27;},&#x27;G&#x27;:{&#x27;R&#x27;:&#x27;B&#x27;,&#x27;G&#x27;:&#x27;G&#x27;,&#x27;B&#x27;:&#x27;R&#x27;},&#x27;B&#x27;:{&#x27;R&#x27;:&#x27;G&#x27;,&#x27;G&#x27;:&#x27;R&#x27;,&#x27;B&#x27;:&#x27;B&#x27;}}
+    for i in range(len(s)-1,0,-1):
+        s = [d[s[j]][s[j+1]] for j in range(i)]
+    return s[0]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(triangle(&quot;RBGG&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "coloured-triangles.py", "code": "def triangle(s):\n    d = {'R':{'R':'R','G':'B','B':'G'},'G':{'R':'B','G':'G','B':'R'},'B':{'R':'G','G':'R','B':'B'}}\n    for i in range(len(s)-1,0,-1):\n        s = [d[s[j]][s[j+1]] for j in range(i)]\n    return s[0]\n\nprint(triangle(\"RBGG\"))\n"}</script>
+  </main>
+</body>
+</html>

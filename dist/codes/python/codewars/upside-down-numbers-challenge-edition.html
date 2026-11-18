@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Upside-Down Numbers - Challenge Edition · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Upside-Down Numbers - Challenge Edition</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/upside-down-numbers-challenge-edition.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/59f98052120be4abfa000304">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Compter dans un intervalle les nombres qui se lisent de la même façon après une rotation de 180 degrés.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def count_to_n(n):
+    cfnd = count_for_n_digits = {1:3}
+    # 1 digit numbers:
+    ct = (n&gt;=0)+(n&gt;=1)+(n&gt;=8)
+    sn = str(n)
+    dig = len(sn)
+    up_do = {i:j for i,j in zip(&#x27;01689&#x27;,&#x27;01986&#x27;)}
+    if dig==1 or n&lt;0: return ct
+    # dig-1 digits numbers:
+    step = cfnd[2] = 4
+    for d in range(2,dig):
+        ct += step
+        step = cfnd.setdefault(d+1,(d%2==0 and 3 or 5/3)*step)
+    # dig digits numbers:
+    fac = [1]
+    if dig&gt;2: fac = [3 if dig%2 else 5]+fac
+    for i in range(2,(dig+1)//2): fac = [fac[0]*5]+fac
+
+    mid = (dig+1)//2
+    for i in range(mid):
+        sni = sn[i]
+        rg = set(range(int(sni)))
+        nums = [{1,6,8,9},{0,1,6,8,9},{0,1,8}][(i!=0)+(dig%2 and i==mid-1)]
+        ct += fac[i]*len(rg&amp;nums)
+        if sni not in &#x27;01689&#x27;: break
+        if i==mid-1:
+            if dig%2 and sni not in &#x27;018&#x27;: break
+            left = &#x27;&#x27;.join(map(lambda x: up_do[x],sn[:mid]))
+            right = int(sn[-mid:])
+            if right&gt;=int(left[::-1]): ct += 1
+
+    return ct
+
+def upsidedown(a,b):
+    cb = count_to_n(int(b))
+    ca = count_to_n(int(a)-1)
+    return cb-ca</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(upsidedown(&quot;10&quot;, &quot;200&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "upside-down-numbers-challenge-edition.py", "code": "def count_to_n(n):\n    cfnd = count_for_n_digits = {1:3}\n    # 1 digit numbers:\n    ct = (n>=0)+(n>=1)+(n>=8)\n    sn = str(n)\n    dig = len(sn)\n    up_do = {i:j for i,j in zip('01689','01986')}\n    if dig==1 or n\u003c0: return ct\n    # dig-1 digits numbers:\n    step = cfnd[2] = 4\n    for d in range(2,dig):\n        ct += step\n        step = cfnd.setdefault(d+1,(d%2==0 and 3 or 5/3)*step)\n    # dig digits numbers:\n    fac = [1]\n    if dig>2: fac = [3 if dig%2 else 5]+fac\n    for i in range(2,(dig+1)//2): fac = [fac[0]*5]+fac\n\n    mid = (dig+1)//2\n    for i in range(mid):\n        sni = sn[i]\n        rg = set(range(int(sni)))\n        nums = [{1,6,8,9},{0,1,6,8,9},{0,1,8}][(i!=0)+(dig%2 and i==mid-1)]\n        ct += fac[i]*len(rg&nums)\n        if sni not in '01689': break\n        if i==mid-1:\n            if dig%2 and sni not in '018': break\n            left = ''.join(map(lambda x: up_do[x],sn[:mid]))\n            right = int(sn[-mid:])\n            if right>=int(left[::-1]): ct += 1\n\n    return ct\n\ndef upsidedown(a,b):\n    cb = count_to_n(int(b))\n    ca = count_to_n(int(a)-1)\n    return cb-ca\n\nprint(upsidedown(\"10\", \"200\"))\n"}</script>
+  </main>
+</body>
+</html>

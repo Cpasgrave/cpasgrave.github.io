@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Unique digits sequence · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Unique digits sequence</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/unique-digits-sequence.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/599688d0e2800dda4e0001b0">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="unique-digits-sequence-version-2.html">Python · version 2</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Lire un terme de la suite qui choisit à chaque étape le plus petit entier encore inutilisé ne partageant aucun chiffre avec le terme précédent.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from itertools import count
+
+def find_num(n):
+  res,last,aside,gen = [],set(),[],(str(n) for n in count())
+  for i in range(n+1):
+  	skip=0
+  	for s in aside:
+  		if not set(s)&amp;last:
+  			aside.remove(s)
+  			last,skip,res = set(s),1,res+[int(s)]
+  			break
+  	if skip: continue
+  	while True:
+  		g = next(gen)
+  		if not set(g)&amp;last:
+  			res.append(int(g))
+  			last = set(g)
+  			break
+  		else:	aside.append(g)
+  return res[-1]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(find_num(12))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "unique-digits-sequence.py", "code": "from itertools import count\n\ndef find_num(n):\n  res,last,aside,gen = [],set(),[],(str(n) for n in count())\n  for i in range(n+1):\n  \tskip=0\n  \tfor s in aside:\n  \t\tif not set(s)&last:\n  \t\t\taside.remove(s)\n  \t\t\tlast,skip,res = set(s),1,res+[int(s)]\n  \t\t\tbreak\n  \tif skip: continue\n  \twhile True:\n  \t\tg = next(gen)\n  \t\tif not set(g)&last:\n  \t\t\tres.append(int(g))\n  \t\t\tlast = set(g)\n  \t\t\tbreak\n  \t\telse:\taside.append(g)\n  return res[-1]\n\nprint(find_num(12))\n"}</script>
+  </main>
+</body>
+</html>

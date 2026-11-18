@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Decode the Morse code, advanced · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Decode the Morse code, advanced</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/decode-the-morse-code-advanced.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/54b72c16cd7f5154e9000457">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Déduire le rythme d’un signal binaire, puis transformer les impulsions et silences en texte à partir du code Morse.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def decodeBits(bits):
+    step = min([len(i) for i in bits.strip(&quot;0&quot;).split(&quot;0&quot;) if i != &#x27;&#x27;]+[len(i) for i in bits.strip(&quot;0&quot;).split(&quot;1&quot;) if i != &#x27;&#x27;])
+    return bits[::step].replace(&quot;0000000&quot;,&quot;   &quot;).replace(&quot;000&quot;,&quot; &quot;).replace(&quot;111&quot;,&quot;-&quot;).replace(&quot;1&quot;,&quot;.&quot;).replace(&quot;0&quot;,&quot;&quot;)
+
+def decodeMorse(morseCode):
+    return &#x27; &#x27;.join(&#x27;&#x27;.join(MORSE_CODE[letter] for letter in word.split(&#x27; &#x27;)) for word in morseCode.strip().split(&#x27;   &#x27;))</code></pre>
+    <p class="python-note">L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>MORSE_CODE = {&quot;.-&quot;: &quot;A&quot;}
+print(decodeMorse(decodeBits(&quot;10111&quot;)))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "decode-the-morse-code-advanced.py", "code": "def decodeBits(bits):\n    step = min([len(i) for i in bits.strip(\"0\").split(\"0\") if i != '']+[len(i) for i in bits.strip(\"0\").split(\"1\") if i != ''])\n    return bits[::step].replace(\"0000000\",\"   \").replace(\"000\",\" \").replace(\"111\",\"-\").replace(\"1\",\".\").replace(\"0\",\"\")\n\ndef decodeMorse(morseCode):\n    return ' '.join(''.join(MORSE_CODE[letter] for letter in word.split(' ')) for word in morseCode.strip().split('   '))\n\nMORSE_CODE = {\".-\": \"A\"}\nprint(decodeMorse(decodeBits(\"10111\")))\n"}</script>
+  </main>
+</body>
+</html>

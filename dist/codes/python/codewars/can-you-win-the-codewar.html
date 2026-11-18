@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Can you win the codewar  ? · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Can you win the codewar  ?</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/can-you-win-the-codewar.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5e3f043faf934e0024a941d7">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="can-you-win-the-codewar-version-2.html">Python · version 2</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Déterminer le meilleur résultat possible lorsqu’on peut réordonner les forces d’une équipe pour les opposer à celles de l’adversaire.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def codewar_result(c,o):
+
+    i,j,score=-1,0,0
+    C,O=sorted(c),sorted(o)
+
+    while i&lt;len(C)-1:
+        i+=1
+        if C[i]&lt;=O[j]: continue
+        while j&lt;len(C)-1 and C[i]&gt;O[j+1]: j += 1
+        C.pop(i), O.pop(j)
+        score += 2
+        j,i = max(0,j-2),i-1
+
+    for e in set(C)-{0}: score += min(C.count(e),O.count(e))
+
+    return (&#x27;Defeat&#x27;,&#x27;Stalemate&#x27;,&#x27;Victory&#x27;)[(score&gt;=len(c))+(score&gt;len(c))]</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(codewar_result([2, 4, 8], [1, 3, 5]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "can-you-win-the-codewar.py", "code": "def codewar_result(c,o):\n\n    i,j,score=-1,0,0\n    C,O=sorted(c),sorted(o)\n\n    while i\u003clen(C)-1:\n        i+=1\n        if C[i]\u003c=O[j]: continue\n        while j\u003clen(C)-1 and C[i]>O[j+1]: j += 1\n        C.pop(i), O.pop(j)\n        score += 2\n        j,i = max(0,j-2),i-1\n\n    for e in set(C)-{0}: score += min(C.count(e),O.count(e))\n\n    return ('Defeat','Stalemate','Victory')[(score>=len(c))+(score>len(c))]\n\nprint(codewar_result([2, 4, 8], [1, 3, 5]))\n"}</script>
+  </main>
+</body>
+</html>

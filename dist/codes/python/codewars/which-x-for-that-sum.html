@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Which x for that sum? · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Which x for that sum?</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/which-x-for-that-sum.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5b1cd19fcd206af728000056">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="which-x-for-that-sum-version-c.html">C</a>
+      <a href="which-x-for-that-sum-version-cpp.html">C++</a>
+      <a href="which-x-for-that-sum-version-csharp.html">C#</a>
+      <a href="which-x-for-that-sum-version-coffeescript.html">CoffeeScript</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Retrouver la valeur de x entre zéro et un dont la série pondérée a pour somme la valeur donnée.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def solve(m):
+	sol = 0
+	for p in range(1,15):
+		lo,hi = 0,10
+		while hi-lo&gt;1:
+			mid = (hi+lo)//2
+			n = sol+mid*10**-p
+			if m&gt;n/(n-1)**2: lo = mid
+			else: hi = mid
+		sol += lo*10**-p
+	return sol</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(solve(2))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "which-x-for-that-sum.py", "code": "def solve(m):\n\tsol = 0\n\tfor p in range(1,15):\n\t\tlo,hi = 0,10\n\t\twhile hi-lo>1:\n\t\t\tmid = (hi+lo)//2\n\t\t\tn = sol+mid*10**-p\n\t\t\tif m>n/(n-1)**2: lo = mid\n\t\t\telse: hi = mid\n\t\tsol += lo*10**-p\n\treturn sol\n\nprint(solve(2))\n"}</script>
+  </main>
+</body>
+</html>

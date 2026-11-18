@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Equal Sides Of An Array · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Equal Sides Of An Array</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/equal-sides-of-an-array.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5679aa472b8f57fb8c000047">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Trouver un indice pour lequel la somme des éléments à gauche est égale à celle des éléments à droite.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def find_even_index(arr):
+    left,right = 0,sum(arr)
+    for i,ai in enumerate(arr):
+    	right -=ai
+    	if left==right: return i
+    	left += ai
+    return -1</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(find_even_index([4, 2, 9, 1, 5]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "equal-sides-of-an-array.py", "code": "def find_even_index(arr):\n    left,right = 0,sum(arr)\n    for i,ai in enumerate(arr):\n    \tright -=ai\n    \tif left==right: return i\n    \tleft += ai\n    return -1\n\nprint(find_even_index([4, 2, 9, 1, 5]))\n"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>telephone words · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>telephone words</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/telephone-words.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5653d33e78e3d9dfe600004e">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Énumérer les combinaisons de lettres correspondant à des chiffres sur un clavier téléphonique.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def telephone_words(ds):
+	ks = {str(d):d in{0,1}and[str(d)]or[chr(59+d*3+(d&gt;7)+j)for j in range(3+(d in{7,9}))]for d in range(10)}
+	ws = [&#x27;&#x27;]
+	for d in ds:
+		ws = [w+c for w in ws for c in ks[d]]
+	return ws</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(telephone_words(&quot;2013&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "telephone-words.py", "code": "def telephone_words(ds):\n\tks = {str(d):d in{0,1}and[str(d)]or[chr(59+d*3+(d>7)+j)for j in range(3+(d in{7,9}))]for d in range(10)}\n\tws = ['']\n\tfor d in ds:\n\t\tws = [w+c for w in ws for c in ks[d]]\n\treturn ws\n\nprint(telephone_words(\"2013\"))\n"}</script>
+  </main>
+</body>
+</html>

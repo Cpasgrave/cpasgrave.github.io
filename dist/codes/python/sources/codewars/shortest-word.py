@@ -1,0 +1,1 @@
+find_short=lambda s:min(map(len,s.split()))

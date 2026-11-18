@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Path Finder #1: can you reach the exit? · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Path Finder #1: can you reach the exit?</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/path-finder-number-1-can-you-reach-the-exit.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5765870e190b1472ec0022a2">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Vérifier si un trajet existe entre l’entrée et la sortie d’un labyrinthe, en évitant les murs.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def path_finder(maze):
+    M = [list(i) for i in maze.split(&#x27;\n&#x27;)]
+    rows,cols = len(M),len(M[0])
+    visited = {(0,0)}
+    paths = [[(0,0)]]
+    while paths:
+        for p in paths:
+            if p[-1]==(rows-1,cols-1):return True
+            for i in [(-1,0),(0,-1),(1,0),(0,1)]:
+                step = p[-1][0]+i[0],p[-1][1]+i[1]
+                if -1&lt;step[0]&lt;rows and -1&lt;step[1]&lt;cols and step not in visited and M[step[0]][step[1]]!=&#x27;W&#x27;:
+                    visited.add(step)
+                    paths.append(p+[step])
+            paths.remove(p)
+    return False</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(path_finder(&quot;...\nWW.\n...&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "path-finder-number-1-can-you-reach-the-exit.py", "code": "def path_finder(maze):\n    M = [list(i) for i in maze.split('\\n')]\n    rows,cols = len(M),len(M[0])\n    visited = {(0,0)}\n    paths = [[(0,0)]]\n    while paths:\n        for p in paths:\n            if p[-1]==(rows-1,cols-1):return True\n            for i in [(-1,0),(0,-1),(1,0),(0,1)]:\n                step = p[-1][0]+i[0],p[-1][1]+i[1]\n                if -1\u003cstep[0]\u003crows and -1\u003cstep[1]\u003ccols and step not in visited and M[step[0]][step[1]]!='W':\n                    visited.add(step)\n                    paths.append(p+[step])\n            paths.remove(p)\n    return False\n\nprint(path_finder(\"...\\nWW.\\n...\"))\n"}</script>
+  </main>
+</body>
+</html>

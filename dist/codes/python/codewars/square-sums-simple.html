@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Square sums (simple) · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Square sums (simple)</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/square-sums-simple.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a6b24d4e626c59d5b000066">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Trouver un ordre des nombres de 1 à n avec une somme carrée entre voisins, ou signaler qu’aucun ordre ne convient.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from math import ceil
+
+class Node:
+	def __init__(s,v):
+		s.value = v
+		s.used = 0
+	def __repr__(s):
+		return f&quot;{s.value}&quot;
+
+def square_sums_row(n):
+
+	rg = set(range(1,n+1))
+	nodes = {i:Node(i) for i in range(1,n+1)}
+	squares = {i**2 for i in range(2,ceil((2*n)**.5))}
+	
+	for node in nodes.values():
+		node.links = [nodes[s-node.value] for s in squares if s-node.value in rg-{node.value}]
+		node.lk_idx = 0
+		lnl = len(node.links)
+		if lnl==0: return 0
+		node.lk_max = lnl
+
+	prio = sorted(nodes.values(),key=lambda x:len(x.links))
+
+	for node in prio:
+		chain = [node]
+		node.used = 1
+		brk = 0
+		while len(chain)&lt;n:
+			nxt = node.links[node.lk_idx]
+			if nxt.used:
+				node.lk_idx += 1
+				while node.lk_idx==node.lk_max: # back
+					node.lk_idx = 0
+					chain.pop()
+					node.used = 0
+					if len(chain)==0: 
+						brk = 1
+						break
+					node = chain[-1]
+					node.lk_idx += 1
+				if brk: break
+				continue
+			chain += [nxt]			
+			if len(chain)==n: return [c.value for c in chain]
+			node = nxt
+			node.used = 1
+
+	return 0
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(square_sums_row(15))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "square-sums-simple.py", "code": "from math import ceil\n\nclass Node:\n\tdef __init__(s,v):\n\t\ts.value = v\n\t\ts.used = 0\n\tdef __repr__(s):\n\t\treturn f\"{s.value}\"\n\ndef square_sums_row(n):\n\n\trg = set(range(1,n+1))\n\tnodes = {i:Node(i) for i in range(1,n+1)}\n\tsquares = {i**2 for i in range(2,ceil((2*n)**.5))}\n\t\n\tfor node in nodes.values():\n\t\tnode.links = [nodes[s-node.value] for s in squares if s-node.value in rg-{node.value}]\n\t\tnode.lk_idx = 0\n\t\tlnl = len(node.links)\n\t\tif lnl==0: return 0\n\t\tnode.lk_max = lnl\n\n\tprio = sorted(nodes.values(),key=lambda x:len(x.links))\n\n\tfor node in prio:\n\t\tchain = [node]\n\t\tnode.used = 1\n\t\tbrk = 0\n\t\twhile len(chain)\u003cn:\n\t\t\tnxt = node.links[node.lk_idx]\n\t\t\tif nxt.used:\n\t\t\t\tnode.lk_idx += 1\n\t\t\t\twhile node.lk_idx==node.lk_max: # back\n\t\t\t\t\tnode.lk_idx = 0\n\t\t\t\t\tchain.pop()\n\t\t\t\t\tnode.used = 0\n\t\t\t\t\tif len(chain)==0: \n\t\t\t\t\t\tbrk = 1\n\t\t\t\t\t\tbreak\n\t\t\t\t\tnode = chain[-1]\n\t\t\t\t\tnode.lk_idx += 1\n\t\t\t\tif brk: break\n\t\t\t\tcontinue\n\t\t\tchain += [nxt]\t\t\t\n\t\t\tif len(chain)==n: return [c.value for c in chain]\n\t\t\tnode = nxt\n\t\t\tnode.used = 1\n\n\treturn 0\n\n\nprint(square_sums_row(15))\n"}</script>
+  </main>
+</body>
+</html>

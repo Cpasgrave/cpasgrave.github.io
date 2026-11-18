@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Chinese Numeral Encoder · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Chinese Numeral Encoder</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/chinese-numeral-encoder.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/52608f5345d4a19bed000b31">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Écrire un nombre en chiffres chinois en tenant compte du signe et de la partie décimale.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def to_chinese_numeral(n):
+
+    num = {0:&quot;零&quot;, 1:&quot;一&quot;, 2:&quot;二&quot;, 3:&quot;三&quot;, 4:&quot;四&quot;, 5:&quot;五&quot;, 6:&quot;六&quot;, 7:&quot;七&quot;, 8:&quot;八&quot;, 9:&quot;九&quot;, 10:&quot;十&quot;, 100:&quot;百&quot;, 1000:&quot;千&quot;, 10000:&quot;万&quot;    }
+
+    if n&lt;0: return &quot;负&quot;+to_chinese_numeral(-n)
+    sn = str(n).split(&quot;.&quot;)
+    dec = &quot;点&quot;+&#x27;&#x27;.join(num[int(d)]for d in sn[1]) if n%1 else &#x27;&#x27;
+    rg = enumerate(map(int,sn[0][::-1]))
+    ch = &#x27;&#x27;.join(num[10**col]*(i!=0 and col&gt;0)+num[i] for col,i in rg)[::-1]
+    while &#x27;零零&#x27; in ch: ch = ch.replace(&#x27;零零&#x27;,&#x27;零&#x27;)
+    return (ch.rstrip(&#x27;零&#x27;)[9&lt;n&lt;20:] or &#x27;零&#x27;)+dec
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(to_chinese_numeral(-204.5))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "chinese-numeral-encoder.py", "code": "def to_chinese_numeral(n):\n\n    num = {0:\"零\", 1:\"一\", 2:\"二\", 3:\"三\", 4:\"四\", 5:\"五\", 6:\"六\", 7:\"七\", 8:\"八\", 9:\"九\", 10:\"十\", 100:\"百\", 1000:\"千\", 10000:\"万\"    }\n\n    if n\u003c0: return \"负\"+to_chinese_numeral(-n)\n    sn = str(n).split(\".\")\n    dec = \"点\"+''.join(num[int(d)]for d in sn[1]) if n%1 else ''\n    rg = enumerate(map(int,sn[0][::-1]))\n    ch = ''.join(num[10**col]*(i!=0 and col>0)+num[i] for col,i in rg)[::-1]\n    while '零零' in ch: ch = ch.replace('零零','零')\n    return (ch.rstrip('零')[9\u003cn\u003c20:] or '零')+dec\n\n\nprint(to_chinese_numeral(-204.5))\n"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Gerrymander Solver · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Gerrymander Solver</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/gerrymander-solver.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5a70285ab17101627a000024">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Découper une grille de vingt-cinq cases en cinq districts contigus pour satisfaire la condition de majorité du casse-tête.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from functools import lru_cache as cache
+
+def adj(citizen):
+	i,j = citizen//10, citizen%10
+	return [*[(i-1)*10+j,10*i+j-1][i==0:2-(j==0)],*[10*(i+1)+j,10*i+j+1][i==4:2-(j==4)]]
+
+@cache(maxsize=50000)
+def district(start,rest):
+	global connections
+	s = [{start,}]
+	rest = set(rest)
+	for _ in range(4):
+		ts = []
+		for f in s:
+			adjs = {c2 for c1 in f for c2 in connections[c1]}
+			for n in adjs&amp;rest-set(f):
+				fn = f|{n}
+				if fn in ts: continue
+				ts += [fn]
+		s = ts
+	return s
+
+def maps():
+	combs = [()]
+	for _ in range(5):
+		temp = []
+		for comb in combs:
+			rest = set(citizens)
+			for c in comb: rest-=c
+			for f in district(rest.pop(),tuple(rest)):
+				temp += [comb+(f,)]
+		combs = temp
+	return combs
+
+def gerrymander(region):
+    M = maps()
+    region = [[[0,1][r==&#x27;O&#x27;] for r in row]for row in region.split(&#x27;\n&#x27;)]
+    for m in M:
+    	score = sum([sum([region[d//10][d%10] for d in district])&gt;2 for district in m])
+    	if score&gt;2:
+    		res = [[&#x27; &#x27;]*5 for _ in range(5)]
+    		for r,row in enumerate(m):
+    			for d in row:
+    				res[d//10][d%10] = str(r+1)
+    		return &#x27;\n&#x27;.join([&#x27;&#x27;.join(row) for row in res])
+    else:
+    	return None
+        
+citizens = set(int(str(i)+str(j))for i in range(5) for j in range(5))
+connections = {c:adj(c) for c in citizens}</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>region = &quot;\n&quot;.join([&quot;OOOOO&quot;, &quot;OOXOO&quot;, &quot;OOOOO&quot;, &quot;OOOOO&quot;, &quot;OOOOO&quot;])
+print(gerrymander(region))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "gerrymander-solver.py", "code": "from functools import lru_cache as cache\n\ndef adj(citizen):\n\ti,j = citizen//10, citizen%10\n\treturn [*[(i-1)*10+j,10*i+j-1][i==0:2-(j==0)],*[10*(i+1)+j,10*i+j+1][i==4:2-(j==4)]]\n\n@cache(maxsize=50000)\ndef district(start,rest):\n\tglobal connections\n\ts = [{start,}]\n\trest = set(rest)\n\tfor _ in range(4):\n\t\tts = []\n\t\tfor f in s:\n\t\t\tadjs = {c2 for c1 in f for c2 in connections[c1]}\n\t\t\tfor n in adjs&rest-set(f):\n\t\t\t\tfn = f|{n}\n\t\t\t\tif fn in ts: continue\n\t\t\t\tts += [fn]\n\t\ts = ts\n\treturn s\n\ndef maps():\n\tcombs = [()]\n\tfor _ in range(5):\n\t\ttemp = []\n\t\tfor comb in combs:\n\t\t\trest = set(citizens)\n\t\t\tfor c in comb: rest-=c\n\t\t\tfor f in district(rest.pop(),tuple(rest)):\n\t\t\t\ttemp += [comb+(f,)]\n\t\tcombs = temp\n\treturn combs\n\ndef gerrymander(region):\n    M = maps()\n    region = [[[0,1][r=='O'] for r in row]for row in region.split('\\n')]\n    for m in M:\n    \tscore = sum([sum([region[d//10][d%10] for d in district])>2 for district in m])\n    \tif score>2:\n    \t\tres = [[' ']*5 for _ in range(5)]\n    \t\tfor r,row in enumerate(m):\n    \t\t\tfor d in row:\n    \t\t\t\tres[d//10][d%10] = str(r+1)\n    \t\treturn '\\n'.join([''.join(row) for row in res])\n    else:\n    \treturn None\n        \ncitizens = set(int(str(i)+str(j))for i in range(5) for j in range(5))\nconnections = {c:adj(c) for c in citizens}\n\nregion = \"\\n\".join([\"OOOOO\", \"OOXOO\", \"OOOOO\", \"OOOOO\", \"OOOOO\"])\nprint(gerrymander(region))\n"}</script>
+  </main>
+</body>
+</html>

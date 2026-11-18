@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>N queens problem (with one mandatory queen position) - challenge version · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>N queens problem (with one mandatory queen position) - challenge version</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/n-queens-problem-with-one-mandatory-queen-position-challenge-version.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5985ea20695be6079e000003">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Placer une reine par rangée sur un échiquier, sans attaque entre elles, en respectant la position d’une reine imposée.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import shuffle
+
+class diag: 1
+
+def solve_n_queens(n,fixed_queen,iter=1):
+
+	if iter&gt;30*(n&lt;100)+5: return None
+
+	rg = range(n)
+	fqx,fqy = fixed_queen
+	board = [*range(fqy)]+[*range(fqy+1,n)]
+	shuffle(board)
+	board.insert(fqx,fqy)
+	indices = set(range(n))-{fqx}
+	
+	xy2diag1 = [[i+j for j in rg]for i in rg]
+	xy2diag2 = [[i-j+n-1 for i in rg]for j in rg]
+	d1_count,d2_count = [],[]
+
+
+	for i in range(2*n-1):
+		diag1,diag2 = diag(),diag()
+		diag1.n,diag2.n = 0,0
+		diag1.alt,diag2.alt = 0,0
+		diag1.pos,diag2.pos = set(),set()
+		d1_count += [diag1]
+		d2_count += [diag2]
+
+	# collision map
+	for x in rg:
+		y = board[x]
+		d1 = xy2diag1[x][y]
+		d2 = xy2diag2[x][y]
+		diag1 = d1_count[d1]
+		diag2 = d2_count[d2]
+		diag1.n += 1
+		diag2.n += 1
+		diag1.pos |= {(x,y)}
+		diag2.pos |= {(x,y)}
+
+	while True:
+
+		# look for a collision
+		collisions = [d for d in d1_count+d2_count if d.n&gt;1]
+		if collisions==[]: break
+
+		swap = 0
+
+		for coll in collisions:
+
+			if swap: break
+
+			# queen to swap (avoid fixed queen):
+			for q in coll.pos-{fixed_queen}:
+
+				if swap: break
+
+				q1x,q1y = q
+
+				# find the first swap lowering collisions
+				for i in indices-{q1x,fqx}:
+
+					q2x,q2y = (i,board[i])
+
+					q1d1,q2d1 = xy2diag1[q1x][q1y],xy2diag1[q2x][q2y]
+					q1d2,q2d2 = xy2diag2[q1x][q1y],xy2diag2[q2x][q2y]
+					q1d1b,q2d1b = xy2diag1[q2x][q1y],xy2diag1[q1x][q2y]
+					q1d2b,q2d2b = xy2diag2[q2x][q1y],xy2diag2[q1x][q2y]
+
+					for d in {q1d1,q2d1,q1d1b,q2d1b}:
+						d1_count[d].alt = d1_count[d].n
+					for d in {q1d2,q2d2,q1d2b,q2d2b}:
+						d2_count[d].alt = d2_count[d].n
+
+					d1_count[q1d1].alt -= 1
+					d1_count[q2d1].alt -= 1
+					d2_count[q1d2].alt -= 1
+					d2_count[q2d2].alt -= 1
+					d1_count[q1d1b].alt += 1
+					d1_count[q2d1b].alt += 1
+					d2_count[q1d2b].alt += 1
+					d2_count[q2d2b].alt += 1
+
+					coll_d1 = sum(max(0,d1_count[d].n-1) for d in {q1d1,q2d1,q1d1b,q2d1b})
+					coll_d2 = sum(max(0,d2_count[d].n-1) for d in {q1d2,q2d2,q1d2b,q2d2b})
+					s1 = coll_d1+coll_d2
+
+					coll_d1 = sum(max(0,d1_count[d].alt-1) for d in {q1d1,q2d1,q1d1b,q2d1b})
+					coll_d2 = sum(max(0,d2_count[d].alt-1) for d in {q1d2,q2d2,q1d2b,q2d2b})
+					s2 = coll_d1+coll_d2
+
+					if s2&lt;s1:
+						# swap
+						swap = 1
+						board[q1x],board[q2x] = q2y,q1y
+
+						d1_count[q1d1].n -= 1
+						d1_count[q1d1].pos -= {(q1x,q1y)}
+						d2_count[q1d2].n -= 1
+						d2_count[q1d2].pos -= {(q1x,q1y)}
+						d1_count[q2d1].n -= 1
+						d1_count[q2d1].pos -= {(q2x,q2y)}
+						d2_count[q2d2].n -= 1
+						d2_count[q2d2].pos -= {(q2x,q2y)}
+
+						d1_count[q1d1b].n += 1
+						d1_count[q1d1b].pos |= {(q2x,q1y)}
+						d2_count[q1d2b].n += 1
+						d2_count[q1d2b].pos |= {(q2x,q1y)}
+						d1_count[q2d1b].n += 1
+						d1_count[q2d1b].pos |= {(q1x,q2y)}
+						d2_count[q2d2b].n += 1
+						d2_count[q2d2b].pos |= {(q1x,q2y)}
+						break
+		if swap==0:
+			return solve_n_queens(n,fixed_queen,iter+1)
+
+	board  = &#x27;&#x27;.join([&#x27;.&#x27;*y+&#x27;Q&#x27;+&#x27;.&#x27;*(n-y-1)+&#x27;\n&#x27; for y in board])
+	return board
+
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>import random
+random.seed(0)
+print(solve_n_queens(8, (0, 0)))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "n-queens-problem-with-one-mandatory-queen-position-challenge-version.py", "code": "from random import shuffle\n\nclass diag: 1\n\ndef solve_n_queens(n,fixed_queen,iter=1):\n\n\tif iter>30*(n\u003c100)+5: return None\n\n\trg = range(n)\n\tfqx,fqy = fixed_queen\n\tboard = [*range(fqy)]+[*range(fqy+1,n)]\n\tshuffle(board)\n\tboard.insert(fqx,fqy)\n\tindices = set(range(n))-{fqx}\n\t\n\txy2diag1 = [[i+j for j in rg]for i in rg]\n\txy2diag2 = [[i-j+n-1 for i in rg]for j in rg]\n\td1_count,d2_count = [],[]\n\n\n\tfor i in range(2*n-1):\n\t\tdiag1,diag2 = diag(),diag()\n\t\tdiag1.n,diag2.n = 0,0\n\t\tdiag1.alt,diag2.alt = 0,0\n\t\tdiag1.pos,diag2.pos = set(),set()\n\t\td1_count += [diag1]\n\t\td2_count += [diag2]\n\n\t# collision map\n\tfor x in rg:\n\t\ty = board[x]\n\t\td1 = xy2diag1[x][y]\n\t\td2 = xy2diag2[x][y]\n\t\tdiag1 = d1_count[d1]\n\t\tdiag2 = d2_count[d2]\n\t\tdiag1.n += 1\n\t\tdiag2.n += 1\n\t\tdiag1.pos |= {(x,y)}\n\t\tdiag2.pos |= {(x,y)}\n\n\twhile True:\n\n\t\t# look for a collision\n\t\tcollisions = [d for d in d1_count+d2_count if d.n>1]\n\t\tif collisions==[]: break\n\n\t\tswap = 0\n\n\t\tfor coll in collisions:\n\n\t\t\tif swap: break\n\n\t\t\t# queen to swap (avoid fixed queen):\n\t\t\tfor q in coll.pos-{fixed_queen}:\n\n\t\t\t\tif swap: break\n\n\t\t\t\tq1x,q1y = q\n\n\t\t\t\t# find the first swap lowering collisions\n\t\t\t\tfor i in indices-{q1x,fqx}:\n\n\t\t\t\t\tq2x,q2y = (i,board[i])\n\n\t\t\t\t\tq1d1,q2d1 = xy2diag1[q1x][q1y],xy2diag1[q2x][q2y]\n\t\t\t\t\tq1d2,q2d2 = xy2diag2[q1x][q1y],xy2diag2[q2x][q2y]\n\t\t\t\t\tq1d1b,q2d1b = xy2diag1[q2x][q1y],xy2diag1[q1x][q2y]\n\t\t\t\t\tq1d2b,q2d2b = xy2diag2[q2x][q1y],xy2diag2[q1x][q2y]\n\n\t\t\t\t\tfor d in {q1d1,q2d1,q1d1b,q2d1b}:\n\t\t\t\t\t\td1_count[d].alt = d1_count[d].n\n\t\t\t\t\tfor d in {q1d2,q2d2,q1d2b,q2d2b}:\n\t\t\t\t\t\td2_count[d].alt = d2_count[d].n\n\n\t\t\t\t\td1_count[q1d1].alt -= 1\n\t\t\t\t\td1_count[q2d1].alt -= 1\n\t\t\t\t\td2_count[q1d2].alt -= 1\n\t\t\t\t\td2_count[q2d2].alt -= 1\n\t\t\t\t\td1_count[q1d1b].alt += 1\n\t\t\t\t\td1_count[q2d1b].alt += 1\n\t\t\t\t\td2_count[q1d2b].alt += 1\n\t\t\t\t\td2_count[q2d2b].alt += 1\n\n\t\t\t\t\tcoll_d1 = sum(max(0,d1_count[d].n-1) for d in {q1d1,q2d1,q1d1b,q2d1b})\n\t\t\t\t\tcoll_d2 = sum(max(0,d2_count[d].n-1) for d in {q1d2,q2d2,q1d2b,q2d2b})\n\t\t\t\t\ts1 = coll_d1+coll_d2\n\n\t\t\t\t\tcoll_d1 = sum(max(0,d1_count[d].alt-1) for d in {q1d1,q2d1,q1d1b,q2d1b})\n\t\t\t\t\tcoll_d2 = sum(max(0,d2_count[d].alt-1) for d in {q1d2,q2d2,q1d2b,q2d2b})\n\t\t\t\t\ts2 = coll_d1+coll_d2\n\n\t\t\t\t\tif s2\u003cs1:\n\t\t\t\t\t\t# swap\n\t\t\t\t\t\tswap = 1\n\t\t\t\t\t\tboard[q1x],board[q2x] = q2y,q1y\n\n\t\t\t\t\t\td1_count[q1d1].n -= 1\n\t\t\t\t\t\td1_count[q1d1].pos -= {(q1x,q1y)}\n\t\t\t\t\t\td2_count[q1d2].n -= 1\n\t\t\t\t\t\td2_count[q1d2].pos -= {(q1x,q1y)}\n\t\t\t\t\t\td1_count[q2d1].n -= 1\n\t\t\t\t\t\td1_count[q2d1].pos -= {(q2x,q2y)}\n\t\t\t\t\t\td2_count[q2d2].n -= 1\n\t\t\t\t\t\td2_count[q2d2].pos -= {(q2x,q2y)}\n\n\t\t\t\t\t\td1_count[q1d1b].n += 1\n\t\t\t\t\t\td1_count[q1d1b].pos |= {(q2x,q1y)}\n\t\t\t\t\t\td2_count[q1d2b].n += 1\n\t\t\t\t\t\td2_count[q1d2b].pos |= {(q2x,q1y)}\n\t\t\t\t\t\td1_count[q2d1b].n += 1\n\t\t\t\t\t\td1_count[q2d1b].pos |= {(q1x,q2y)}\n\t\t\t\t\t\td2_count[q2d2b].n += 1\n\t\t\t\t\t\td2_count[q2d2b].pos |= {(q1x,q2y)}\n\t\t\t\t\t\tbreak\n\t\tif swap==0:\n\t\t\treturn solve_n_queens(n,fixed_queen,iter+1)\n\n\tboard  = ''.join(['.'*y+'Q'+'.'*(n-y-1)+'\\n' for y in board])\n\treturn board\n\n\n\nimport random\nrandom.seed(0)\nprint(solve_n_queens(8, (0, 0)))\n"}</script>
+  </main>
+</body>
+</html>

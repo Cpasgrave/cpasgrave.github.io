@@ -1,0 +1,2 @@
+from heapq import heappop as ho, heappush as hi
+dbl_linear = lambda n:[[[s.add(p),hi(Q,p)]for _ in range(n)for q in[ho(Q)]for m in (2,3)for p in [m*q+1]if p not in s]and ho(Q)for Q,s in[([1],set())]][0]

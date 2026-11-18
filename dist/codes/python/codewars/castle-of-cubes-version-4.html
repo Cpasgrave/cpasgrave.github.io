@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Castle of Cubes · Python · version 4 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Castle of Cubes · Python · version 4</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/castle-of-cubes-version-4.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5cbcf4d4a0dcd2001e28fc79">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="castle-of-cubes.html">Python · version 1</a>
+      <a href="castle-of-cubes-version-2.html">Python · version 2</a>
+      <a href="castle-of-cubes-version-3.html">Python · version 3</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Compter les panneaux nécessaires pour assembler un nombre donné de pièces cubiques avec une surface extérieure minimale.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def panel_count(n):
+    root3 = int(n**(1/3))
+    dim3 = [0,0,0] if not n else [root3]*3 if n&lt;root3**2*(root3+1) else [root3,root3,root3+1] if n&lt;root3*(root3+1)**2 else [root3,root3+1,root3+1]
+    remain2 = n - dim3[0]*dim3[1]*dim3[2]
+    root2 = int(remain2**(1/2))
+    dim2 = [0,0] if not remain2 else [root2]*2 if remain2&lt;root2*(root2+1) else [root2,root2+1]
+    dim1 = remain2 - dim2[0]*dim2[1]
+    surface3 = 2 * (dim3[0]*dim3[1]+dim3[1]*dim3[2]+dim3[2]*dim3[0])
+    int3 = (dim3[0]*dim3[1]*dim3[2]*6 - surface3)//2
+    surface2 = (dim2[0]+2)*(dim2[1]+2)-4
+    int2 = (dim2[0]*dim2[1]*5 - surface2)//2
+    surfint1 = dim1*3 + 1*bool(dim1)
+    return surface3+int3+surface2+int2+surfint1</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(panel_count(8))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "castle-of-cubes-version-4.py", "code": "def panel_count(n):\n    root3 = int(n**(1/3))\n    dim3 = [0,0,0] if not n else [root3]*3 if n\u003croot3**2*(root3+1) else [root3,root3,root3+1] if n\u003croot3*(root3+1)**2 else [root3,root3+1,root3+1]\n    remain2 = n - dim3[0]*dim3[1]*dim3[2]\n    root2 = int(remain2**(1/2))\n    dim2 = [0,0] if not remain2 else [root2]*2 if remain2\u003croot2*(root2+1) else [root2,root2+1]\n    dim1 = remain2 - dim2[0]*dim2[1]\n    surface3 = 2 * (dim3[0]*dim3[1]+dim3[1]*dim3[2]+dim3[2]*dim3[0])\n    int3 = (dim3[0]*dim3[1]*dim3[2]*6 - surface3)//2\n    surface2 = (dim2[0]+2)*(dim2[1]+2)-4\n    int2 = (dim2[0]*dim2[1]*5 - surface2)//2\n    surfint1 = dim1*3 + 1*bool(dim1)\n    return surface3+int3+surface2+int2+surfint1\n\nprint(panel_count(8))\n"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,1 @@
+move_zeros=lambda a:sorted(a,key=lambda x:not(str(x)[0]!='0'or x))

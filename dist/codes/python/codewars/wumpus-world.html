@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Wumpus world · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Wumpus world</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/wumpus-world.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/625c70f8a071210030c8e22a">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Décider si l’or reste accessible dans une grotte à partir des informations disponibles sur les dangers et les cases adjacentes.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from functools import cache
+
+@cache
+def possca(n_pits):
+
+    # producing all the possible caves with n_pits pits and 1 wumpus:
+    # &#x27;+&#x27; is for reachable room
+    possible_caves = [&quot;+&quot;+&quot;_&quot;*15]
+    for p in range(n_pits): # placing the pits
+        new_caves = []
+        for poss_cave in possible_caves:
+            ct = p
+            for i in range(1,16):
+                if poss_cave[i]==&#x27;P&#x27;: ct -= 1
+                if poss_cave[i]==&#x27;_&#x27; and ct==0:
+                    new_caves  += [&#x27;&#x27;.join([c if j!=i else &#x27;P&#x27; for j,c in enumerate(poss_cave)])]
+        possible_caves = new_caves
+    new_caves = []
+    for poss_cave in possible_caves: # placing the wumpus
+        for i in range(1,16):
+            if poss_cave[i] == &#x27;_&#x27;:
+                new_caves += [&#x27;&#x27;.join([c if j!=i else &#x27;W&#x27; for j,c in enumerate(poss_cave)])]
+    return new_caves
+
+
+def wumpus_world(cave):
+
+    if cave[0][1] in &#x27;PW&#x27; or cave[1][0] in &#x27;PW&#x27;: return False
+
+    rg16 = range(16)
+    n_pits = sum([c.count(&#x27;P&#x27;)for c in cave])
+    cave = [c for row in cave for c in row]
+    cave[0] = &#x27;+&#x27;
+    neighbors = {n:{m if cond else None for (m,cond) in [(n-1,n%4),(n+1,(n+1)%4),(n-4,n&gt;3),(n+4,n&lt;12)]}-{None} for n in rg16}
+    smells = {room:{cave[n] for n in neighbors[room] if cave[n] in &#x27;WP&#x27;} for room in rg16}
+    w_dead = 0
+
+    # creating all the possible caves with n_pits P, 1 G and 1 W, in a 4x4 grid, with (0,0) free.
+    possible_caves = possca(n_pits)
+
+    # Entering the cave with a wide open nose
+    while True:
+
+        a = len(possible_caves)
+        b = cave.count(&#x27;+&#x27;)
+
+        for room in rg16:
+            if cave[room]==&#x27;+&#x27;:
+                neighrooms = neighbors[room]
+                smell = smells[room]
+                if smell=={&#x27;P&#x27;}:
+                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]==&#x27;P&#x27; for n in neighrooms)]
+                    possible_caves = [p_c for p_c in possible_caves if all(p_c[n]!=&#x27;W&#x27; for n in neighrooms)]
+                elif smell=={&#x27;W&#x27;}:
+                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]==&#x27;W&#x27; for n in neighrooms)]
+                    possible_caves = [p_c for p_c in possible_caves if all(p_c[n]!=&#x27;P&#x27; for n in neighrooms)]
+                elif smell=={&#x27;P&#x27;,&#x27;W&#x27;}:
+                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]==&#x27;P&#x27; for n in neighrooms) and any(p_c[n]==&#x27;W&#x27; for n in neighrooms)]
+                else: # smell==set():
+                    # no smell in this rooom
+                    for neighbor in neighrooms:
+                        if cave[neighbor] == &#x27;_&#x27;:
+                            cave[neighbor] = &#x27;+&#x27;
+                            possible_caves = [p_c for p_c in possible_caves if p_c[neighbor]==&#x27;_&#x27;]
+                        elif cave[neighbor] == &#x27;G&#x27;: return True
+
+        possibly_pits = set()
+        w_poss_loc = set()
+        for p_c in possible_caves:
+            for i in rg16:
+                if p_c[i]==&#x27;P&#x27;: possibly_pits |= {i}
+                elif p_c[i]==&#x27;W&#x27;: w_poss_loc |= {i}
+        for room in rg16:
+            if cave[room]==&#x27;+&#x27; and smells[room]=={&#x27;P&#x27;}:
+                for n in neighbors[room]:
+                    if n not in possibly_pits:
+                        if cave[n]==&#x27;G&#x27;: return True
+                        else: cave[n] = &#x27;+&#x27;
+        if not w_dead:
+            w_poss_loc = set(i for poss_cave in possible_caves for i in rg16 if poss_cave[i]==&#x27;W&#x27;)
+            if len(w_poss_loc)==1:
+                # kill the Wumpus
+                w = w_poss_loc.pop()
+                for neighbor in neighbors[w]: smells[neighbor] -= {&#x27;W&#x27;}
+                cave[w] = &#x27;+&#x27; if any(cave[n]==&#x27;+&#x27; for n in neighbors[w]) else &#x27;_&#x27;
+                possible_caves = list({p_c.replace(&#x27;W&#x27;,&#x27;_&#x27;) for p_c in possible_caves})
+                w_dead = 1
+
+        if len(possible_caves)==a and cave.count(&#x27;+&#x27;)==b:
+            break # no progress =&gt; no solution
+
+    return False </code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>grotte = [list(ligne) for ligne in (&quot;____&quot;, &quot;____&quot;, &quot;____&quot;, &quot;_W_G&quot;)]
+print(wumpus_world(grotte))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "wumpus-world.py", "code": "from functools import cache\n\n@cache\ndef possca(n_pits):\n\n    # producing all the possible caves with n_pits pits and 1 wumpus:\n    # '+' is for reachable room\n    possible_caves = [\"+\"+\"_\"*15]\n    for p in range(n_pits): # placing the pits\n        new_caves = []\n        for poss_cave in possible_caves:\n            ct = p\n            for i in range(1,16):\n                if poss_cave[i]=='P': ct -= 1\n                if poss_cave[i]=='_' and ct==0:\n                    new_caves  += [''.join([c if j!=i else 'P' for j,c in enumerate(poss_cave)])]\n        possible_caves = new_caves\n    new_caves = []\n    for poss_cave in possible_caves: # placing the wumpus\n        for i in range(1,16):\n            if poss_cave[i] == '_':\n                new_caves += [''.join([c if j!=i else 'W' for j,c in enumerate(poss_cave)])]\n    return new_caves\n\n\ndef wumpus_world(cave):\n\n    if cave[0][1] in 'PW' or cave[1][0] in 'PW': return False\n\n    rg16 = range(16)\n    n_pits = sum([c.count('P')for c in cave])\n    cave = [c for row in cave for c in row]\n    cave[0] = '+'\n    neighbors = {n:{m if cond else None for (m,cond) in [(n-1,n%4),(n+1,(n+1)%4),(n-4,n>3),(n+4,n\u003c12)]}-{None} for n in rg16}\n    smells = {room:{cave[n] for n in neighbors[room] if cave[n] in 'WP'} for room in rg16}\n    w_dead = 0\n\n    # creating all the possible caves with n_pits P, 1 G and 1 W, in a 4x4 grid, with (0,0) free.\n    possible_caves = possca(n_pits)\n\n    # Entering the cave with a wide open nose\n    while True:\n\n        a = len(possible_caves)\n        b = cave.count('+')\n\n        for room in rg16:\n            if cave[room]=='+':\n                neighrooms = neighbors[room]\n                smell = smells[room]\n                if smell=={'P'}:\n                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]=='P' for n in neighrooms)]\n                    possible_caves = [p_c for p_c in possible_caves if all(p_c[n]!='W' for n in neighrooms)]\n                elif smell=={'W'}:\n                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]=='W' for n in neighrooms)]\n                    possible_caves = [p_c for p_c in possible_caves if all(p_c[n]!='P' for n in neighrooms)]\n                elif smell=={'P','W'}:\n                    possible_caves = [p_c for p_c in possible_caves if any(p_c[n]=='P' for n in neighrooms) and any(p_c[n]=='W' for n in neighrooms)]\n                else: # smell==set():\n                    # no smell in this rooom\n                    for neighbor in neighrooms:\n                        if cave[neighbor] == '_':\n                            cave[neighbor] = '+'\n                            possible_caves = [p_c for p_c in possible_caves if p_c[neighbor]=='_']\n                        elif cave[neighbor] == 'G': return True\n\n        possibly_pits = set()\n        w_poss_loc = set()\n        for p_c in possible_caves:\n            for i in rg16:\n                if p_c[i]=='P': possibly_pits |= {i}\n                elif p_c[i]=='W': w_poss_loc |= {i}\n        for room in rg16:\n            if cave[room]=='+' and smells[room]=={'P'}:\n                for n in neighbors[room]:\n                    if n not in possibly_pits:\n                        if cave[n]=='G': return True\n                        else: cave[n] = '+'\n        if not w_dead:\n            w_poss_loc = set(i for poss_cave in possible_caves for i in rg16 if poss_cave[i]=='W')\n            if len(w_poss_loc)==1:\n                # kill the Wumpus\n                w = w_poss_loc.pop()\n                for neighbor in neighbors[w]: smells[neighbor] -= {'W'}\n                cave[w] = '+' if any(cave[n]=='+' for n in neighbors[w]) else '_'\n                possible_caves = list({p_c.replace('W','_') for p_c in possible_caves})\n                w_dead = 1\n\n        if len(possible_caves)==a and cave.count('+')==b:\n            break # no progress => no solution\n\n    return False \n\ngrotte = [list(ligne) for ligne in (\"____\", \"____\", \"____\", \"_W_G\")]\nprint(wumpus_world(grotte))\n"}</script>
+  </main>
+</body>
+</html>

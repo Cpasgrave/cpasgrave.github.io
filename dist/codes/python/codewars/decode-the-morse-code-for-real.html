@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Decode the Morse code, for real · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Decode the Morse code, for real</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/decode-the-morse-code-for-real.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/54acd76f7207c6a2880012bb">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Décoder le Morse à partir d’un signal binaire dont les durées de transmission peuvent varier.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def decodeBitsAdvanced(bits):
+
+	bits = bits.strip(&#x27;0&#x27;)
+	if not bits: return &#x27;&#x27;
+	ones,zeros,prev =[1],[],&#x27;1&#x27;
+	for i,b in enumerate(bits[1:]):
+		if b==prev:	
+			[zeros,ones][int(b)][-1] += 1
+		else:
+			[zeros,ones][int(b)] += [1]
+			prev = b
+	onesort =  sorted(ones)
+	min1,max1 = onesort[0],onesort[-1]
+	
+	if max1/min1&lt;3:
+		if not zeros or max1/min(zeros)&lt;3: rate = sum(ones)/len(ones)
+		else: rate = sum(ones)/len(ones)/3
+
+	else:
+		zerosort = sorted(zeros)
+		min0,max0 = zerosort[0],zerosort[-1]
+		rate0 = (max0-min0)/7.6
+		rate1 = (max1-min1)/3.66
+		rate = (rate0+rate1)/2 if len(zeros)&gt;1 else rate1
+
+	return &#x27;&#x27;.join(&#x27;.-&#x27;[n1&gt;=2*rate]+(&#x27;&#x27;,&#x27; &#x27;,&#x27;   &#x27;)[(n0&gt;=rate*2)+(n0&gt;=rate*5)] for n1,n0 in zip(ones,zeros+[0]))
+
+def decodeMorse(morseCode):
+	if morseCode==&#x27;&#x27;: return &#x27;&#x27;
+	return &#x27; &#x27;.join(&#x27;&#x27;.join(MORSE_CODE[letter] for letter in word.split(&#x27; &#x27;)) for word in morseCode.strip().split(&#x27;   &#x27;))
+</code></pre>
+    <p class="python-note">L’exemple fournit les entrées du dictionnaire Morse utilisées pour cette démonstration.</p>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>MORSE_CODE = {&quot;...&quot;: &quot;S&quot;, &quot;---&quot;: &quot;O&quot;}
+bits = &quot;1&quot;
+print(decodeBitsAdvanced(bits))
+MORSE_CODE[&quot;.&quot;] = &quot;E&quot;
+print(decodeMorse(decodeBitsAdvanced(bits)))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "decode-the-morse-code-for-real.py", "code": "def decodeBitsAdvanced(bits):\n\n\tbits = bits.strip('0')\n\tif not bits: return ''\n\tones,zeros,prev =[1],[],'1'\n\tfor i,b in enumerate(bits[1:]):\n\t\tif b==prev:\t\n\t\t\t[zeros,ones][int(b)][-1] += 1\n\t\telse:\n\t\t\t[zeros,ones][int(b)] += [1]\n\t\t\tprev = b\n\tonesort =  sorted(ones)\n\tmin1,max1 = onesort[0],onesort[-1]\n\t\n\tif max1/min1\u003c3:\n\t\tif not zeros or max1/min(zeros)\u003c3: rate = sum(ones)/len(ones)\n\t\telse: rate = sum(ones)/len(ones)/3\n\n\telse:\n\t\tzerosort = sorted(zeros)\n\t\tmin0,max0 = zerosort[0],zerosort[-1]\n\t\trate0 = (max0-min0)/7.6\n\t\trate1 = (max1-min1)/3.66\n\t\trate = (rate0+rate1)/2 if len(zeros)>1 else rate1\n\n\treturn ''.join('.-'[n1>=2*rate]+('',' ','   ')[(n0>=rate*2)+(n0>=rate*5)] for n1,n0 in zip(ones,zeros+[0]))\n\ndef decodeMorse(morseCode):\n\tif morseCode=='': return ''\n\treturn ' '.join(''.join(MORSE_CODE[letter] for letter in word.split(' ')) for word in morseCode.strip().split('   '))\n\n\nMORSE_CODE = {\"...\": \"S\", \"---\": \"O\"}\nbits = \"1\"\nprint(decodeBitsAdvanced(bits))\nMORSE_CODE[\".\"] = \"E\"\nprint(decodeMorse(decodeBitsAdvanced(bits)))\n"}</script>
+  </main>
+</body>
+</html>

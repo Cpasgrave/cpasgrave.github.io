@@ -1,0 +1,1 @@
+quarter_of=lambda m:(m-1)//3+1

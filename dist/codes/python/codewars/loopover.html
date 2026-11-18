@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Loopover · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Loopover</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/loopover.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5c1d796370fee68b1e000611">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Résoudre un plateau en décalant cycliquement ses lignes et ses colonnes, puis renvoyer les mouvements effectués.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">class Board:
+
+	def __init__(s,start,target):
+		s.start = start
+		s.B = [s[:]for s in start]
+		s.T = target
+		s.h = len(s.B)
+		s.w = len(s.B[0])
+		s.position = {e:[i,j] for i,r in enumerate(s.B)for j,e in enumerate(r)}
+		s.moves = []
+		s.buffer = [] # used to store moves before applying them
+
+	def move(s,m):
+		# a row or column move is applied, 
+		# and the modified positions updated
+		d = m[0]
+		idx = int(m[1:])
+		if d in &#x27;RL&#x27;:
+			j = -1 if d==&#x27;R&#x27; else -s.w+1
+			s.B[idx] = [s.B[idx][i+j]for i in range(s.w)]
+			for j,e in enumerate(s.B[idx]):
+				s.position[e][1] = j
+		else:
+			k = -1 if d==&#x27;D&#x27; else -s.h+1
+			s.B = [[c if j!=idx else s.B[i+k][j]for j,c in enumerate(r)]for i,r in enumerate(s.B)]
+			for i in range(s.h):
+				s.position[s.B[i][idx]][0] = i
+
+	def update(s,e=None):
+		# apply the sequence of moves present in the buffer
+		# then clean the buffer
+		for m in s.buffer: 
+			s.move(m)
+			s.moves += [m]
+		s.buffer = []
+		return e and s.position[e] or None
+
+	def final_sort(s,mess,target,rec):
+
+		# the sorting process:
+		# - parse the ordered array elements
+		# 	identify the first for which the previous is not at its left
+		# - give it &#x27;jumps&#x27; of 2 to the right untill it has the previous 
+		#   ordered element at its left
+		# - if it reaches the situation : xxxxxba and cannot jump,
+		#   use the highest ordered element at b&#x27;s left by bringing it
+		#   right of b and allow b&#x27;s jump:
+		#   xcxxxxba -&gt; xxxcxxba -&gt; xxxxxcba -&gt; xxxxxbac -&gt; xxxxxacb
+		#   the movements applied to the array are simultaneously
+		# 	appplied to the board (using buffer and update)
+		arr = mess[:]
+		indx = {e:i for i,e in enumerate(target)}
+		def jump_2R(el,i1,i2):
+			jump = [f&quot;D{s.w-1}&quot;,f&quot;R{s.h-1}&quot;,f&quot;U{s.w-1}&quot;,f&quot;R{s.h-1}&quot;,f&quot;D{s.w-1}&quot;,f&quot;L{s.h-1}&quot;,f&quot;L{s.h-1}&quot;,f&quot;U{s.w-1}&quot;]
+			arr.insert(i2,arr.pop(i1))
+			slide = s.w-3-s.position[el][1]
+			s.buffer = [f&quot;{&#x27;LR&#x27;[slide&gt;0]}{s.h-1}&quot;]*abs(slide)+jump
+			s.update()
+
+		while arr[:-2]!=target[:-2]:
+			prev = target[0]
+			for i,e in enumerate(target):
+				e_i = arr.index(e)
+				prev_i = arr.index(prev)
+				while e_i&lt;prev_i:
+					if e_i==s.w-2: # xxxba situation
+						x,f,f_i = max([(indx[f],f,i) for i,f in enumerate(arr[:e_i])if indx[f]&gt;indx[e]],default=(None,None,None))
+						if f==None: break
+						while f_i&lt;e_i:
+							jump_2R(f,f_i,f_i+2)
+							f_i += 2
+						e_i -= 1
+					else: # b&#x27;s simple jump
+						jump_2R(e,e_i,e_i+2)
+						e_i += 2
+				prev = e
+
+		# set the first element at the leftmost index
+		s.buffer = [f&quot;L{s.h-1}&quot;]*s.position[s.T[-1][0]][1]
+		s.update()
+
+		if s.B[-1]==target:	
+			return &#x27;solved&#x27;
+		# both height and width are odd:
+		if s.w%2 and s.h%2:
+			return &#x27;unsolvable&#x27;
+		# width is even:
+		if s.w%2==0:
+			e = s.T[-1][-1]
+			e_i = arr.index(e)
+			for i in range(s.w//2):
+				i2 = (e_i+2)%(s.w-1)
+				jump_2R(e,e_i,i2)
+				e_i = i2
+			return &#x27;solved&#x27;
+		# only height is even:
+		if s.h==2:
+			s.buffer = [f&quot;U{s.w-1}&quot;,f&quot;R{s.h-1}&quot;,f&quot;D{s.w-1}&quot;,f&quot;L{s.h-1}&quot;,f&quot;D{s.w-1}&quot;]
+			s.update()
+			return &#x27;solved&#x27;
+		# recursion case:
+		s.B = [s[:] for s in s.start]
+		s.position = {e:[i,j] for i,r in enumerate(s.B)for j,e in enumerate(r)}
+		s.moves,s.buffer = [],[]
+		s.solve(rec+1)
+
+	def solve(s,rec=0):
+
+		# recursion case:
+		if rec:
+			s.buffer = [f&quot;U{s.w-1}&quot;]*rec+[f&quot;R{s.h-1}&quot;,f&quot;U{s.w-1}&quot;,f&quot;L{s.h-1}&quot;,f&quot;U{s.w-1}&quot;,f&quot;R{s.h-1}&quot;,f&quot;D{s.w-1}&quot;,f&quot;D{s.w-1}&quot;,f&quot;L{s.h-1}&quot;,f&quot;U{s.w-1}&quot;]
+			s.update()
+
+		# solving first line:
+		for j in range(s.w):
+			e = s.T[0][j]
+			x,y = s.position[e]
+			if x==0:
+				if y==j: continue
+				if j!=0:
+					s.buffer += [f&quot;D{y}&quot;]
+					x,y = s.update(e)
+			shift = y-j
+			s.buffer += [f&quot;{&#x27;RL&#x27;[shift&gt;0]}{x}&quot;]*abs(shift)+[f&quot;U{j}&quot;]*x
+			s.update()
+
+		# solving next lines cycling though the grid till penultimate:
+		for i in range(1,s.h-1):
+			for j in range(s.w):
+				e = s.T[i][j]
+				x,y = s.position[e]
+				if x==i:
+					if y==j: continue
+					if j!=0:
+						s.buffer += [f&quot;D{y}&quot;,f&quot;L{(i+1)%s.h}&quot;,f&quot;U{y}&quot;]
+						x,y = s.update(e)
+				if y==j:
+					s.buffer += [f&quot;L{x}&quot;]
+					x,y = s.update(e)
+				hshift = y-j
+				vshift = x-i
+				s.buffer += [f&quot;D{j}&quot;]*vshift+[f&quot;{&#x27;RL&#x27;[hshift&gt;0]}{x}&quot;]*abs(hshift)+[f&quot;U{j}&quot;]*vshift
+				s.update()
+
+		# apply a last slide to have the first element
+		# of the last row at the leftmost index
+		s.buffer = [f&quot;L{s.h-1}&quot;]*s.position[s.T[-1][0]][1]
+		s.update()
+
+		# sorting the last row, by using a specific &#x27;jump&#x27; movement, alternated with slides
+		# the &#x27;jump&#x27; takes the element at index -2 and brings it to the end of the array
+		final = s.final_sort(s.B[-1],s.T[-1],rec)
+		return None if final==&#x27;unsolvable&#x27; else s.moves
+
+def loopover(mixed_up_board, solved_board,f=&#x27;&#x27;):
+    return Board(mixed_up_board,solved_board).solve()
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>depart = [list(&quot;ABC&quot;), list(&quot;EFD&quot;), list(&quot;GHI&quot;)]
+but = [list(&quot;ABC&quot;), list(&quot;DEF&quot;), list(&quot;GHI&quot;)]
+print(loopover(depart, but))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "loopover.py", "code": "class Board:\n\n\tdef __init__(s,start,target):\n\t\ts.start = start\n\t\ts.B = [s[:]for s in start]\n\t\ts.T = target\n\t\ts.h = len(s.B)\n\t\ts.w = len(s.B[0])\n\t\ts.position = {e:[i,j] for i,r in enumerate(s.B)for j,e in enumerate(r)}\n\t\ts.moves = []\n\t\ts.buffer = [] # used to store moves before applying them\n\n\tdef move(s,m):\n\t\t# a row or column move is applied, \n\t\t# and the modified positions updated\n\t\td = m[0]\n\t\tidx = int(m[1:])\n\t\tif d in 'RL':\n\t\t\tj = -1 if d=='R' else -s.w+1\n\t\t\ts.B[idx] = [s.B[idx][i+j]for i in range(s.w)]\n\t\t\tfor j,e in enumerate(s.B[idx]):\n\t\t\t\ts.position[e][1] = j\n\t\telse:\n\t\t\tk = -1 if d=='D' else -s.h+1\n\t\t\ts.B = [[c if j!=idx else s.B[i+k][j]for j,c in enumerate(r)]for i,r in enumerate(s.B)]\n\t\t\tfor i in range(s.h):\n\t\t\t\ts.position[s.B[i][idx]][0] = i\n\n\tdef update(s,e=None):\n\t\t# apply the sequence of moves present in the buffer\n\t\t# then clean the buffer\n\t\tfor m in s.buffer: \n\t\t\ts.move(m)\n\t\t\ts.moves += [m]\n\t\ts.buffer = []\n\t\treturn e and s.position[e] or None\n\n\tdef final_sort(s,mess,target,rec):\n\n\t\t# the sorting process:\n\t\t# - parse the ordered array elements\n\t\t# \tidentify the first for which the previous is not at its left\n\t\t# - give it 'jumps' of 2 to the right untill it has the previous \n\t\t#   ordered element at its left\n\t\t# - if it reaches the situation : xxxxxba and cannot jump,\n\t\t#   use the highest ordered element at b's left by bringing it\n\t\t#   right of b and allow b's jump:\n\t\t#   xcxxxxba -> xxxcxxba -> xxxxxcba -> xxxxxbac -> xxxxxacb\n\t\t#   the movements applied to the array are simultaneously\n\t\t# \tappplied to the board (using buffer and update)\n\t\tarr = mess[:]\n\t\tindx = {e:i for i,e in enumerate(target)}\n\t\tdef jump_2R(el,i1,i2):\n\t\t\tjump = [f\"D{s.w-1}\",f\"R{s.h-1}\",f\"U{s.w-1}\",f\"R{s.h-1}\",f\"D{s.w-1}\",f\"L{s.h-1}\",f\"L{s.h-1}\",f\"U{s.w-1}\"]\n\t\t\tarr.insert(i2,arr.pop(i1))\n\t\t\tslide = s.w-3-s.position[el][1]\n\t\t\ts.buffer = [f\"{'LR'[slide>0]}{s.h-1}\"]*abs(slide)+jump\n\t\t\ts.update()\n\n\t\twhile arr[:-2]!=target[:-2]:\n\t\t\tprev = target[0]\n\t\t\tfor i,e in enumerate(target):\n\t\t\t\te_i = arr.index(e)\n\t\t\t\tprev_i = arr.index(prev)\n\t\t\t\twhile e_i\u003cprev_i:\n\t\t\t\t\tif e_i==s.w-2: # xxxba situation\n\t\t\t\t\t\tx,f,f_i = max([(indx[f],f,i) for i,f in enumerate(arr[:e_i])if indx[f]>indx[e]],default=(None,None,None))\n\t\t\t\t\t\tif f==None: break\n\t\t\t\t\t\twhile f_i\u003ce_i:\n\t\t\t\t\t\t\tjump_2R(f,f_i,f_i+2)\n\t\t\t\t\t\t\tf_i += 2\n\t\t\t\t\t\te_i -= 1\n\t\t\t\t\telse: # b's simple jump\n\t\t\t\t\t\tjump_2R(e,e_i,e_i+2)\n\t\t\t\t\t\te_i += 2\n\t\t\t\tprev = e\n\n\t\t# set the first element at the leftmost index\n\t\ts.buffer = [f\"L{s.h-1}\"]*s.position[s.T[-1][0]][1]\n\t\ts.update()\n\n\t\tif s.B[-1]==target:\t\n\t\t\treturn 'solved'\n\t\t# both height and width are odd:\n\t\tif s.w%2 and s.h%2:\n\t\t\treturn 'unsolvable'\n\t\t# width is even:\n\t\tif s.w%2==0:\n\t\t\te = s.T[-1][-1]\n\t\t\te_i = arr.index(e)\n\t\t\tfor i in range(s.w//2):\n\t\t\t\ti2 = (e_i+2)%(s.w-1)\n\t\t\t\tjump_2R(e,e_i,i2)\n\t\t\t\te_i = i2\n\t\t\treturn 'solved'\n\t\t# only height is even:\n\t\tif s.h==2:\n\t\t\ts.buffer = [f\"U{s.w-1}\",f\"R{s.h-1}\",f\"D{s.w-1}\",f\"L{s.h-1}\",f\"D{s.w-1}\"]\n\t\t\ts.update()\n\t\t\treturn 'solved'\n\t\t# recursion case:\n\t\ts.B = [s[:] for s in s.start]\n\t\ts.position = {e:[i,j] for i,r in enumerate(s.B)for j,e in enumerate(r)}\n\t\ts.moves,s.buffer = [],[]\n\t\ts.solve(rec+1)\n\n\tdef solve(s,rec=0):\n\n\t\t# recursion case:\n\t\tif rec:\n\t\t\ts.buffer = [f\"U{s.w-1}\"]*rec+[f\"R{s.h-1}\",f\"U{s.w-1}\",f\"L{s.h-1}\",f\"U{s.w-1}\",f\"R{s.h-1}\",f\"D{s.w-1}\",f\"D{s.w-1}\",f\"L{s.h-1}\",f\"U{s.w-1}\"]\n\t\t\ts.update()\n\n\t\t# solving first line:\n\t\tfor j in range(s.w):\n\t\t\te = s.T[0][j]\n\t\t\tx,y = s.position[e]\n\t\t\tif x==0:\n\t\t\t\tif y==j: continue\n\t\t\t\tif j!=0:\n\t\t\t\t\ts.buffer += [f\"D{y}\"]\n\t\t\t\t\tx,y = s.update(e)\n\t\t\tshift = y-j\n\t\t\ts.buffer += [f\"{'RL'[shift>0]}{x}\"]*abs(shift)+[f\"U{j}\"]*x\n\t\t\ts.update()\n\n\t\t# solving next lines cycling though the grid till penultimate:\n\t\tfor i in range(1,s.h-1):\n\t\t\tfor j in range(s.w):\n\t\t\t\te = s.T[i][j]\n\t\t\t\tx,y = s.position[e]\n\t\t\t\tif x==i:\n\t\t\t\t\tif y==j: continue\n\t\t\t\t\tif j!=0:\n\t\t\t\t\t\ts.buffer += [f\"D{y}\",f\"L{(i+1)%s.h}\",f\"U{y}\"]\n\t\t\t\t\t\tx,y = s.update(e)\n\t\t\t\tif y==j:\n\t\t\t\t\ts.buffer += [f\"L{x}\"]\n\t\t\t\t\tx,y = s.update(e)\n\t\t\t\thshift = y-j\n\t\t\t\tvshift = x-i\n\t\t\t\ts.buffer += [f\"D{j}\"]*vshift+[f\"{'RL'[hshift>0]}{x}\"]*abs(hshift)+[f\"U{j}\"]*vshift\n\t\t\t\ts.update()\n\n\t\t# apply a last slide to have the first element\n\t\t# of the last row at the leftmost index\n\t\ts.buffer = [f\"L{s.h-1}\"]*s.position[s.T[-1][0]][1]\n\t\ts.update()\n\n\t\t# sorting the last row, by using a specific 'jump' movement, alternated with slides\n\t\t# the 'jump' takes the element at index -2 and brings it to the end of the array\n\t\tfinal = s.final_sort(s.B[-1],s.T[-1],rec)\n\t\treturn None if final=='unsolvable' else s.moves\n\ndef loopover(mixed_up_board, solved_board,f=''):\n    return Board(mixed_up_board,solved_board).solve()\n\n\ndepart = [list(\"ABC\"), list(\"EFD\"), list(\"GHI\")]\nbut = [list(\"ABC\"), list(\"DEF\"), list(\"GHI\")]\nprint(loopover(depart, but))\n"}</script>
+  </main>
+</body>
+</html>

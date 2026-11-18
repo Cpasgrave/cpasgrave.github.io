@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Substring Near Match · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Substring Near Match</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/substring-near-match.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5f1a9e7293f079002fc4ca59">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Repérer dans un texte les occurrences exactes ou suffisamment proches d’une sous-chaîne, selon les transformations autorisées.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def near_matches(substring, text):
+	# produces all the possible &#x27;near matches&#x27; 
+	# then check if matches any word (lowercased and cleaned)
+	s = substring.lower()
+	if len(s)&lt;2: raise ValueError
+	near = {s}
+	for i,c in enumerate(s):
+		# transpo
+		for j,d in enumerate(s[i+1:],i+1):
+			t = [*s]
+			t[i],t[j] = d,c
+			near |= {&#x27;&#x27;.join(t)}
+		# double
+		near |= {(s[:i+1]+s[i:])}
+		# exclu
+		near |= {(s[:i]+s[i+1:])}
+	matches = {}
+	for i,line in enumerate(text.splitlines(),1):
+		for w in line.split():
+			word = &#x27;&#x27;.join(c for c in w if c.isalpha()).lower()
+			if word in near: matches[i] = matches.get(i,[])+[w]
+	return matches</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(near_matches(&quot;chat&quot;, &quot;un chat, un caht et un chaat&quot;))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "substring-near-match.py", "code": "def near_matches(substring, text):\n\t# produces all the possible 'near matches' \n\t# then check if matches any word (lowercased and cleaned)\n\ts = substring.lower()\n\tif len(s)\u003c2: raise ValueError\n\tnear = {s}\n\tfor i,c in enumerate(s):\n\t\t# transpo\n\t\tfor j,d in enumerate(s[i+1:],i+1):\n\t\t\tt = [*s]\n\t\t\tt[i],t[j] = d,c\n\t\t\tnear |= {''.join(t)}\n\t\t# double\n\t\tnear |= {(s[:i+1]+s[i:])}\n\t\t# exclu\n\t\tnear |= {(s[:i]+s[i+1:])}\n\tmatches = {}\n\tfor i,line in enumerate(text.splitlines(),1):\n\t\tfor w in line.split():\n\t\t\tword = ''.join(c for c in w if c.isalpha()).lower()\n\t\t\tif word in near: matches[i] = matches.get(i,[])+[w]\n\treturn matches\n\nprint(near_matches(\"chat\", \"un chat, un caht et un chaat\"))\n"}</script>
+  </main>
+</body>
+</html>

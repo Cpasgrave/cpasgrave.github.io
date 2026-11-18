@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Roman Numerals Encoder · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Roman Numerals Encoder</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/roman-numerals-encoder.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/51b62bf6a9c58071c600001b">Énoncé original sur Codewars</a>
+    </div>
+    <nav class="python-links" aria-label="Autres versions">
+      <a href="roman-numerals-encoder-version-2.html">Python · version 2</a>
+    </nav>
+    <h2>Énoncé en bref</h2>
+    <p>Écrire un entier en chiffres romains en utilisant la notation soustractive lorsque nécessaire.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">def solution(n):
+    r = [&#x27;I&#x27;,&#x27;V&#x27;,&#x27;X&#x27;,&#x27;L&#x27;,&#x27;C&#x27;,&#x27;D&#x27;,&#x27;M&#x27;]
+    pat = [&#x27;&#x27;,&#x27;0&#x27;,&#x27;00&#x27;,&#x27;000&#x27;,&#x27;01&#x27;,&#x27;1&#x27;,&#x27;10&#x27;,&#x27;100&#x27;,&#x27;1000&#x27;,&#x27;02&#x27;]
+    res = &#x27;&#x27;
+    for s in range(len(str(n))):
+        res = &#x27;&#x27;.join([r[int(i) + 2*s] for i in pat[int(str(n)[::-1][s])]]) + res
+    return res</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(solution(2468))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "roman-numerals-encoder.py", "code": "def solution(n):\n    r = ['I','V','X','L','C','D','M']\n    pat = ['','0','00','000','01','1','10','100','1000','02']\n    res = ''\n    for s in range(len(str(n))):\n        res = ''.join([r[int(i) + 2*s] for i in pat[int(str(n)[::-1][s])]]) + res\n    return res\n\nprint(solution(2468))\n"}</script>
+  </main>
+</body>
+</html>

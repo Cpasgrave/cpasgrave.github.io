@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Strip Comments · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Strip Comments</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/strip-comments.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/51c8e37cee245da6b40000bd">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Couper le texte de chaque ligne à partir du premier marqueur de commentaire reconnu et retirer les espaces de fin.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">solution=lambda s,m:&#x27;\n&#x27;.join(l[:next((i for i in range(len(l))if l[i]in m),len(l))].rstrip(&#x27; &#x27;)for l in s.split(&#x27;\n&#x27;))</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(solution(&quot;pomme # note\npoire ! remarque\nprune&quot;, [&quot;#&quot;, &quot;!&quot;]))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "strip-comments.py", "code": "solution=lambda s,m:'\\n'.join(l[:next((i for i in range(len(l))if l[i]in m),len(l))].rstrip(' ')for l in s.split('\\n'))\n\nprint(solution(\"pomme # note\\npoire ! remarque\\nprune\", [\"#\", \"!\"]))\n"}</script>
+  </main>
+</body>
+</html>

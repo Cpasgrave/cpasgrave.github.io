@@ -1,0 +1,1 @@
+solution=lambda s,m:'\n'.join(l[:next((i for i in range(len(l))if l[i]in m),len(l))].rstrip(' ')for l in s.split('\n'))

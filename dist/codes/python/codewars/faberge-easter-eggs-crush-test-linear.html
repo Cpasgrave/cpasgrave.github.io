@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Faberge easter eggs crush test [linear] · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Codewars">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Faberge easter eggs crush test [linear]</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Codewars</a>
+      <a href="../sources/codewars/faberge-easter-eggs-crush-test-linear.py" download>Télécharger le .py</a>
+      <a href="https://www.codewars.com/kata/5976c5a5cd933a7bbd000029">Énoncé original sur Codewars</a>
+    </div>
+    <h2>Énoncé en bref</h2>
+    <p>Calculer, modulo le nombre demandé, la hauteur maximale qu’on peut déterminer avec un nombre donné d’œufs et d’essais.</p>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">MOD = 998244353
+
+inv = [1]+[inv.append(v)or v for inv in[[1]]for i in range(2,80001)for d,m in[divmod(MOD,i)]for v in[d*(i-inv[m-1])+m]]
+
+def height(m,g):
+    m=m-1
+    coeff = 1
+    result = 0
+    for i in range(m+1):
+        coeff = coeff*(g-i)*inv[i]%MOD
+        result += coeff
+    return result%MOD
+</code></pre>
+    <h2>Exemple d’exécution</h2>
+    <pre class="python-source" tabindex="0" aria-label="Exemple d’exécution"><code>print(height(2, 5))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "faberge-easter-eggs-crush-test-linear.py", "code": "MOD = 998244353\n\ninv = [1]+[inv.append(v)or v for inv in[[1]]for i in range(2,80001)for d,m in[divmod(MOD,i)]for v in[d*(i-inv[m-1])+m]]\n\ndef height(m,g):\n    m=m-1\n    coeff = 1\n    result = 0\n    for i in range(m+1):\n        coeff = coeff*(g-i)*inv[i]%MOD\n        result += coeff\n    return result%MOD\n\n\nprint(height(2, 5))\n"}</script>
+  </main>
+</body>
+</html>
