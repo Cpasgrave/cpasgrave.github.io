@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>027 · Quadratic primes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>027 · Quadratic primes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0027_Quadratic_primes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0027_Quadratic_primes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Quadratic primes
+
+Euler discovered the remarkable quadratic formula:
+
+n2+n+41
+It turns out that the formula will produce 40 primes for the
+consecutive integer values 0≤n≤39. However,
+when n=40,402+40+41=40(40+1)+41 is divisible by 41,
+and certainly when n=41,412+41+41 is clearly divisible by 41.
+
+The incredible formula n2−79n+1601 was discovered,
+which produces 80 primes for the consecutive values 0≤n≤79.
+The product of the coefficients, −79 and 1601, is −126479.
+
+Considering quadratics of the form:
+
+n2+an+b, where |a|&lt;1000 and |b|≤1000
+
+where |n| is the modulus/absolute value of n
+e.g. |11|=11 and |−4|=4
+Find the product of the coefficients, a and b,
+for the quadratic expression that produces
+the maximum number of primes for consecutive values of n,
+starting with n=0.
+&#x27;&#x27;&#x27;
+from sympy import isprime as isp
+
+maxprimes = (0,0,0)
+for a in range(-999,1000):
+    for b in range(-1000,1001):
+        test = 2
+        n = 0
+        while isp(test):
+            test = n**2 + a*n + b
+            n += 1
+        maxprimes = max(maxprimes,(n,a,b))
+print(maxprimes) # (72, -61, 971)
+print(maxprimes[1]*maxprimes[2]) # -59231
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["sympy"], "filename": "PE_0027_Quadratic_primes.py"}</script>
+  </main>
+</body>
+</html>

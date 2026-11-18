@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Générateur de pseudo-mots multilingue · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Projets Python">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Générateur de pseudo-mots multilingue</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Projets Python</a>
+      <a href="../sources/pseudo-mots/Pseudo_words_generator.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Pseudowords-Generator-Multi/blob/6bd6e27dd7377d8360a8b3f69ead832d9546cfbf/Pseudo_words_generator.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import choices
+import os
+import codecs
+import pickle
+import unicodedata
+
+
+def analyse(lexique, profondeur_max):
+	
+	proba_longeur = {}
+
+	len_max = 0
+	for mot in lexique:
+		lm = len(mot)
+		proba_longeur[lm] = proba_longeur.get(lm,0) + 1
+		if lm &gt; len_max: len_max = lm
+
+	proba_debut = {i:{} for i in range(len_max)}
+	proba_fin = {i:{} for i in range(len_max)}
+
+	for mot in lexique:
+
+		lm = len(mot)
+		precedent = &#x27;&#x27;
+
+		for profondeur in range(1,profondeur_max+1):
+
+			for i,c in enumerate(mot):
+
+				proba_debut[i][precedent] = proba_debut[i].get(precedent,{})
+				proba_debut[i][precedent][c] = proba_debut[i][precedent].get(c,0) + 1
+				proba_fin[inv][precedent] = proba_fin[inv := lm-i-1].get(precedent,{})
+				proba_fin[inv][precedent][c] = proba_fin[inv][precedent].get(c,0) + 1
+
+				precedent = precedent[(1,0)[len(precedent) &lt; profondeur]:] + c
+
+	probas = proba_longeur, proba_debut, proba_fin
+	with open(local_path + f&#x27;/Data/Probas_gen_mots_3.0_{language}.pkl&#x27;, &#x27;wb&#x27;) as f:
+		pickle.dump(probas, f)
+
+
+def genere(language, lexique, profondeur, nombre, longueur=0):
+
+	with open(local_path + f&#x27;/Data/Probas_gen_mots_3.0_{language}.pkl&#x27;, &quot;rb&quot;) as file:
+	    probas = pickle.load(file)
+
+	proba_longueur, proba_debut, proba_fin = probas
+	choix = lambda d: choices(list(d.keys()),weights=list(d.values()),k=1)[0]
+
+	for i in range(nombre):
+
+		l = longueur or choix(proba_longueur)
+		fin = l//2
+		debut = l-fin
+		mot = &#x27;&#x27;
+		dec = 0
+		if int(profondeur) != profondeur: 
+			mul = profondeur - int(profondeur)
+			profondeur = int(profondeur) + 1
+			dec = 1
+
+		for rg, proba in ((range(debut), proba_debut),(range(fin-1,-1,-1), proba_fin)):
+			for i in rg:
+				precedent = mot[-(min(len(mot),profondeur)):]
+				while precedent not in proba[i]:
+					print(&quot;    --  baisse&quot;)
+					precedent = precedent[1:]
+				if dec and len(precedent) &gt; profondeur:
+					d = {k:v*mul for k,v in proba[i][precedent]}
+					for k,v in proba[i][precedent[1:]]:
+						d[k] = d.get(v,0) + v*(1-mul)
+				else:
+					d =  proba[i][precedent]
+				mot += choix(d)
+
+		if mot in lexique:
+			genere(language, lexique, profondeur, 1, longueur=l)
+		else:
+			print(mot)
+
+
+local_path = os.path.dirname(__file__)
+fr = &#x27;liste.de.mots.francais.frgut.txt&#x27;
+en = &#x27;English_words_alpha_370k.txt&#x27;
+ru = &#x27;Mots_russes.txt&#x27;
+ro = &#x27;Mots_roumains_180k.txt&#x27;
+de = &#x27;Mots_Allemands_344k.txt&#x27;
+fi = &#x27;Mots_finlandais_287k.txt&#x27;
+hr = &#x27;words.croatian.txt&#x27;
+dk = &#x27;words.danish.txt&#x27;
+nl = &#x27;words.dutch.txt&#x27;
+it = &#x27;words.italian.txt&#x27;
+la = &#x27;words.latin.txt&#x27;
+no = &#x27;words.norwegian.txt&#x27;
+pl = &#x27;words.polish.txt&#x27;
+
+
+language = fr
+
+with codecs.open(local_path + &#x27;/Data/&#x27; +  language, &quot;r&quot;, &quot;utf-8&quot;) as file:
+	lexique = set(unicodedata.normalize(&#x27;NFC&#x27;, w.strip()) for w in file.readlines())
+
+if not os.path.isfile(f&quot;Data/Probas_gen_mots_3.0_{language}.pkl&quot;):
+	# création des probas, à la première utilisation
+	print(&quot;Please wait, probas are being processed...&quot;)
+	probas = analyse(lexique,3)
+
+taille_des_mots = 0
+profondeur = 2.12
+nombre_de_mots = 20
+mot = genere(language, lexique, profondeur, nombre_de_mots, taille_des_mots)
+</code></pre>
+    <p class="python-note">Le premier calcul charge le dictionnaire français et peut prendre un moment.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Pseudo_words_generator.py", "files": [{"name": "Data/liste.de.mots.francais.frgut.txt", "url": "https://raw.githubusercontent.com/Cpasgrave/Pseudowords-Generator-Multi/6bd6e27dd7377d8360a8b3f69ead832d9546cfbf/Data/liste.de.mots.francais.frgut.txt"}]}</script>
+  </main>
+</body>
+</html>

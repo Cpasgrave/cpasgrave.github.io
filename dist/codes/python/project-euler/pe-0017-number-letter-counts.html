@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>017 · Number letter counts · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>017 · Number letter counts</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0017_Number_letter_counts.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0017_Number_letter_counts.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Number letter counts
+
+
+If the numbers 1 to 5 are written out in words:
+one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+
+If all the numbers from 1 to 1000 (one thousand) inclusive
+were written out in words, how many letters would be used?
+
+NOTE: Do not count spaces or hyphens. For example,
+342 (three hundred and forty-two) contains 23 letters
+and 115 (one hundred and fifteen) contains 20 letters.
+The use of &quot;and&quot; when writing out numbers is in compliance with British usage.
+&#x27;&#x27;&#x27;
+
+D = {
+0:&#x27;&#x27;,
+1:&#x27;one&#x27;,
+2:&#x27;two&#x27;,
+3:&#x27;three&#x27;,
+4:&#x27;four&#x27;,
+5:&#x27;five&#x27;,
+6:&#x27;six&#x27;,
+7:&#x27;seven&#x27;,
+8:&#x27;eight&#x27;,
+9:&#x27;nine&#x27;,
+10:&#x27;ten&#x27;,
+11:&#x27;eleven&#x27;,
+12:&#x27;twelve&#x27;,
+13:&#x27;thirteen&#x27;,
+14:&#x27;fourteen&#x27;,
+15:&#x27;fifteen&#x27;,
+16:&#x27;sixteen&#x27;,
+17:&#x27;seventeen&#x27;,
+18:&#x27;eighteen&#x27;,
+19:&#x27;nineteen&#x27;,
+20:&#x27;twenty&#x27;,
+30:&#x27;thirty&#x27;,
+40:&#x27;forty&#x27;,
+50:&#x27;fifty&#x27;,
+60:&#x27;sixty&#x27;,
+70:&#x27;seventy&#x27;,
+80:&#x27;eighty&#x27;,
+90:&#x27;ninety&#x27;,
+}
+
+def lettersCount(n):
+    m,c,d,u = [*map(int,[*str(n).zfill(4)])]
+    text = (m&gt;0)*(D[m]+&#x27; thousand &#x27;+(n%1000&gt;0)*&#x27;and &#x27;)+(c&gt;0)*(D[c]+&#x27; hundred&#x27;+(n%100&gt;0)*&#x27;and &#x27;)+(D[n%100]if d==1 else D[d*10]+D[u])
+    text = text.replace(&#x27; &#x27;,&#x27;&#x27;)
+    return len(text)
+
+s = 0
+for n in range(1,1001):
+    s += lettersCount(n)
+print(s)
+
+def write(n):
+    *m,c,d,u = [*map(int,[*str(n).zfill(6)])]
+    text = (write(n//1000)+&#x27; thousand &#x27;+(n%1000&gt;0)*&#x27;and &#x27;if n//1000 else &#x27;&#x27;)+(c&gt;0)*(D[c]+&#x27; hundred &#x27;+(n%100&gt;0)*&#x27;and &#x27;)+(D[n%100]if d==1 else D[d*10]+&#x27;-&#x27;*(d*u&gt;0)+D[u])
+    return text
+
+for n in [2,17,53,348,611,1000,900,1365,22222]:
+    print(write(n))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0017_Number_letter_counts.py"}</script>
+  </main>
+</body>
+</html>

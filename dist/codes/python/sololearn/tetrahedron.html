@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Tetrahedron · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Tetrahedron</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Tetrahedron.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Tetrahedron.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1142841/assignment-challenge-tetrahedron
+# https://www.sololearn.com/Discuss/1148022/assignment-challenge-tetrahedron-2
+
+&#x27;&#x27;&#x27;
+answer to Gaurav Agrawal&#x27;s funky challenge :
+CHALLENGE ::: TETRAHEDRON [2]
+
+previous challenge was :
+
+Your task is to find number of ways in which we can reach from point &#x27;A&#x27; to point &#x27;A&#x27; in n-steps .
+&#x27;n&#x27; will be provided as the user #input .
+
+Example : inp : 3 
+          out : 6
+          [ABCA,ABDA,ACBA,ACDA,ADBA,ADCA]
+          
+the only difference in this challenge is that , now we have to find no. of paths of n steps possible for reaching from pt. A to pt. B 
+//1 step means 1 jump 
+//give it a try , be simple 👍
+//WARNING : forget U know some basic math
+&#x27;&#x27;&#x27;
+
+start = &#x27;A&#x27;
+end = &#x27;B&#x27;
+
+def travel(n,start,end):
+    paths = [start]
+    tetra = &#x27;ABCD&#x27;
+    for i in range(n):
+        temp = []
+        if i == n-2:
+            tetra.replace(end,&#x27;&#x27;)
+        if i == n-1:
+            tetra = end
+        for p in paths:
+            for vertice in tetra.replace(p[-1],&#x27;&#x27;):
+                temp.append(p + vertice)
+        paths = temp
+    return len(paths),paths
+
+print(&#x27;from&#x27;,start,&#x27;to&#x27;,end,&#x27;:&#x27;)
+for i in range(1,13):
+    print(i,&#x27;steps --&gt;&#x27;,travel(i,start,end)[0],&#x27;different paths&#x27;)
+#    print(travel(i,start,end)[1])
+
+# printing the paths is commented, because it&#x27;s taking too long on CodePlayground.
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Tetrahedron.py"}</script>
+  </main>
+</body>
+</html>

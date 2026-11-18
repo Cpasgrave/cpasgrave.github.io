@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Deficient Numbers · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Deficient Numbers</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Deficient_Numbers.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Deficient_Numbers.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># Challenge by Krishna Teja Yeluripati
+&#x27;&#x27;&#x27;
+Deficient Numbers
+
+A number is considered deficient if the sum of its factors is less than twice that number.
+
+For Example:
+10 is a deficient number.
+Factors of 10 are 1, 2, 5, 10
+Sum is 1 + 2 + 5 + 10 = 18 &lt; 2 * 10
+
+Tasks:
+(Easy) Write a program to verify whether a given number is deficient or not.
+(Medium) Write a program to find all the deficient numbers in a range.
+(Hard) Given a number, write a program to display its factors, their sum and then verify whether it&#x27;s deficient or not.
+&#x27;&#x27;&#x27;
+
+x = 2557834
+
+fac = [n for n in range(1,x+1) if x%n==0]
+tot = sum(fac)
+#----printing addition----------------
+w=len(str(max(fac)))+2
+print(&#x27;{:{w}}&#x27;.format(1,w=w))
+for i in fac[1:]:
+  print(&#x27;{:=+{w}}&#x27;.format(i,w=w))
+print(chr(196)*w)
+print(&#x27;=&#x27;,&#x27;{:{w}}&#x27;.format(tot,w=w-1),sep=&#x27;&#x27;)
+#----printing explanation-------------
+de = tot&lt;2*x
+print(&#x27;\n&#x27;,x,&#x27; is&#x27;,&#x27; not&#x27;*(not de),&#x27; a deficient number, because :&#x27;,sep=&#x27;&#x27;)
+print(tot,&#x27; &lt; &#x27; if de else &#x27; &gt; &#x27;,2*x,&#x27; (2 x &#x27;,x,&#x27;)&#x27;,sep=&#x27;&#x27;)
+#----All deficient from 1 to 600------
+print(&#x27;\nFollowing numbers are all deficient numbers from 0 to 1000:&#x27;)
+for i in range(1001):
+  if sum([n for n in range(1,i+1) if i%n==0]) &lt; 2*i:
+    print(i,&#x27;, &#x27;,sep=&#x27;&#x27;,end=&#x27;&#x27;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Deficient_Numbers.py"}</script>
+  </main>
+</body>
+</html>

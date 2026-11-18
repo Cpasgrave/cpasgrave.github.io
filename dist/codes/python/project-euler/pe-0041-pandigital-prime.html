@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>041 · Pandigital prime · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>041 · Pandigital prime</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0041_Pandigital_prime.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0041_Pandigital_prime.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Pandigital prime
+
+We shall say that an n-digit number is pandigital
+if it makes use of all the digits 1 to n exactly once.
+For example, 2143 is a 4-digit pandigital and is also prime.
+
+What is the largest n-digit pandigital prime that exists?
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+from itertools import permutations as perm
+
+def is_prime(n):
+  if n == 2 or n == 3: return True
+  if n &lt; 2 or n%2 == 0: return False
+  if n &lt; 9: return True
+  if n%3 == 0: return False
+  r = int(n**0.5)
+  f = 5
+  while f &lt;= r:
+    # print &#x27;\t&#x27;,f
+    if n%f == 0: return False
+    if n%(f+2) == 0: return False
+    f +=6
+  return True
+
+t = time()
+# no permutation of all the 9 digits will produce a prime because
+# their repeted sum leads to 9
+# same for 8 digits
+P = (p for p in perm(&#x27;7654321&#x27;,7))
+
+test = 0
+for i in range(100):
+	p = int(&#x27;&#x27;.join(next(P)))
+	test += 1
+	if is_prime(p):
+		print(p)
+		break
+print(test)
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0041_Pandigital_prime.py"}</script>
+  </main>
+</body>
+</html>

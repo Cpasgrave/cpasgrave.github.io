@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Typoglycemia 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Typoglycemia 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Typoglycemia_2.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Typoglycemia_2.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1041633/%EF%B8%8Fchallenge-%EF%B8%8F-typoglycemia
+&#x27;&#x27;&#x27;
+☢️CHALLENGE☢️: Typoglycemia proposed by Murillo Pyaia
+
+Typoglycemia is the mind&#x27;s ability to decipher a mispelled word if the first and last letters of the word are correct.
+Make a program that receives user input and outputs the typoglycemic version of the string.
+Example:
+Input: &quot;I love SoloLearn&quot;
+Output: &quot;I lvoe SLloorean&quot;
+
+Good luck and good coding!&#x27;&#x27;&#x27;
+
+from re import findall
+from random import shuffle
+text = &quot;If you are coming from Java world, you might already have heard about the method overloading in Java. &quot; \
+       &quot;Kotlin, with the help of default parameters and named arguments helps us to reduce the number &quot; \
+       &quot;of overloads that we generally need in Java world.&quot;
+
+pattern = r&#x27;(\w+)(\W+)&#x27;
+matches = findall(pattern,text)
+words = []
+for m in matches:
+    words.append(m[0])
+    words.append(m[1])
+glyc = [] ; s = &#x27;&#x27;
+for i in range(len(words)):
+    if len(words[i])&lt;4 or (len(words[i])==4 and words[i][1]==words[i][2]):
+        glyc.append(words[i])
+    else:
+        s = words[i][1:-1]
+        while True:
+            l = list(s)
+            shuffle(l)
+            if &#x27;&#x27;.join(l) != words[i][1:-1]: break
+        glyc.append(words[i][0]+&#x27;&#x27;.join(l)+words[i][-1])
+print(&#x27;&#x27;.join(glyc))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Typoglycemia_2.py"}</script>
+  </main>
+</body>
+</html>

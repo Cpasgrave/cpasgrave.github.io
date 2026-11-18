@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>065 · Convergents of e · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>065 · Convergents of e</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0065_Convergents_of_e.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0065_Convergents_of_e.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Convergents of e
+
+The square root of 2 can be written as an infinite continued fraction.
+
+√2 = 1 + 1 / (2+1 / (2+1 / (2+1 / (2 + ... ))))
+The infinite continued fraction can be written, √2 = [1;(2)], (2) indicates that 2 repeats ad infinitum. In a similar way, √23 = [4;(1,3,1,8)].
+
+It turns out that the sequence of partial values of continued fractions for square roots provide the best rational approximations. Let us consider the convergents for √2.
+
+
+Hence the sequence of the first ten convergents for √2 are:
+
+1, 3/2, 7/5, 17/12, 41/29, 99/70, 239/169, 577/408, 1393/985, 3363/2378, ...
+What is most surprising is that the important mathematical constant,
+e = [2; 1,2,1, 1,4,1, 1,6,1 , ... , 1,2k,1, ...].
+
+The first ten terms in the sequence of convergents for e are:
+
+2, 3, 8/3, 11/4, 19/7, 87/32, 106/39, 193/71, 1264/465, 1457/536, ...
+The sum of digits in the numerator of the 10th convergent is 1+4+5+7=17.
+
+Find the sum of digits in the numerator of the 100th convergent of the continued fraction for e.
+&#x27;&#x27;&#x27;
+
+def cf2f(cf):
+    &#x27;&#x27;&#x27; continued fraction to fraction
+    n = numerator, d = denominator&#x27;&#x27;&#x27;
+    n,d = 1,0
+    for e in cf[::-1]: n,d = d+n*e,n
+    return n,d
+
+def ecf(n):
+    e = [2]
+    for i in range(1,n//3+2): e.extend([1,i*2,1])
+    return(e[:n])
+
+n = 100
+e = ecf(n)
+
+print(sum(map(int,str(cf2f(e[:n])[0]))))
+
+
+
+
+
+
+
+
+
+#
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0065_Convergents_of_e.py"}</script>
+  </main>
+</body>
+</html>

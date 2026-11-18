@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>025 · 1000-digit Fibonacci number · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>025 · 1000-digit Fibonacci number</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0025_1000-digit_Fibonacci_number.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0025_1000-digit_Fibonacci_number.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+1000-digit Fibonacci number
+
+The Fibonacci sequence is defined by the recurrence relation:
+
+Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+Hence the first 12 terms will be:
+
+F1 = 1
+F2 = 1
+F3 = 2
+F4 = 3
+F5 = 5
+F6 = 8
+F7 = 13
+F8 = 21
+F9 = 34
+F10 = 55
+F11 = 89
+F12 = 144
+The 12th term, F12, is the first term to contain three digits.
+
+What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+&#x27;&#x27;&#x27;
+
+def fib():
+    j = 1
+    F = [1,1]
+    while True:
+        if len(str(F[j%2]))==1000:
+            return j,F[j%2]
+        s = sum(F)
+        F[j%2] = s
+        j += 1
+
+print(fib()) # 4782
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0025_1000-digit_Fibonacci_number.py"}</script>
+  </main>
+</body>
+</html>

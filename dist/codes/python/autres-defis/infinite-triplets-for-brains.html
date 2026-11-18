@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Infinite Triplets For Brains · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Infinite Triplets For Brains</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Infinite__Triplets_For_Brains.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Infinite__Triplets_For_Brains.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"> &#x27;&#x27;&#x27;
+Brains asked for a function to produce infinite triplets following next pattern:
+123
+234
+345
+456
+567
+678
+789
+891
+912
+123
+...
+&#x27;&#x27;&#x27;
+
+print(&#x27;\n&#x27;.join([&#x27;&#x27;.join([str(i)for i in range(1,10)]*2)[a%9:a%9+3] for a in range(500)]))
+</code></pre>
+    <p class="python-note">À l’exécution, une indentation au début du fichier est corrigée.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Infinite__Triplets_For_Brains.py", "code": "'''\nBrains asked for a function to produce infinite triplets following next pattern:\n123\n234\n345\n456\n567\n678\n789\n891\n912\n123\n...\n'''\n\nprint('\\n'.join([''.join([str(i)for i in range(1,10)]*2)[a%9:a%9+3] for a in range(500)]))\n"}</script>
+  </main>
+</body>
+</html>

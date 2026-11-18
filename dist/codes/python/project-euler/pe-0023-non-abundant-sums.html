@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>023 · Non-abundant sums · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>023 · Non-abundant sums</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0023_Non-abundant_sums.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0023_Non-abundant_sums.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Non-abundant sums
+
+A perfect number is a number for which the sum of its proper divisors
+ is exactly equal to the number.
+ For example, the sum of the proper
+ divisors of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that
+ 28 is a perfect number.
+
+A number n is called deficient if the sum of its proper divisors
+is less than n and it is called abundant if this sum exceeds n.
+
+As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16,
+the smallest number that can be written as the sum of
+two abundant numbers is 24.
+By mathematical analysis, it can be shown that
+all integers greater than 28123 can be written
+as the sum of two abundant numbers.
+However, this upper limit cannot be reduced any further
+by analysis even though it is known that the greatest number
+that cannot be expressed as the sum of two abundant numbers
+is less than this limit.
+
+Find the sum of all the positive integers which
+cannot be written as the sum of two abundant numbers.
+&#x27;&#x27;&#x27;
+
+from collections import defaultdict as dd
+
+def pFac(n,div=0):
+    if n&lt;2:
+        if div: return {}
+        else: return []
+    fac = dd(int)
+    while n%2==0:
+        n //= 2
+        fac[2] += 1
+    p = 3
+    while p &lt;= n:
+        if n%p==0:
+            n //= p
+            fac[p] += 1
+        else: p += 2
+    pFactors = [(k,v) for k,v in fac.items()]
+    if div==0:
+        return pFactors
+    else:
+        divisors = [1]
+        for p,pow in pFactors:
+            divisors = [d*p**pw for d in divisors for pw in range(pow+1)]
+        return divisors
+
+abondant = set()
+for n in range(1,28124):
+    if sum(sorted(pFac(n,1))[:-1]) &gt; n:
+        abondant.add(n)
+
+nas = []
+for n in range(1,28124):
+    summable = 0
+    for ab in abondant:
+        if n-ab in abondant:
+            summable = 1
+            break
+        else: continue
+    if summable == 0: nas.append(n)
+
+print(sum(nas)) # 4179871
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0023_Non-abundant_sums.py"}</script>
+  </main>
+</body>
+</html>

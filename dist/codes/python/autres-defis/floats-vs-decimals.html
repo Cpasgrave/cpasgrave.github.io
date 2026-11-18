@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Floats vs Decimals · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Floats vs Decimals</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Floats_vs_Decimals.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Floats_vs_Decimals.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+This code demonstrates the danger of floats when making an increasing number of operations on them.
+It also shows the benefits of the Decimal module solution.
+&#x27;&#x27;&#x27;
+
+import decimal
+
+def iterate(n):
+    a = decimal.Decimal(&#x27;1&#x27;)
+    b = decimal.Decimal(&#x27;2&#x27;)
+    aa = 1
+    bb = 2
+    def process(a, b, n):
+        for i in range(n):
+            b = (b + a * b) / a
+            a = 100 - b
+        return b
+        
+    b=process(a,b,n)
+    bb=process(aa,bb,n)
+    
+    bb = decimal.Decimal(str(bb))
+    print(&#x27;--&#x27;,n,&#x27;iterations:\npython float-&gt;&#x27;,bb,&#x27;\ndecimal     -&gt;&#x27;,b,&#x27;\n&#x27;,b-bb,&#x27;(difference)\n&#x27;)
+
+for n in [1,10,100,200,300,400,500,600,620,640,645,650,660,670,671,675,680,690,700,800,900,1000,10000,100000,1000000]:
+    iterate(n)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Floats_vs_Decimals.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>037 · Truncatable primes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>037 · Truncatable primes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0037_Truncatable_primes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0037_Truncatable_primes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Truncatable primes
+
+The number 3797 has an interesting property.
+Being prime itself, it is possible to continuously
+remove digits from left to right, and remain prime at each stage:
+3797, 797, 97, and 7.
+Similarly we can work from right to left:
+3797, 379, 37, and 3.
+
+Find the sum of the only eleven primes that are both
+truncatable from left to right and right to left.
+
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+&#x27;&#x27;&#x27;
+
+from time import perf_counter as time
+from math import log10
+
+def primesto(n):
+    sieve = [0]+[1]*((n-1)//2)
+    for i in range(3,int(n**0.5)+1,2):
+        for j in range(i**2//2,(n-1)//2+1,i): sieve[j]=0
+    primes = set()
+    for i,j in enumerate(sieve):
+      if j:
+        p = 2*i+1
+        primes.add(p)
+    return {2}|primes
+
+def TPrimes(primes):
+  TP = set()
+  pdig = {&#x27;1&#x27;,&#x27;3&#x27;,&#x27;7&#x27;,&#x27;9&#x27;}
+  for p in primes:
+    stop = 0
+    p1 = p//10
+    while p1:
+      if p1 in primes:
+        p1 //= 10
+        continue
+      else:
+        stop = 1
+        break
+    if stop: continue
+    p2 = p%10**int(log10(p))
+    while p2:
+      if p2 in primes:
+        p2 = p2%10**int(log10(p2))
+        continue
+      else:
+        stop = 1
+        break
+    if stop: continue
+    else:
+      if p&gt;10: TP.add(p)
+  return sorted(TP)
+
+t = time()
+limit = 10**6
+primes = primesto(limit)
+TP = TPrimes(primes)
+
+print(len(TP))
+print(TP)
+print(sum(TP))  # 748317
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0037_Truncatable_primes.py"}</script>
+  </main>
+</body>
+</html>

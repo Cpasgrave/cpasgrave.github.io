@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Alphabetic Balance Scale 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Alphabetic Balance Scale 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Alphabetic%20Balance%20Scale%202.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Alphabetic%20Balance%20Scale%202.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># -*- coding: utf-8 -*-
+
+&quot;&quot;&quot;
+Challenge by Zephyr Koo https://www.sololearn.com/Profile/5654685/
+Monday Blue Challenge Series #14
+Let&#x27;s play with alphabets this week! This time we will need to put alphabets onto the balance scale at 2 ends to achieve equilibrium.
+If it&#x27;s impossible to do so, determine the letter need to be added with minimum weight. The letters weight from 1 to 26 which corresponds to A to Z respectively.
+TASK
+Write a program to accept a string of uppercase letters and split into 2 groups which produce the minimum sum difference by using an underscore character &quot;_&quot;.
+If the sum difference is not ZERO, we will need to add a letter (surround it with round brackets) on either side to achieve equilibrium.
+
+TEST CASE
+&quot;A&quot; ➡ (A)_A or A_(A)
+&quot;AA&quot; ➡ A_A
+&quot;AAA&quot; ➡ A(A)_AA or AA_A(A)
+&quot;ABC&quot; ➡ AB_C
+&quot;ABBA&quot; ➡ AB_BA
+&quot;ABCD&quot; ➡ ABC_D(B)
+&quot;ZEPHYRKOO&quot; ➡ ZEPHY_RKOO(U)
+&quot;MONDAYBLUE&quot; ➡ MONDA(R)_YBLUE
+&quot;CHRISTMAS&quot; ➡ CHRIS_TMAS(D)
+&quot;IS&quot; ➡ I(J)_S
+&quot;COMING&quot; ➡ COM_ING(A)
+&quot;SOON&quot; ➡ SO_ON(E)
+BONUS
+ Clear-cut and optimized approach is encouraged.
+Happy Coding!!!
+&quot;&quot;&quot;
+
+# https://www.sololearn.com/Discuss/937081/m-challenge-alphabetical-balance-scale-%EF%B8%8F
+test = [&quot;A&quot;, &quot;AA&quot;, &quot;AAA&quot;, &quot;ABC&quot;, &quot;ABBA&quot;, &quot;ABCD&quot;, &quot;ZEPHYRKOO&quot;, &quot;MONDAYBLUE&quot;, &quot;CHRISTMAS&quot;, &quot;IS&quot;, &quot;COMING&quot;, &quot;SOON&quot;, &quot;AAAAAZ&quot;]
+
+def cut(word):
+    n_list = [ord(c) - 64 for c in word]
+    half = sum(n_list) / 2
+    length = weight = 0
+    for n in n_list:
+        length += 1
+        weight += n
+        if weight == half:
+            return word[:length] + &quot;_&quot; + word[length:]
+        if weight &gt; half:
+            diff = weight - half
+            diff_short = half - (weight-n)
+            if diff &lt;= diff_short:
+                return word[:length] + &quot;_&quot; + word[length:] + &quot;(&quot; + chr(int(diff*2 + 64)) + &quot;)&quot;
+            else:
+                return word[:length-1] + &quot;(&quot; + chr(int(diff_short*2 + 64)) + &quot;)&quot; + &quot;_&quot; + word[length-1:]
+
+for i in test:
+    print (cut(i))
+        
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Alphabetic Balance Scale 2.py"}</script>
+  </main>
+</body>
+</html>

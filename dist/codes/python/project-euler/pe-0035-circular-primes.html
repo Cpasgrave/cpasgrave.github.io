@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>035 · Circular primes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>035 · Circular primes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0035_Circular_primes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0035_Circular_primes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Circular primes
+
+The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.
+
+There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+
+How many circular primes are there below one million?
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+
+def primesto(n):
+    sieve = [0]+[1]*((n-1)//2)
+    for i in range(3,int(n**0.5)+1,2):
+        for j in range(i**2//2,(n-1)//2+1,i): sieve[j]=0
+    return {2}|{2*i+1 for i,j in enumerate(sieve)if j}
+
+t = time()
+n = 10**6
+primes = primesto(n)
+pdig = {&#x27;1&#x27;,&#x27;3&#x27;,&#x27;7&#x27;,&#x27;9&#x27;}
+
+cp = 2 # to add 2 and 5
+seen = set()
+for n in primes:
+  if n in seen: continue
+  strn = str(n)
+  if set(strn)-pdig: continue
+  ls = len (strn)
+  cycle = {int(strn[i:]+strn[:i])for i in range(ls)}
+  if all(c in primes for c in cycle):
+    seen.update(cycle)
+    cp += len(cycle)
+
+print(time()-t)
+print(cp)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0035_Circular_primes.py"}</script>
+  </main>
+</body>
+</html>

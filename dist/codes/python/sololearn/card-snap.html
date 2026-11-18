@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Card Snap · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Card Snap</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Card_Snap.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Card_Snap.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import shuffle
+from re import findall
+&#x27;&#x27;&#x27;Answer to challenge proposed by D_Stark (explanations after code)&#x27;&#x27;&#x27;
+# https://www.sololearn.com/Discuss/1053866/card-snap-challenge
+
+#you can choose to check only the first n cards, by giving this number here:
+num = 0 # if you leave 0, it checks the whole deck
+
+deck = [i for i in [&#x27;A&#x27;,&#x27;K&#x27;,&#x27;Q&#x27;,&#x27;J&#x27;,&#x27;10&#x27;,&#x27;9&#x27;,&#x27;8&#x27;,&#x27;7&#x27;,&#x27;6&#x27;,&#x27;5&#x27;,&#x27;4&#x27;,&#x27;3&#x27;,&#x27;2&#x27;] for j in range(4)]
+
+def shuffle_and_check(deck,num=52):
+    if num&gt;52 or num&lt;1: num = 52
+    shuffle(deck)
+    deck = &#x27;.&#x27;.join(deck[:num])
+    print(&#x27;your cards : &#x27;,deck,&#x27;\n&#x27;,sep=&#x27;&#x27;)
+    pattern = r&#x27;([^.]+).\1&#x27;
+    matches = findall(pattern,deck)
+    n = 0
+    if matches:
+        for m in matches:
+            n += 1
+            print(&#x27;pair n.{}: {}&#x27;.format(n,m+&#x27;-&#x27;+m))
+    else:
+        print(&#x27;no pair found&#x27;)
+
+shuffle_and_check(deck)
+
+&#x27;&#x27;&#x27;Hey
+Shuffle 52 cards and run through the deck to find out how many snaps/pairs  there are in the deck as follows.
+first 20 cards of a shuffled deck.
+A,A,3,4,2,6,8,8,8,8,J,J,K,A,6,Q,Q,Q,A,4
+running through the deck to find pairs in order.
+snap 1 was AA
+snap 2 was 88
+snap 3 was 88
+snap 4 was JJ
+snap 5 was QQ
+Challenge by D_Stark&#x27;&#x27;&#x27;
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Card_Snap.py"}</script>
+  </main>
+</body>
+</html>

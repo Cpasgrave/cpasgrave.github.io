@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>085 · Counting rectangles · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>085 · Counting rectangles</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0085_Counting_rectangles.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0085_Counting_rectangles.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+Counting rectangles
+
+By counting carefully it can be seen that a rectangular grid measuring 3 by 2 contains eighteen rectangles:
+
+
+Although there exists no rectangular grid that contains exactly two million rectangles, find the area of the grid with the nearest solution.
+&quot;&quot;&quot;
+
+def rectangles_count(M,N):
+
+	ct = 0
+	for m in range(M):
+		for n in range(N):
+			ct += (M-m)*(N-n)
+	return ct
+
+
+
+def PE85(target):
+
+	M = 1
+	while True:
+		n = rectangles_count(M,M)
+		if n&gt;target: break
+		M += 1
+	N = M
+	solutions = {}
+	diff = n-target
+	solution = (diff,M,N)
+	
+	while True:
+		# lower N
+		while True:
+			N -= 1
+			diff = rectangles_count(M,N)-target
+			solution = min((abs(diff),M,N),solution)
+			if diff&lt;0: break
+		if N==0: break
+		# grow M
+		while True:
+			M += 1
+			diff = rectangles_count(M,N)-target
+			solution = min((abs(diff),M,N),solution)
+			if diff&gt;0: break
+	d,m,n = solution
+	return rectangles_count(m,n),d,m,n,m*n
+
+t = 2000000
+r = PE85(t)
+print(r)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0085_Counting_rectangles.py"}</script>
+  </main>
+</body>
+</html>

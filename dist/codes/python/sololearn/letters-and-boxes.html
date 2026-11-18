@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Letters And Boxes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Letters And Boxes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Letters_And_Boxes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Letters_And_Boxes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># Challenge proposed by D_Stark
+# https://www.sololearn.com/Discuss/1052933/letters-boxes-challenge/
+&#x27;&#x27;&#x27;
+🔡Letters &amp; Boxes [Challenge]
+The idea of this is like musical chairs 😂
+
+You start off with say 5 letters and 5 boxes.
+
+Each shuffle a box is removed forcing one letter to be nocked out of the game this repeats untill theres only one letter and 1 box left
+
+Catch: Numbers are to be randomly shuffled around each time as follows
+
+[a][b][c][d] &lt; all letters have a box 
+
+Shuffle 1,  --box
+
+[c][d][b]    &lt; &quot;a&quot; missed out and removed
+
+Shuffle 2,  --box
+
+[b][c]  &lt;  &quot;d&quot; missed out
+
+Shuffle 3, --box
+
+[c]  &lt; &quot;b&quot; missed out 
+
+[c] &lt; Won
+
+Have fun ☺
+&#x27;&#x27;&#x27;
+
+from random import randint, sample, choice
+# initial number of chairs :
+chairs = 8
+
+players = [chr(i+97) for i in range(chairs)]
+print(&#x27;&#x27;.join([&#x27;[&#x27;+i+&#x27;]&#x27; for i in players]),&#x27;\n&#x27;,sep=&#x27;&#x27;)
+while len(players)&gt;1:
+    print(&quot;Dance around ... and ... sit !&quot;)
+    out = players.pop(randint(0,len(players)-1))
+    print(&#x27;&#x27;.join([&#x27;[&#x27;+i+&#x27;]&#x27; for i in sample(players,len(players))]),&#x27; &lt; &#x27;+out+&#x27; missed out&#x27;,&#x27;\n&#x27;,sep=&#x27;&#x27;)
+print(choice([&#x27;Monsieur&#x27;,&#x27;Madame&#x27;]),players[0],&#x27;won this round !&#x27;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Letters_And_Boxes.py"}</script>
+  </main>
+</body>
+</html>

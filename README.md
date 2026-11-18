@@ -12,9 +12,20 @@ Lancer `../Jouer.cmd`, puis ouvrir `http://127.0.0.1:8876/` dans le profil Chrom
 
 - `dist/index.html` : avatar et liens vers les rubriques Dossiers et Codes.
 - `dist/dossiers/index.html` : page prête à accueillir les dossiers.
-- `dist/codes/index.html` : titres, descriptions et liens des jeux et des démos. Pour ajouter un projet, dupliquer un élément `<li>` dans la liste et donner des identifiants uniques à ses textes.
+- `dist/codes/index.html` : accès aux rubriques Jeux, Python et Web.
+- `dist/codes/jeux/index.html` et `dist/codes/web/index.html` : titres, descriptions et liens des jeux et des démos. Pour ajouter un projet, dupliquer un élément `<li>` et donner des identifiants uniques à ses textes.
 - `dist/style.css` : couleurs, mise en page et adaptation aux petits écrans.
 - `dist/assets/` : pictogrammes des jeux en SVG éditable et [avatar GitHub](https://github.com/Cpasgrave) en JPEG original, sans calques. Le cadrage circulaire est appliqué par le CSS.
+
+## Catalogue Python
+
+Les fichiers `.py` éditables se trouvent dans `dist/codes/python/sources/`. Les liens « Source sur GitHub » pointent vers la révision importée. Les adaptations nécessaires au navigateur sont décrites dans `dist/codes/python/catalogue.json` et signalées sur les fiches concernées. Les données des exercices 22, 42 et 54 proviennent de [Project Euler](https://projecteuler.net/copyright) via [TheAlgorithms/Python](https://github.com/TheAlgorithms/Python/tree/30507bbe41397065728167fb09aa820f9fce8dc7/project_euler).
+
+Pour ajouter un script, place le `.py` dans `sources/`, puis ajoute une entrée dans la catégorie voulue de `catalogue.json` avec `id`, `title` et `file` (chemin relatif à `sources/`). Utilise `input` pour fournir un exemple ligne par ligne et `packages` pour les bibliothèques nécessaires disponibles dans Pyodide. Lance `python tools/build-python-catalogue.py` depuis le dépôt pour régénérer les pages HTML. Les pages produites s’ouvrent directement depuis le disque ou via GitHub Pages.
+
+Le bouton « Exécuter » charge Pyodide au premier lancement, puis exécute le programme dans un Worker du navigateur. Les calculs longs se poursuivent en arrière-plan jusqu’à la fin du programme, au clic sur « Arrêter » ou au départ de la page. [Pyodide](https://pyodide.org/en/0.29.3/usage/webworker.html)
+
+## Jeux
 
 Les sources modifiables d’Onitama se trouvent dans `../onitama-web/src/`. Depuis `../onitama-web/`, `npm run build -- --base=./` produit `dist/`, à recopier dans `dist/jeux/onitama/` du portail. Les fichiers générés d’Onitama sont compilés.
 

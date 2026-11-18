@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>073 · Counting fractions in a range · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>073 · Counting fractions in a range</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0073_Counting_fractions_in_a_range---.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0073_Counting_fractions_in_a_range---.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+Counting fractions in a range
+
+Consider the fraction, n/d, where n and d are positive integers. If n&lt;d and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions for d ≤ 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that there are 3 fractions between 1/3 and 1/2.
+
+How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d ≤ 12,000?
+&quot;&quot;&quot;
+
+from math import ceil
+
+def fracount(limit):
+
+	avoid = {n:set() for n in range(4,limit+1)}
+	ct = 0
+	
+	for d in range(4,limit+1):
+		left = d//3 + 1
+		right = ceil(d/2)
+		av = avoid[d]
+		for n in range(left,right):
+			if n in av: continue
+			ct += 1
+			mul = 2
+			dm = d*mul
+			while dm &lt;= limit:
+				avoid[dm] |= {n*mul}
+				mul += 1
+				dm = d*mul
+
+	return ct
+
+limit = 120000
+
+print(fracount(limit))
+</code></pre>
+    <p class="python-note">Le navigateur lance le calcul jusqu’à 12 000, la valeur demandée dans l’énoncé.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0073_Counting_fractions_in_a_range---.py", "code": "\"\"\"\nCounting fractions in a range\n\nConsider the fraction, n/d, where n and d are positive integers. If n\u003cd and HCF(n,d)=1, it is called a reduced proper fraction.\n\nIf we list the set of reduced proper fractions for d ≤ 8 in ascending order of size, we get:\n\n1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8\n\nIt can be seen that there are 3 fractions between 1/3 and 1/2.\n\nHow many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d ≤ 12,000?\n\"\"\"\n\nfrom math import ceil\n\ndef fracount(limit):\n\n\tavoid = {n:set() for n in range(4,limit+1)}\n\tct = 0\n\t\n\tfor d in range(4,limit+1):\n\t\tleft = d//3 + 1\n\t\tright = ceil(d/2)\n\t\tav = avoid[d]\n\t\tfor n in range(left,right):\n\t\t\tif n in av: continue\n\t\t\tct += 1\n\t\t\tmul = 2\n\t\t\tdm = d*mul\n\t\t\twhile dm \u003c= limit:\n\t\t\t\tavoid[dm] |= {n*mul}\n\t\t\t\tmul += 1\n\t\t\t\tdm = d*mul\n\n\treturn ct\n\nlimit = 12000\n\nprint(fracount(limit))\n"}</script>
+  </main>
+</body>
+</html>

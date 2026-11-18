@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>058 · Spiral primes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>058 · Spiral primes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0058_Spiral_primes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0058_Spiral_primes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Spiral primes
+
+Starting with 1 and spiralling anticlockwise in the following way,
+a square spiral with side length 7 is formed.
+
+37 36 35 34 33 32 31
+38 17 16 15 14 13 30
+39 18  5  4  3 12 29
+40 19  6  1  2 11 28
+41 20  7  8  9 10 27
+42 21 22 23 24 25 26
+43 44 45 46 47 48 49
+
+It is interesting to note that the odd squares lie
+along the bottom right diagonal, but what is more interesting is that
+8 out of the 13 numbers lying along both diagonals are prime;
+that is, a ratio of 8/13 ≈ 62%.
+
+If one complete new layer is wrapped around the spiral above,
+a square spiral with side length 9 will be formed.
+If this process is continued, what is the side length
+of the square spiral for which the ratio of primes
+along both diagonals first falls below 10%?
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+from sympy.ntheory.primetest import isprime as ip
+
+t = time()
+inc,n,num,den = 2,1,0,1
+while True:
+    for i in range(3):
+        n += inc
+        num +=  ip(n)
+    den += 4
+    ratio = num/den
+    if ratio&lt;.1:
+        break
+    n += inc
+    inc += 2
+
+print(ratio)
+print(inc+1) # 26241
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["sympy"], "filename": "PE_0058_Spiral_primes.py"}</script>
+  </main>
+</body>
+</html>

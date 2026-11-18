@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Einstein Riddle · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Einstein Riddle</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Einstein_Riddle.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Einstein_Riddle.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;Einstein&#x27;s Riddle
+
+Einstein&#x27;s Riddle is a logic puzzle. It is often claimed that only 2% of the population can solve the puzzle.
+It has several variants, one of them is this:
+1. There are five houses.
+2. The Mathematician lives in the red house.
+3. The Hacker writes in Python.
+4. Brackets (code editor) is used in the green house.
+5. The Analyst uses Atom (code editor).
+6. The green house is immediately to the right of the ivory house.
+7. The man who uses Redis (Database System) writes in Java.
+8. Cassandra (Database System) is used in the yellow house.
+9. Notepad++ (code editor) is used in the middle house.
+10. The Developer lives in the first house.
+11. The man who uses Hadoop (Database System) lives in the house next to the man writing in JavaScript.
+12. Cassandra is used in the house next to the house where the primary language is C#.
+13. The man who uses ArangoDB uses Sublime Text (code editor).
+14. The Engineer uses MongoDB.
+15. The Developer lives next to the blue house.
+
+Now, who uses Vim? Who writes in C++?
+
+Write a program that solves this riddle and outputs the answer.
+&quot;&quot;&quot;
+
+# Elements can be edited,
+# all the groups must have the same number of elements
+# and the number of groups must be the same
+
+Hou  = &#x27;1&#x27;,            &#x27;2&#x27;,        &#x27;3&#x27;,         &#x27;4&#x27;,          &#x27;5&#x27;
+Col  = &#x27;Red&#x27;,          &#x27;Green&#x27;,    &#x27;Yellow&#x27;,    &#x27;Ivory&#x27;,      &#x27;Blue&#x27;
+Job  = &#x27;Mathematician&#x27;,&#x27;Hacker&#x27;,   &#x27;Analyst&#x27;,   &#x27;Engineer&#x27;,   &#x27;Developer&#x27;
+Lang = &#x27;Python&#x27;,       &#x27;Java&#x27;,     &#x27;JS&#x27;,        &#x27;C#&#x27;,         &#x27;C++&#x27;
+Edit = &#x27;Brackets&#x27;,     &#x27;Atom&#x27;,     &#x27;Notepad++&#x27;, &#x27;SublimeText&#x27;,&#x27;Vim&#x27;
+DB   = &#x27;Redis&#x27;,        &#x27;Cassandra&#x27;,&#x27;Hadoop&#x27;,    &#x27;ArangoDB&#x27;,   &#x27;MongoDB&#x27;
+
+elements = [Hou,Col,Job,Lang,Edit,DB]
+m = len(elements[0])
+n = len(elements)
+# The rules can be easily edited, within the following limits:
+# 2 elements can and must be related in each line
+# The relation can be:
+# = and it&#x27;s a direct relationship
+# a unique positive or negative int (distance)
+# two positive or negative ints (choice of possible distances)
+
+rules = &quot;&quot;&quot;
+        Mathematician =    Red,
+        Hacker        =    Python,
+        Brackets      =    Green,
+        Analyst       =    Atom,
+        Green        -1    Ivory,
+        Redis         =    Java,
+        Cassandra     =    Yellow,
+        Notepad++     =    3,
+        Developer     =    1,
+        Hadoop      +1 -1  JS,
+        Cassandra   +1 -1  C#,
+        ArangoDB      =    SublimeText,
+        Engineer      =    MongoDB,
+        Developer   +1 -1  Blue
+        &quot;&quot;&quot;
+
+#########################################
+#########################################
+
+def apply_rules(solution,rules):
+  &#x27;&#x27;&#x27;Parse the grid row by row,
+  Applying all the rules to each row&#x27;&#x27;&#x27;
+  G = solution[0]
+  def one(G,row_i,j,k):
+    &#x27;&#x27;&#x27;place a &#x27;one&#x27; in a solved cell,
+    and the corresponding &#x27;zeros&#x27;
+    in the column&#x27;s facing positions&#x27;&#x27;&#x27;
+    for i,g in enumerate(G):
+      if i==row_i: # place 1 for the right element and 0 for other in the good row
+        g[j]=[1 if i==k else 0 for i in range(m)]
+      else: g[j][k]=0 # place 0 in other cells of the column
+
+  def zeros(G,rows,j,k):
+    &quot;&quot;&quot;Places zeros in a column, excepting the given rows&quot;&quot;&quot;
+    for i,g in enumerate(G):
+      if i not in rows: g[j][k]=0
+
+  for row_i,row in enumerate(G):
+
+    for r in rules:
+      shifts = r[2]
+      for it in range(2):
+        cell_a = row[r[it][0]][r[it][1]]
+        row_b = row_i+shifts[0]*[1,-1][it]
+        cell_b = G[row_b][r[1-it][0]][r[1-it][1]]if row_b in range(m) else &#x27;out&#x27;
+
+        if len(shifts) == 1: # same row and single shift rules
+          check = cases.get((cell_a, cell_b))
+          if   check in [7,10,12,15]: return &#x27;impossible&#x27;
+          elif check in [2,4]:        row[r[it][0]][r[it][1]]=0
+          elif check == 3:            one(G,row_i,r[it][0],r[it][1])
+
+        else: # 2 possible shifts rules
+          row_c = row_i + shifts[1] * [1, -1][it]
+          cell_c = G[row_c][r[1-it][0]][r[1-it][1]]if row_c in range(m) else &#x27;out&#x27;
+          cross = cases.get((cell_b,cell_c))
+
+          if cell_a == 1:
+            if   cross in (6,8,11,16): return &#x27;impossible&#x27;
+            elif cross in (2,4):       one(G,row_b,r[1-it][0],r[1-it][1])
+            elif cross in (5,13):      one(G,row_c,r[1-it][0],r[1-it][1])
+            elif cross == 1:           zeros(G,[row_b,row_c],r[1-it][0],r[1-it][1])
+            elif cross == 3:           G[row_b][r[1-it][0]][r[1-it][1]]=0
+            elif cross == 9:           G[row_c][r[1-it][0]][r[1-it][1]]=0
+
+def fill_and_branch(solutions,final):
+
+  branches = []
+  badsol = set()
+  for sol_i,sol in enumerate(solutions):
+    G = sol[0] # G for grid
+    # deduction: when only one possibility left, choose it:
+    solved = 0 # counting cells with a found value in them
+    for row_i,row in enumerate(G):
+      for j,col in enumerate(row):
+        if col.count(None)==1:
+          indx = col.index(None)
+          col[indx]=1
+          for not_row in {*range(m)}-{row_i}:
+            G[not_row][j][indx]=0
+          solved +=1
+        elif col.count(0)==m:
+          badsol.add(sol_i)
+        elif 1 in col:
+          solved+=1
+
+    # if nothing new happened, a guess is needed
+    # two solutions will replace the current one
+    # for each cell where only two posssibilities
+    # are remaining:
+    if solved==sol[-1] and sol_i not in badsol:
+      # complete grids detected:
+      if solved == m*n:
+        if sol[0]not in final: final.append(sol[0])
+        badsol.add(sol_i)
+      else:
+        # stuck grids detected:
+        forks=0
+        for row_i,row in enumerate(G):
+          for col_i,col in enumerate(row):
+            if col.count(None)==2:
+              forks+=1
+              idx=[i for i,j in enumerate(col)if j==None]
+              B1,B2=[[col[:] for col in row[:]] for row in G],[[col[:] for col in row[:]] for row in G]
+
+              for it,B in enumerate([B1,B2]):
+                for bi,b in enumerate(B):
+                  if bi==row_i: b[col_i] = [1 if i == idx[it] else 0 for i in range(m)]
+                  else: b[col_i][idx[it]] = 0
+              branches.append([sol_i,[B1,sol[-1]+1],[B2,sol[-1]+1]])
+        if forks==0: # if there are no cells with only two alternatives
+          badsol.add(sol_i)
+    else: sol[-1] = solved
+
+  #Next loops are dealing with the solution list
+  for b in branches: # branching solutions
+    solutions[b[0]]=b[1]; solutions.append(b[2])
+  solutions = [s for i, s in enumerate(solutions) if i not in badsol]
+
+  return solutions,final
+
+def solve(elements,rules,formated=0,timed=0):
+
+  global cases,m,n # dictionary used to check pairs of cells
+  cases = {(None, None): 1,
+           (None, 0): 2,
+           (None, 1): 3,
+           (None, &#x27;out&#x27;): 4,
+           (0, None): 5,
+           (0, 0): 6,
+           (0, 1): 7,
+           (0, &#x27;out&#x27;): 8,
+           (1, None): 9,
+           (1, 0): 10,
+           (1, 1): 11,
+           (1, &#x27;out&#x27;): 12,
+           (&#x27;out&#x27;, None): 13,
+           (&#x27;out&#x27;, 0): 14,
+           (&#x27;out&#x27;, 1): 15,
+           (&#x27;out&#x27;, &#x27;out&#x27;): 16}
+
+  # Formating the rules: (first cell, second cell, shift(s))
+  # ex: &quot;Hadoop +1 -1 Javascript&quot; becomes ((5,2),(3,2),(1,-1))
+  #     &quot;Green -1 Ivory&quot; becomes ((1,1),(1,3),(-1,))
+  #     &quot;Notepad++ = 3&quot; becomes ((4,2),(0,2),(0,))
+  if formated==0:
+    rules = {(lambda x: (*[(i, j) for i, el in enumerate(elements) for j, e in enumerate(el) if e == x[0]],
+                        *[(i, j) for i, el in enumerate(elements) for j, e in enumerate(el) if e == x[-1]],
+                        tuple(0 if i == &#x27;=&#x27; else int(i) for i in x[1:-1])))(r.split()) for r in rules.split(&#x27;,&#x27;)}
+
+  # Initial Grid:
+  Grid = [[[1 if row == k else 0 for row in range(m)]] + [[None for i in range(m)] for j in range(m)] for k in range(m)]
+
+  # Each solution in the solutions list will contain:
+  # its grid and its number of solved cells
+  solutions = [[Grid,m],[[[col[:] for col in row[:]] for row in Grid][::-1],m]]
+  final = [] # completed grids
+  rounds = 0
+  if timed:
+    t = time()
+  while len(solutions):
+    c = 0
+    while c &lt; len(solutions):
+      if apply_rules(solutions[c],rules)==&#x27;impossible&#x27;: del solutions[c]; c-=1
+      c+=1
+    solutions,final = fill_and_branch(solutions,final)
+    rounds += 1
+    if timed:
+      if time()-t&gt;0.03:
+        break
+  return final,rounds
+
+def final_print(final,rounds):
+  print(f&#x27;{rounds} rounds needed to solve it:\n&#x27;)
+  if final == []:
+    print(&quot;no solution found&quot;)
+  for G in final:
+    G=[&#x27;|&#x27;.join([elements[j][aa.index(1)][:3].center(3)if 1 in aa else&#x27; &#x27;*15 for j,aa in enumerate(a)])for i,a in enumerate(G)]
+    print(*G, sep=&#x27;\n&#x27;)
+    print()
+
+def rules2sentences(rules):
+
+  for i,r in enumerate(rules):
+    fk = lambda x,y:dict.fromkeys(x,y)
+    first = {**fk([0,1],&#x27;the person in the {}&#x27;+{0:&#x27;st&#x27;,1:&#x27;nd&#x27;,2:&#x27;rd&#x27;,3:&#x27;th&#x27;,4:&#x27;th&#x27;}[r[0][1]]*(r[0][0]==0)+&#x27; house &#x27;),2:&#x27;the {} &#x27;,**fk([3,4,5],&#x27;the person using {} &#x27;)}[r[0][0]].format(elements[r[0][0]][r[0][1]])
+    second = {**fk([0,1],&quot;the {}&quot;+{0:&#x27;st&#x27;,1:&#x27;nd&#x27;,2:&#x27;rd&#x27;,3:&#x27;th&#x27;,4:&#x27;th&#x27;}[r[1][1]]*(r[1][0]==0)+&quot; house.&quot;),2:&#x27;the {}.&#x27;,**fk([3,4,5],&#x27;the {} user.&#x27;)}[r[1][0]].format(elements[r[1][0]][r[1][1]])
+    if len(r[2])==1:
+      if r[2][0]==0: relation = &#x27;lives in &#x27;if r[1][0] in [0,1] else &#x27;is &#x27;
+      else: relation = f&quot;lives {abs(r[2][0])} house{&#x27;s&#x27;*(abs(r[2][0])&gt;1)} to the {({0:&#x27;left&#x27;,1:&#x27;right&#x27;}[r[2][0]&gt;0])} from &quot;
+    else:
+      relation = f&quot;lives {abs(r[2][0])} house{&#x27;s&#x27;*(abs(r[2][0])&gt;1)} &quot;+f&quot;to the {({0:&#x27;left&#x27;,1:&#x27;right&#x27;}[r[2][0]&gt;0])} &quot;*((r[2][0]&gt;0)!=(r[2][1]&gt;0))+f&quot;or {abs(r[2][1])} house{&#x27;s&#x27;*(abs(r[2][1])&gt;1)} to the {({0:&#x27;left&#x27;,1:&#x27;right&#x27;}[r[2][1]&gt;0])} from &quot;
+    print(&quot;{:2} -&quot;.format(i),first+relation+second)
+  rules = &#x27;\n&#x27;.join([&#x27;{:&gt;13} {:^5} {:13} &#x27;.format(elements[r[0][0]][r[0][1]],&#x27; &#x27;.join([&#x27;+&#x27;*(i&gt;0)+(str(i) if (i or len(r[2])==2) else &#x27;=&#x27;) for i in r[2]]),elements[r[1][0]][r[1][1]]+&#x27;,&#x27;) for r in rules])
+  print(&quot;\nIf you want to see the solution,\njust copy/paste the following\nreformated rules into the code : )\n&quot;)
+  print(rules)
+
+def create_rules():
+  from random import sample,choice,choices
+  Target = sorted(zip(*[[[1 if j==s else 0 for j in range(m)] for s in sample([*range(m)],m)]for i in range(n)]))[::-1]
+  rulz = set()
+  final = []
+  while len(final)!=1:
+    for _ in range(30):
+      shifts_num = choices([1,2],weights=[.75,.25])
+      cell_a = (choice([*range(m)]), choice([*range(n)]))
+      w1 = [.75,.25]if shifts_num[0]==1 else [0,1]
+      w2 = (lambda x:[i/sum(x)for i in x])([(m-abs(cell_a[0]-i))**3 for i in range(m)if i!=cell_a[0]])
+      cell_b_row = choices([cell_a[0],*choices([i for i in range(m)if i!=cell_a[0]],weights=w2)],weights=w1)
+      cell_b = (*cell_b_row, choice([*range(n)]))
+      elem_a = cell_a[1],Target[cell_a[0]][cell_a[1]].index(1)
+      elem_b = cell_b[1],Target[cell_b[0]][cell_b[1]].index(1)
+      shifts = (cell_b[0]-cell_a[0],)
+      if shifts_num[0] == 2:
+        shift_2 = choice([-shifts[0],choice([shifts[0]+i for i in [-2,-1,1,2]if shifts[0]+i in (set(range(-m+1,m))-{0})])])
+        shifts = tuple(choice([[*shifts,shift_2],[shift_2,*shifts]]))
+      rulz.add((elem_a,elem_b,shifts))
+    final,rounds = solve(elements, rulz,1,1)
+  for r in set(rulz):
+    temp = solve(elements,rulz-{r},1,1)[0]
+    if len(temp)==1:
+      rulz.remove(r)
+  return rulz
+
+from time import perf_counter as time
+
+t = time()
+final_print(*solve(elements,rules))
+print(&quot;    !! Your turn now !!\n(there&#x27;s only one solution)\n       new rules:\n&quot;)
+new_rules = create_rules()
+rules2sentences(new_rules)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Einstein_Riddle.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Motifs ASCII · version 1 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Projets Python">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Motifs ASCII · version 1</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Projets Python</a>
+      <a href="../sources/motifs-ascii/Pattern_Generator_1.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_1.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import choice
+
+# These are chars from the 128 ascii chars usable with python in CodePlayground :
+# It may not display well on some devices.
+charnums = (1,2,3,4,5,6,16,21,22,23,25)
+ends = (&#x27;rd&#x27;,&#x27;ld&#x27;,&#x27;ur&#x27;,&#x27;lu&#x27;,&#x27;ud&#x27;,&#x27;lr&#x27;,&#x27;lurd&#x27;,&#x27;lur&#x27;,&#x27;lrd&#x27;,&#x27;lud&#x27;,&#x27;urd&#x27;)
+
+# If you copy this code to your IDE, you can use the two following lines instead of the previous ones, they give a much nicer result with rounded shapes :
+#charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547, 9581, 9582, 9583, 9584)
+#ends = (&#x27;lr&#x27;, &#x27;ud&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;ur&#x27;, &#x27;lu&#x27;, &#x27;urd&#x27;, &#x27;lud&#x27;, &#x27;lrd&#x27;, &#x27;lur&#x27;, &#x27;lurd&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;lu&#x27;, &#x27;ur&#x27;)
+
+chars = [chr(i) for i in charnums]
+dic = {}
+for i in range(len(chars)):
+    dic[chars[i]] = ends[i]
+dic[&#x27; &#x27;] = &#x27;&#x27;
+
+# Function cc randomly chooses the next character in the line according to the rules defined in line and stored in a and b
+def cc(a,b):
+    try:
+        c = choice([i for i in dic if all(j in dic[i] for j in a) and all(k not in dic[i] for k in b) and i != &#x27; &#x27;])
+    except:
+        c = &#x27; &#x27;
+    return c
+
+# Function line creates the next line for the grid, creating conditions for the whole line, stored in aa and bb and then calling the function cc(a, b) to create each character. It has special conditions for the last raw and the two last lines, to avoid having unfinished lines in the pattern.
+def line(grid,last=0):
+    line = &#x27; &#x27;
+    aa = []
+    bb = []
+    l = len(grid[-1])
+    for i in range(l - 1):
+        aa.append([])
+        bb.append([])
+        if &#x27;d&#x27; in dic[grid[-1][i+1]]:
+            aa[i].append(&#x27;u&#x27;)
+        else:
+            bb[i].append(&#x27;u&#x27;)
+        if &#x27;r&#x27; in dic[line[-1]]:
+            aa[i].append(&#x27;l&#x27;)
+        else:
+            bb[i].append(&#x27;l&#x27;)
+        if i == l-3:
+            aa[i].append(&#x27;r&#x27;)
+        if i == l-2:
+            bb[-1].append(&#x27;r&#x27;)
+        if last==2:
+            aa[0].append(&#x27;d&#x27;)
+            aa[-1].append(&#x27;d&#x27;)
+        if last==1:
+            if i &lt; l-2:
+                if &#x27;d&#x27; not in dic[grid[-1][i+2]]:
+                    aa[i].append(&#x27;r&#x27;)
+            bb[i].append(&#x27;d&#x27;)
+        line += cc(aa[i],bb[i])
+    return line
+
+# Function pat finally gather the lines together, with special 2 last lines, and returns the grid as a string
+def pat(n, m = 0):
+    grid = []
+    if m == 0: m = n
+    grid.append(&#x27; &#x27;*(m+1))
+    for i in range(n-2):
+        grid.append(line(grid))
+    grid.append(line(grid,2))
+    grid.append(line(grid,1))
+    return &#x27;\n&#x27;.join(grid)
+
+print(pat(40,30))
+</code></pre>
+    <p class="python-note">À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Pattern_Generator_1.py", "code": "from random import choice\n\n# These are chars from the 128 ascii chars usable with python in CodePlayground :\n# It may not display well on some devices.\ncharnums = (1,2,3,4,5,6,16,21,22,23,25)\nends = ('rd','ld','ur','lu','ud','lr','lurd','lur','lrd','lud','urd')\n\n# If you copy this code to your IDE, you can use the two following lines instead of the previous ones, they give a much nicer result with rounded shapes :\n#charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547, 9581, 9582, 9583, 9584)\n#ends = ('lr', 'ud', 'rd', 'ld', 'ur', 'lu', 'urd', 'lud', 'lrd', 'lur', 'lurd', 'rd', 'ld', 'lu', 'ur')\n\nchars = [bytes([i]).decode('cp437') for i in charnums]\ndic = {}\nfor i in range(len(chars)):\n    dic[chars[i]] = ends[i]\ndic[' '] = ''\n\n# Function cc randomly chooses the next character in the line according to the rules defined in line and stored in a and b\ndef cc(a,b):\n    try:\n        c = choice([i for i in dic if all(j in dic[i] for j in a) and all(k not in dic[i] for k in b) and i != ' '])\n    except:\n        c = ' '\n    return c\n\n# Function line creates the next line for the grid, creating conditions for the whole line, stored in aa and bb and then calling the function cc(a, b) to create each character. It has special conditions for the last raw and the two last lines, to avoid having unfinished lines in the pattern.\ndef line(grid,last=0):\n    line = ' '\n    aa = []\n    bb = []\n    l = len(grid[-1])\n    for i in range(l - 1):\n        aa.append([])\n        bb.append([])\n        if 'd' in dic[grid[-1][i+1]]:\n            aa[i].append('u')\n        else:\n            bb[i].append('u')\n        if 'r' in dic[line[-1]]:\n            aa[i].append('l')\n        else:\n            bb[i].append('l')\n        if i == l-3:\n            aa[i].append('r')\n        if i == l-2:\n            bb[-1].append('r')\n        if last==2:\n            aa[0].append('d')\n            aa[-1].append('d')\n        if last==1:\n            if i \u003c l-2:\n                if 'd' not in dic[grid[-1][i+2]]:\n                    aa[i].append('r')\n            bb[i].append('d')\n        line += cc(aa[i],bb[i])\n    return line\n\n# Function pat finally gather the lines together, with special 2 last lines, and returns the grid as a string\ndef pat(n, m = 0):\n    grid = []\n    if m == 0: m = n\n    grid.append(' '*(m+1))\n    for i in range(n-2):\n        grid.append(line(grid))\n    grid.append(line(grid,2))\n    grid.append(line(grid,1))\n    return '\\n'.join(grid)\n\nprint(pat(40,30))\n"}</script>
+  </main>
+</body>
+</html>

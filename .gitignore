@@ -1,4 +1,5 @@
 sources/
+!dist/codes/python/sources/
 node_modules/
 .DS_Store
 Thumbs.db

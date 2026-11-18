@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>055 · Lychrel numbers · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>055 · Lychrel numbers</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0055_Lychrel_numbers.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0055_Lychrel_numbers.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Lychrel numbers
+
+If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+
+Not all numbers produce palindromes so quickly. For example,
+
+349 + 943 = 1292,
+1292 + 2921 = 4213
+4213 + 3124 = 7337
+
+That is, 349 took three iterations to arrive at a palindrome.
+
+Although no one has proved it yet, it is thought that some numbers,
+like 196, never produce a palindrome. A number that never forms a palindrome
+through the reverse and add process is called a Lychrel number.
+Due to the theoretical nature of these numbers, and for the purpose
+of this problem, we shall assume that a number is Lychrel
+until proven otherwise. In addition you are given that
+for every number below ten-thousand, it will either:
+(i) become a palindrome in less than fifty iterations, or,
+(ii) no one, with all the computing power that exists,
+has managed so far to map it to a palindrome.
+In fact, 10677 is the first number to be shown to require over
+fifty iterations before producing a palindrome:
+4668731596684224866951378664 (53 iterations, 28-digits).
+
+Surprisingly, there are palindromic numbers that are themselves
+Lychrel numbers; the first example is 4994.
+
+How many Lychrel numbers are there below ten-thousand?
+
+NOTE: Wording was modified slightly on 24 April 2007
+to emphasise the theoretical nature of Lychrel numbers.
+&#x27;&#x27;&#x27;
+Lychrel = 0
+for n in range(1,10000):
+    it = 0
+    n = str(n)
+    n2 = n[::-1]
+    while True:
+        n = str(int(n)+int(n2))
+        it += 1
+        n2 = n[::-1]
+        if n == n2: break
+        if it &gt; 50:
+            Lychrel += 1
+            break
+print(Lychrel) # 249
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0055_Lychrel_numbers.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>036 · Double-base palindromes · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>036 · Double-base palindromes</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0036_Double-base_palindromes.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0036_Double-base_palindromes.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Double-base palindromes
+
+The decimal number, 585 = 1001001001 2 (binary),
+is palindromic in both bases.
+
+Find the sum of all numbers, less than one million,
+which are palindromic in base 10 and base 2.
+
+(Please note that the palindromic number,
+in either base, may not include leading zeros.)
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+from math import log10
+
+limit = 10**6
+
+t = time()
+
+half = 10**(int(log10(limit))//2)
+dbp = set()
+for n in range(half):
+  sn = str(n)
+  pals = [int(sn+sn[::-1]),int(sn[:-1]+sn[::-1])]
+  for pal in pals:
+    b = bin(int(pal))[2:]
+    if b[::-1]==b:
+      dbp.add(pal)
+print(sum(dbp)) # 872187
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0036_Double-base_palindromes.py"}</script>
+  </main>
+</body>
+</html>

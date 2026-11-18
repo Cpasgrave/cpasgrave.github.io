@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Motifs ASCII · version 3 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Projets Python">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Motifs ASCII · version 3</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Projets Python</a>
+      <a href="../sources/motifs-ascii/Pattern_Generator_3.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_3.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import  choice as choose
+from numpy.random import choice
+
+H = 10 # Height
+W = 10# Width
+
+grid = [[[None,None,None,None] for i in range(W)] for j in range(H)]
+dic = {&#x27;0011&#x27;:chr(201),&#x27;1001&#x27;:chr(187),&#x27;0110&#x27;:chr(200),&#x27;1100&#x27;:chr(188),&#x27;0101&#x27;:chr(186),&#x27;1010&#x27;:chr(205),&#x27;1111&#x27;:chr(206),&#x27;1110&#x27;:chr(202),&#x27;1011&#x27;:chr(203),&#x27;1101&#x27;:chr(185),&#x27;0111&#x27;:chr(204)}
+
+for i in range(H):
+    grid[i][0][0]=0
+    grid[i][-1][2]=0
+for j in range(W):
+    grid[0][j][1]=0
+    grid[-1][j][3]=0
+
+def connect(grid):
+    for i in range(H):
+     for j in range(W):
+      if grid[i][j].count(0)==2: grid[i][j]=[x if x==0 else 1 for x in grid[i][j]]
+      for k in range(4):
+        if grid[i][j][k]==1:
+         grid[i+int(((-1)**k-1)*(2-k)/2)][j+int(((-1)**k+1)*(k-1)/2)][(k+2)%4]=1
+
+def fill(grid):
+    for i in range(H):
+        for j in range(W):
+            if grid[i][j].count(None)==1:
+                grid[i][j] = [x if x != None else choice([0,1],p=[0.9,0.1]) for x in grid[i][j]]
+            connect(grid)
+            if grid[i][j].count(None)==2:
+                grid[i][j][choose([x for x in range(4) if grid[i][j][x]==None])] = choice([0,1],p=[0.9,0.1])
+            connect(grid)
+            if grid[i][j].count(None)&gt;=3:
+                grid[i][j][choose([x for x in range(4) if grid[i][j][x]==None])] = choice([0,1],p=[0.9,0.1])
+
+while True:
+    connect(grid)
+    fill(grid)
+    if &#x27;None&#x27; not in str(grid):
+        break
+
+pattern = &#x27;\n&#x27;.join([&#x27;&#x27;.join([dic[&#x27;&#x27;.join([str(d)for d in c])] for c in r]) for r in grid])
+print(pattern)
+</code></pre>
+    <p class="python-note">À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["numpy"], "filename": "Pattern_Generator_3.py", "code": "from random import  choice as choose\nfrom numpy.random import choice\n\nH = 10 # Height\nW = 10# Width\n\ngrid = [[[None,None,None,None] for i in range(W)] for j in range(H)]\ndef chr(number):\n    return bytes([number]).decode('cp437')\n\ndic = {'0011':chr(201),'1001':chr(187),'0110':chr(200),'1100':chr(188),'0101':chr(186),'1010':chr(205),'1111':chr(206),'1110':chr(202),'1011':chr(203),'1101':chr(185),'0111':chr(204)}\n\nfor i in range(H):\n    grid[i][0][0]=0\n    grid[i][-1][2]=0\nfor j in range(W):\n    grid[0][j][1]=0\n    grid[-1][j][3]=0\n\ndef connect(grid):\n    for i in range(H):\n     for j in range(W):\n      if grid[i][j].count(0)==2: grid[i][j]=[x if x==0 else 1 for x in grid[i][j]]\n      for k in range(4):\n        if grid[i][j][k]==1:\n         grid[i+int(((-1)**k-1)*(2-k)/2)][j+int(((-1)**k+1)*(k-1)/2)][(k+2)%4]=1\n\ndef fill(grid):\n    for i in range(H):\n        for j in range(W):\n            if grid[i][j].count(None)==1:\n                grid[i][j] = [x if x != None else choice([0,1],p=[0.9,0.1]) for x in grid[i][j]]\n            connect(grid)\n            if grid[i][j].count(None)==2:\n                grid[i][j][choose([x for x in range(4) if grid[i][j][x]==None])] = choice([0,1],p=[0.9,0.1])\n            connect(grid)\n            if grid[i][j].count(None)>=3:\n                grid[i][j][choose([x for x in range(4) if grid[i][j][x]==None])] = choice([0,1],p=[0.9,0.1])\n\nwhile True:\n    connect(grid)\n    fill(grid)\n    if 'None' not in str(grid):\n        break\n\npattern = '\\n'.join([''.join([dic[''.join([str(d)for d in c])] for c in r]) for r in grid])\nprint(pattern)\n"}</script>
+  </main>
+</body>
+</html>

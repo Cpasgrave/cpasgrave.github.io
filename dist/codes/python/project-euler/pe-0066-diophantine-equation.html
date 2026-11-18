@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>066 · Diophantine equation · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>066 · Diophantine equation</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0066_Diophantine_equation.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0066_Diophantine_equation.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Diophantine equation
+
+Consider quadratic Diophantine equations of the form:
+
+x**2 – Dy**2 = 1
+
+For example, when D=13, the minimal solution in x is 649**2 – 13×180**2 = 1.
+
+It can be assumed that there are no solutions
+in positive integers when D is square.
+
+By finding minimal solutions in x for D = {2, 3, 5, 6, 7},
+we obtain the following:
+
+3**2 – 2 × 2**2 = 1
+2**2 – 3 × 1**2 = 1
+9**2 – 5 × 4**2 = 1
+5**2 – 6 × 2**2 = 1
+8**2 – 7 × 3**2 = 1
+
+Hence, by considering minimal solutions in x for D ≤ 7,
+the largest x is obtained when D=5.
+
+Find the value of D ≤ 1000 in minimal solutions of x
+for which the largest value of x is obtained.
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+from itertools import count
+
+def cf(n):
+    a0 = a = int(n**.5)
+    b,c,cf = 0,1,[]
+    while True:
+        b = a*c - b
+        c = (n-b*b)/c
+        a = int((a0+b)/c)
+        cf.append(a)
+        if c==1: return [a0,cf]
+
+def cf2f(cf):
+    &#x27;&#x27;&#x27; continued fraction to fraction
+    n = numerator, d = denominator&#x27;&#x27;&#x27;
+    n,d = 1,0
+    for e in cf[::-1]: n,d = d+n*e,n
+    return n,d
+
+def E66(D):
+    cfD = cf(D)
+    cfgen = (cfD[1][c%len(cfD[1])] for c in count())
+    contFrac = [cfD[0]]
+    while True:
+        n,d = cf2f(contFrac)
+        if n*n-D*d*d==1: return [n,D]
+        contFrac += [next(cfgen)]
+
+skip = {n*n for n in range(33)}
+x = [0,0]
+for D in range(1001):
+    if D in skip: continue
+    x = max(E66(D),x)
+print(x[1])
+
+
+
+
+
+#
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0066_Diophantine_equation.py"}</script>
+  </main>
+</body>
+</html>

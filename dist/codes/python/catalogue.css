@@ -1,0 +1,112 @@
+.python-categories { width: min(100%, 23rem); }
+
+.python-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .85rem 1.15rem;
+  list-style: none;
+  margin: clamp(2.2rem, 5vw, 3rem) 0 0;
+  padding: 0;
+}
+
+.python-reader {
+  width: min(62rem, calc(100% - 2rem));
+  padding-block: clamp(1.4rem, 5vh, 3rem) 4rem;
+}
+
+.python-reader .avatar { width: clamp(4rem, 9vw, 6rem); }
+
+.python-reader h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  overflow-wrap: anywhere;
+}
+
+.python-reader h2 {
+  margin: 1rem 0 .4rem;
+  font: 700 1.45rem/1.15 var(--display);
+}
+
+.python-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem 1.2rem;
+  margin-top: 1.1rem;
+}
+
+.python-links a {
+  color: inherit;
+  font-weight: 600;
+  text-underline-offset: .2em;
+}
+
+.python-source, .python-output {
+  margin: 0;
+  padding: .85rem;
+  border: 1px solid #56321b;
+  border-radius: .35rem;
+  overflow: auto;
+  font: .9rem/1.55 Consolas, 'Courier New', monospace;
+}
+
+.python-source {
+  max-height: min(48vh, 32rem);
+  color: #fff1d4;
+  background: #2b211b;
+  tab-size: 4;
+}
+
+.python-output {
+  min-height: 5rem;
+  max-height: 21rem;
+  background: #f8e6c4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.python-note { margin: .8rem 0 0; }
+.python-console { margin-top: 1rem; }
+.python-console label { display: block; font-weight: 650; }
+.python-console label span { font-size: .9rem; font-weight: 400; }
+
+.python-console textarea {
+  width: 100%;
+  margin-block: .3rem .8rem;
+  padding: .55rem;
+  resize: vertical;
+  border: 1px solid #56321b;
+  border-radius: .25rem;
+  background: #f8e6c4;
+  color: var(--ink);
+  font: .95rem/1.4 Consolas, 'Courier New', monospace;
+}
+
+.python-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .55rem .75rem;
+}
+
+.python-controls button {
+  min-height: 2.75rem;
+  font: 650 .95rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.python-stop {
+  border: 1px solid #56321b;
+  border-radius: .25rem;
+  padding: .5rem .75rem;
+  color: var(--ink);
+  background: #f8e6c4;
+}
+
+.python-controls button:disabled {
+  opacity: .65;
+  cursor: default;
+  transform: none;
+}
+
+@media (max-width: 36rem) {
+  .python-list { grid-template-columns: 1fr; }
+}

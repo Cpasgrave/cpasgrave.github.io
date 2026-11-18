@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>021 · Amicable numbers · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>021 · Amicable numbers</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0021_Amicable_numbers.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0021_Amicable_numbers.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Amicable numbers
+
+Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
+If d(a) = b and d(b) = a, where a ≠ b, then a and b are an amicable pair and each of a and b are called amicable numbers.
+
+For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55 and 110; therefore d(220) = 284. The proper divisors of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
+
+Evaluate the sum of all the amicable numbers under 10000.
+&#x27;&#x27;&#x27;
+
+from collections import defaultdict as dd
+
+def pFac(n,div=0):
+    if n&lt;2:
+        if div: return {}
+        else: return []
+    fac = dd(int)
+    while n%2==0:
+        n //= 2
+        fac[2] += 1
+    p = 3
+    while p &lt;= n:
+        if n%p==0:
+            n //= p
+            fac[p] += 1
+        else: p += 2
+    pFactors = [(k,v) for k,v in fac.items()]
+    if div==0:
+        return pFactors
+    else:
+        divisors = [1]
+        for p,pow in pFactors:
+            divisors = [d*p**pw for d in divisors for pw in range(pow+1)]
+        return divisors
+
+
+amicables = []
+
+
+for n in range(1,10000):
+    n2 = sum(sorted(pFac(n,1))[:-1])
+    if sum(sorted(pFac(n2,1))[:-1])==n:
+        if n!=n2:
+            print(n,n2)
+            amicables.append(n)
+
+print(sum(amicables))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0021_Amicable_numbers.py"}</script>
+  </main>
+</body>
+</html>

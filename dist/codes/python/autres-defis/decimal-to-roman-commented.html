@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Decimal to Roman Commented · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Decimal to Roman Commented</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Decimal_to_Roman_Commented.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Decimal_to_Roman_Commented.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">n = str(input()) # up to 3 999 999
+
+# pat is the list of patterns corresponding to each decimal
+# digital : 0,1,2,3,4,5,6,7,8,9
+# e.g. &#x27;000&#x27; correspond to &#x27;3&#x27; and will give &#x27;III&#x27; or &#x27;XXX&#x27; or &#x27;CCC&#x27;, etc ...
+#      &#x27;10&#x27; comes for &#x27;4&#x27; and wil give &#x27;IV&#x27; or &#x27;XL&#x27;, etc ...
+#      &#x27;20&#x27; for 9 will produce &#x27;IX&#x27; or &#x27;XC&#x27;, etc ...
+# Those patterns are using 0 for &#x27;no modification&#x27;
+# &#x27;1&#x27; will fetch the next letter in &#x27;IVXLCDMvxlcdm&#x27;
+# &#x27;2&#x27; will fetch the second next letter.
+# so when the current letter is &#x27;I&#x27;, 
+# each 0 will add an &#x27;I&#x27;
+# each 1 will add a &#x27;V&#x27;
+# each 2 will add an &#x27;X&#x27;
+# when the current letter is &#x27;X&#x27;,
+# each 0 will add an &#x27;X&#x27;
+# each 1 will add a &#x27;L&#x27;
+# each 2 will add an &#x27;C
+# You may have notices that the patterns are actually
+# reverse, that&#x27;s because the whole conversion is 
+# processed backwards and reversed at the end.
+# Lowercase letters are used to represent the
+# higher values (highercase letter x 1000)
+# v = 5000, x = 10.000, l = 50.000, etc ...
+pat = [&#x27;&#x27;,&#x27;0&#x27;,&#x27;00&#x27;,&#x27;000&#x27;,&#x27;10&#x27;,&#x27;1&#x27;,&#x27;01&#x27;,&#x27;001&#x27;,&#x27;0001&#x27;,&#x27;20&#x27;]
+res = []
+
+for pos in range(len(n)):
+    # The digits from input (as a string) are turned to 
+    # an integer and then processed successively, 
+    # using pos to point their position, from the last 
+    # to the first : it&#x27;s the reason for n[::-1] next line
+    for i in pat[int(n[::-1][pos])]:
+        # the current digit is used to find the 
+        # corresponding pattern in pat.
+        # And in the next line, each 0, 1 or 2
+        # associated with the position &#x27;pos&#x27; of the 
+        # current digit will return the right roman letter.
+        # e.g. n = 1369, when it&#x27;s 6&#x27;s turn, pos = 1
+        # 6 will return &#x27;01&#x27; from pat from which:
+        # 0 will be added to (pos=1)*2, which gives 2
+        # and at index 2 in the roman letters string,
+        # we find &#x27;X&#x27;. Same with the &#x27;1&#x27;:
+        # 1+(pos=1)*2 = 3 -&gt; &#x27;L&#x27;
+        res += [&#x27;IVXLCDMvxlcdm&#x27;[int(i)+2*pos]]
+
+print(&#x27;&#x27;.join(res[::-1]))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <label for="python-input">Entrées du programme <span>(une valeur par ligne)</span></label>
+      <textarea id="python-input" rows="2" spellcheck="false">1997</textarea>
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Decimal_to_Roman_Commented.py"}</script>
+  </main>
+</body>
+</html>

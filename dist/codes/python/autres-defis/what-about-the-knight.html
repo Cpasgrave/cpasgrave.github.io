@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>What About The Knight · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>What About The Knight</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/What_About_The_Knight.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/What_About_The_Knight.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Challenge: What about the Knight? by Vardanator
+
+Given a chessboard you should determine how many squares can be attacked by a knight standing alone on the board in a given position.
+
+Input contains two characters: the first character is a lowercase English letter from &#x27;a&#x27; to &#x27;h&#x27;; the second character is an integer from 1 to 8; they specify the rank and file of the square at which the knight is standing. For example, the knight presented in the image below stands at the position d3. 
+Output should contain the number of the squares of the chessboard that are under attack by the knight.
+
+For Example:
+Input: g6
+Output: 6
+
+Input: a3
+Output: 4
+&#x27;&#x27;&#x27;
+
+p = input().lower()
+a = (ord(p[0])-100.5)**2//6+(int(p[1])-4.5)**2//6
+moves = 8-round(2*a-a**2/10)
+
+print(moves)
+
+#############
+# One Liner #
+#############
+
+print((lambda a:8-round(2*a-a**2/10))(sum([(i-4.5)**2//6 for i in(lambda p:[ord(p[0])-96,int(p[1])])(input().lower())])))
+
+#############
+# Commented #
+#############
+
+# first input is taken and lowercased # in case someone would write &#x27;G3&#x27;
+p = input().lower()
+
+# next, this input is changed into
+# a list of coordinates.
+# The letter is turned into an int
+# thanks to ord()
+# ord(p[0])-96 gives the difference
+# with the character before &#x27;a&#x27; in
+# the Ascii table so that &#x27;a&#x27; will
+# return 1,b will return 2, and so on ...
+# b7 as input will give us :
+# [2, 7]
+p = [ord(p[0])-96,int(p[1])]
+
+# the idea here is to get the
+# distance of the knight to the
+# center of board in both directions:
+# Because chessboard is 8x8, center
+# in each direction is between lines # 4 and 5 (respectively &#x27;d&#x27; and &#x27;e&#x27;)
+# So we can have this distance by
+# substracting 4.5 to the position
+# value in each direction.
+p = [i-4.5 for i in p]
+# At this point,b7 after giving [2,7]
+# now give [-2.5,2.5]
+# My goal was to turn these distances
+# into integers following this table:
+# (first column is a reminder of the original coordinate value):
+# 8  -&gt;   3.5  -&gt;  2
+# 7  -&gt;   2.5  -&gt;  1
+# 6  -&gt;   1.5  -&gt;  0
+# 5  -&gt;   0.5  -&gt;  0
+# 4  -&gt;  -0.5  -&gt;  0
+# 3  -&gt;  -1.5  -&gt;  0
+# 2  -&gt;  -2.5  -&gt;  1
+# 1  -&gt;  -3.5  -&gt;  2
+
+# 2 and 1 are integers that represent
+# by how much the knight is close to a
+# border. 2 is when he&#x27;s right next to
+# a border (big influence)
+# 1 is one line away, the rest goes
+# with 0 because it will have no
+# influence on the knight&#x27;s 
+# possibilities.
+# I just had to find a simple way
+# to jump from column 2 to 3 of my
+# table.
+# x**2//6 does it !
+p = [i**2//6 for i in p]
+# now b7 as input became,
+# successively :
+# [2,7]
+# [-2.5,2.5]
+# [1,1]
+# Next trick is to add those
+# &#x27;border influences&#x27;
+# We&#x27;ll get an integer representing
+# the influence of the closest borders
+# in both directions.
+a = sum(p)
+# with our b7 example, now we obtain 
+# 2 as a global border influence on
+# the knight.
+ 
+# Only thing to do now is to transform
+# our influences into attack
+# possibilities for the knight.
+# The table is as follows :
+# 0  -&gt;   8
+# 1  -&gt;   6
+# 2  -&gt;   4
+# 3  -&gt;   3
+# 4  -&gt;   2
+# One simple way to get this done
+# I found is :
+# 8-round(2*x-x**2/10)
+# in our example, 2 becomes 
+# 8-round(4-0.4) --&gt; 4
+# This last operation may seem dirty,
+# I actually enjoy dirty programming
+# &gt;:)  (e.g. as evolutionary
+# algorithms are dirty)
+moves = 8-round(2*a-a**2/10)
+
+print(moves)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <label for="python-input">Entrées du programme <span>(une valeur par ligne)</span></label>
+      <textarea id="python-input" rows="3" spellcheck="false">g6
+a3
+d3</textarea>
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "What_About_The_Knight.py"}</script>
+  </main>
+</body>
+</html>

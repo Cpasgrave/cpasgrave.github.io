@@ -1,0 +1,1177 @@
+{
+  "categories": [
+    {
+      "id": "project-euler",
+      "title": "Project Euler",
+      "entries": [
+        {
+          "id": "partitions",
+          "title": "partitions",
+          "file": "project-euler/_partitions.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/_partitions.py"
+        },
+        {
+          "id": "primes",
+          "title": "primes",
+          "file": "project-euler/_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/_primes.py",
+          "example": "print(primes_to(30))",
+          "note": "L’exécution ajoute un exemple avec les nombres premiers jusqu’à 30."
+        },
+        {
+          "id": "primes-decomposition",
+          "title": "primes decomposition",
+          "file": "project-euler/_primes_decomposition.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/_primes_decomposition.py",
+          "example": "print(prime_dec(360))",
+          "note": "L’exécution ajoute un exemple de décomposition de 360."
+        },
+        {
+          "id": "pythagorean-triples",
+          "title": "Pythagorean Triples",
+          "file": "project-euler/_Pythagorean_Triples.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/_Pythagorean_Triples.py"
+        },
+        {
+          "id": "pe-0001-multiples-of-3-or-5",
+          "title": "001 · Multiples of 3 or 5",
+          "file": "project-euler/PE_0001_Multiples_of_3_or_5.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0001_Multiples_of_3_or_5.py"
+        },
+        {
+          "id": "pe-0002-even-fibonacci-numbers",
+          "title": "002 · Even Fibonacci numbers",
+          "file": "project-euler/PE_0002_Even_Fibonacci_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0002_Even_Fibonacci_numbers.py"
+        },
+        {
+          "id": "pe-0003-largest-prime-factor",
+          "title": "003 · Largest prime factor",
+          "file": "project-euler/PE_0003_Largest_prime_factor.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0003_Largest_prime_factor.py"
+        },
+        {
+          "id": "pe-0004-largest-palindrome-product",
+          "title": "004 · Largest palindrome product",
+          "file": "project-euler/PE_0004_Largest_palindrome_product.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0004_Largest_palindrome_product.py"
+        },
+        {
+          "id": "pe-0005-smallest-multiple",
+          "title": "005 · Smallest multiple",
+          "file": "project-euler/PE_0005_Smallest_multiple.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0005_Smallest_multiple.py"
+        },
+        {
+          "id": "pe-0006-sum-square-difference",
+          "title": "006 · Sum square difference",
+          "file": "project-euler/PE_0006_Sum_square_difference.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0006_Sum_square_difference.py"
+        },
+        {
+          "id": "pe-0007-10001st-prime",
+          "title": "007 · 10001st prime",
+          "file": "project-euler/PE_0007_10001st_prime.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0007_10001st_prime.py"
+        },
+        {
+          "id": "pe-0008-largest-product-in-a-series",
+          "title": "008 · Largest product in a series",
+          "file": "project-euler/PE_0008_Largest_product_in_a_series.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0008_Largest_product_in_a_series.py"
+        },
+        {
+          "id": "pe-0009-special-pythagorean-triplet",
+          "title": "009 · Special Pythagorean triplet",
+          "file": "project-euler/PE_0009_Special_Pythagorean_triplet.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0009_Special_Pythagorean_triplet.py"
+        },
+        {
+          "id": "pe-0010-summation-of-primes",
+          "title": "010 · Summation of primes",
+          "file": "project-euler/PE_0010_Summation_of_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0010_Summation_of_primes.py"
+        },
+        {
+          "id": "pe-0011-largest-product-in-a-grid",
+          "title": "011 · Largest product in a grid",
+          "file": "project-euler/PE_0011_Largest_product_in_a_grid.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0011_Largest_product_in_a_grid.py"
+        },
+        {
+          "id": "pe-0012-highly-divisible-triangular-number",
+          "title": "012 · Highly divisible triangular number",
+          "file": "project-euler/PE_0012_Highly_divisible_triangular_number.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0012_Highly_divisible_triangular_number.py"
+        },
+        {
+          "id": "pe-0013-large-sum",
+          "title": "013 · Large sum",
+          "file": "project-euler/PE_0013_Large_sum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0013_Large_sum.py"
+        },
+        {
+          "id": "pe-0014-longest-collatz-sequence",
+          "title": "014 · Longest Collatz sequence",
+          "file": "project-euler/PE_0014_Longest_Collatz_sequence.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0014_Longest_Collatz_sequence.py"
+        },
+        {
+          "id": "pe-0015-lattice-paths",
+          "title": "015 · Lattice paths",
+          "file": "project-euler/PE_0015_Lattice_paths.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0015_Lattice_paths.py"
+        },
+        {
+          "id": "pe-0016-power-digit-sum",
+          "title": "016 · Power digit sum",
+          "file": "project-euler/PE_0016_Power_digit_sum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0016_Power_digit_sum.py",
+          "replacements": [
+            [
+              "n = 2**100000",
+              "import sys\nsys.set_int_max_str_digits(100_000)\n\nn = 2**100000"
+            ]
+          ],
+          "note": "À l’exécution, la limite de conversion en texte est relevée pour afficher le résultat du calcul sur 2¹⁰⁰⁰⁰⁰."
+        },
+        {
+          "id": "pe-0017-number-letter-counts",
+          "title": "017 · Number letter counts",
+          "file": "project-euler/PE_0017_Number_letter_counts.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0017_Number_letter_counts.py"
+        },
+        {
+          "id": "pe-0018-maximum-path-sum-i",
+          "title": "018 · Maximum path sum I",
+          "file": "project-euler/PE_0018_Maximum_path_sum_I.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0018_Maximum_path_sum_I.py"
+        },
+        {
+          "id": "pe-0019-counting-sundays",
+          "title": "019 · Counting Sundays",
+          "file": "project-euler/PE_0019_Counting_Sundays.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0019_Counting_Sundays.py"
+        },
+        {
+          "id": "pe-0020-factorial-digit-sum",
+          "title": "020 · Factorial digit sum",
+          "file": "project-euler/PE_0020_Factorial_digit_sum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0020_Factorial_digit_sum.py"
+        },
+        {
+          "id": "pe-0021-amicable-numbers",
+          "title": "021 · Amicable numbers",
+          "file": "project-euler/PE_0021_Amicable_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0021_Amicable_numbers.py"
+        },
+        {
+          "id": "pe-0022-names-scores",
+          "title": "022 · Names scores",
+          "file": "project-euler/PE_0022_Names_scores.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0022_Names_scores.py",
+          "files": [
+            {
+              "name": "p022_names.txt",
+              "file": "project-euler/p022_names.txt"
+            }
+          ],
+          "urls": {
+            "https://projecteuler.net/project/resources/p022_names.txt": "p022_names.txt"
+          }
+        },
+        {
+          "id": "pe-0023-non-abundant-sums",
+          "title": "023 · Non-abundant sums",
+          "file": "project-euler/PE_0023_Non-abundant_sums.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0023_Non-abundant_sums.py"
+        },
+        {
+          "id": "pe-0024-lexicographic-permutations",
+          "title": "024 · Lexicographic permutations",
+          "file": "project-euler/PE_0024_Lexicographic_permutations.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0024_Lexicographic_permutations.py"
+        },
+        {
+          "id": "pe-0025-1000-digit-fibonacci-number",
+          "title": "025 · 1000-digit Fibonacci number",
+          "file": "project-euler/PE_0025_1000-digit_Fibonacci_number.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0025_1000-digit_Fibonacci_number.py"
+        },
+        {
+          "id": "pe-0026-reciprocal-cycles",
+          "title": "026 · Reciprocal cycles",
+          "file": "project-euler/PE_0026_Reciprocal_cycles.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0026_Reciprocal_cycles.py"
+        },
+        {
+          "id": "pe-0027-quadratic-primes",
+          "title": "027 · Quadratic primes",
+          "file": "project-euler/PE_0027_Quadratic_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0027_Quadratic_primes.py",
+          "packages": [
+            "sympy"
+          ]
+        },
+        {
+          "id": "pe-0028-number-spiral-diagonals",
+          "title": "028 · Number spiral diagonals",
+          "file": "project-euler/PE_0028_Number_spiral_diagonals.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0028_Number_spiral_diagonals.py",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "pe-0029-distinct-powers",
+          "title": "029 · Distinct powers",
+          "file": "project-euler/PE_0029_Distinct_powers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0029_Distinct_powers.py"
+        },
+        {
+          "id": "pe-0030-digit-fifth-powers",
+          "title": "030 · Digit fifth powers",
+          "file": "project-euler/PE_0030_Digit_fifth_powers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0030_Digit_fifth_powers.py"
+        },
+        {
+          "id": "pe-0031-coin-sums",
+          "title": "031 · Coin sums",
+          "file": "project-euler/PE_0031_Coin_sums.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0031_Coin_sums.py"
+        },
+        {
+          "id": "pe-0032-pandigital-products",
+          "title": "032 · Pandigital products",
+          "file": "project-euler/PE_0032_Pandigital_products.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0032_Pandigital_products.py"
+        },
+        {
+          "id": "pe-0033-digit-cancelling-fractions",
+          "title": "033 · Digit cancelling fractions",
+          "file": "project-euler/PE_0033_Digit_cancelling_fractions.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0033_Digit_cancelling_fractions.py"
+        },
+        {
+          "id": "pe-0034-digit-factorials",
+          "title": "034 · Digit factorials",
+          "file": "project-euler/PE_0034_Digit_factorials.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0034_Digit_factorials.py"
+        },
+        {
+          "id": "pe-0035-circular-primes",
+          "title": "035 · Circular primes",
+          "file": "project-euler/PE_0035_Circular_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0035_Circular_primes.py"
+        },
+        {
+          "id": "pe-0036-double-base-palindromes",
+          "title": "036 · Double-base palindromes",
+          "file": "project-euler/PE_0036_Double-base_palindromes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0036_Double-base_palindromes.py"
+        },
+        {
+          "id": "pe-0037-truncatable-primes",
+          "title": "037 · Truncatable primes",
+          "file": "project-euler/PE_0037_Truncatable_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0037_Truncatable_primes.py"
+        },
+        {
+          "id": "pe-0038-pandigital-multiples",
+          "title": "038 · Pandigital multiples",
+          "file": "project-euler/PE_0038_Pandigital_multiples.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0038_Pandigital_multiples.py"
+        },
+        {
+          "id": "pe-0039-integer-right-triangles",
+          "title": "039 · Integer right triangles",
+          "file": "project-euler/PE_0039_Integer_right_triangles.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0039_Integer_right_triangles.py"
+        },
+        {
+          "id": "pe-0040-champernowne-s-constant",
+          "title": "040 · Champernowne's constant",
+          "file": "project-euler/PE_0040_Champernowne's_constant.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0040_Champernowne%27s_constant.py"
+        },
+        {
+          "id": "pe-0041-pandigital-prime",
+          "title": "041 · Pandigital prime",
+          "file": "project-euler/PE_0041_Pandigital_prime.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0041_Pandigital_prime.py"
+        },
+        {
+          "id": "pe-0042-coded-triangle-numbers",
+          "title": "042 · Coded triangle numbers",
+          "file": "project-euler/PE_0042_Coded_triangle_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0042_Coded_triangle_numbers.py",
+          "files": [
+            {
+              "name": "p042_words.txt",
+              "file": "project-euler/p042_words.txt"
+            }
+          ],
+          "urls": {
+            "https://projecteuler.net/project/resources/p042_words.txt": "p042_words.txt"
+          }
+        },
+        {
+          "id": "pe-0043-sub-string-divisibility",
+          "title": "043 · Sub-string divisibility",
+          "file": "project-euler/PE_0043_Sub-string_divisibility.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0043_Sub-string_divisibility.py"
+        },
+        {
+          "id": "pe-0044-pentagon-numbers",
+          "title": "044 · Pentagon numbers",
+          "file": "project-euler/PE_0044_Pentagon_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0044_Pentagon_numbers.py"
+        },
+        {
+          "id": "pe-0045-triangular-pentagonal-and-hexagonal",
+          "title": "045 · Triangular, pentagonal, and hexagonal",
+          "file": "project-euler/PE_0045_Triangular,_pentagonal,_and hexagonal.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0045_Triangular%2C_pentagonal%2C_and%20hexagonal.py"
+        },
+        {
+          "id": "pe-0046-goldbach-s-other-conjecture",
+          "title": "046 · Goldbach's other conjecture",
+          "file": "project-euler/PE_0046_Goldbach's_other_conjecture.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0046_Goldbach%27s_other_conjecture.py",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "pe-0047-distinct-primes-factors",
+          "title": "047 · Distinct primes factors",
+          "file": "project-euler/PE_0047_Distinct_primes_factors.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0047_Distinct_primes_factors.py"
+        },
+        {
+          "id": "pe-0048-self-powers",
+          "title": "048 · Self powers",
+          "file": "project-euler/PE_0048_Self_powers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0048_Self_powers.py"
+        },
+        {
+          "id": "pe-0049-prime-permutations",
+          "title": "049 · Prime permutations",
+          "file": "project-euler/PE_0049_Prime_permutations.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0049_Prime_permutations.py"
+        },
+        {
+          "id": "pe-0050-consecutive-prime-sum",
+          "title": "050 · Consecutive prime sum",
+          "file": "project-euler/PE_0050_Consecutive_prime_sum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0050_Consecutive_prime_sum.py"
+        },
+        {
+          "id": "pe-0051-prime-digit-replacements",
+          "title": "051 · Prime digit replacements",
+          "file": "project-euler/PE_0051_Prime_digit_replacements.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0051_Prime_digit_replacements.py"
+        },
+        {
+          "id": "pe-0052-permuted-multiples",
+          "title": "052 · Permuted multiples",
+          "file": "project-euler/PE_0052_Permuted_multiples.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0052_Permuted_multiples.py"
+        },
+        {
+          "id": "pe-0053-combinatoric-selections",
+          "title": "053 · Combinatoric selections",
+          "file": "project-euler/PE_0053_Combinatoric_selections.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0053_Combinatoric_selections.py"
+        },
+        {
+          "id": "pe-0054-poker-hands",
+          "title": "054 · Poker hands",
+          "file": "project-euler/PE_0054_Poker_hands.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0054_Poker_hands.py",
+          "files": [
+            {
+              "name": "p054_poker.txt",
+              "file": "project-euler/p054_poker.txt"
+            }
+          ],
+          "urls": {
+            "https://projecteuler.net/project/resources/p054_poker.txt": "p054_poker.txt"
+          }
+        },
+        {
+          "id": "pe-0055-lychrel-numbers",
+          "title": "055 · Lychrel numbers",
+          "file": "project-euler/PE_0055_Lychrel_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0055_Lychrel_numbers.py"
+        },
+        {
+          "id": "pe-0056-powerful-digit-sum",
+          "title": "056 · Powerful digit sum",
+          "file": "project-euler/PE_0056_Powerful_digit_sum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0056_Powerful_digit_sum.py"
+        },
+        {
+          "id": "pe-0057-square-root-convergents",
+          "title": "057 · Square root convergents",
+          "file": "project-euler/PE_0057_Square_root_convergents.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0057_Square_root_convergents.py"
+        },
+        {
+          "id": "pe-0058-spiral-primes",
+          "title": "058 · Spiral primes",
+          "file": "project-euler/PE_0058_Spiral_primes.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0058_Spiral_primes.py",
+          "packages": [
+            "sympy"
+          ]
+        },
+        {
+          "id": "pe-0059-xor-decryption",
+          "title": "059 · XOR decryption",
+          "file": "project-euler/PE_0059_XOR_decryption.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0059_XOR_decryption.py"
+        },
+        {
+          "id": "pe-0060-prime-pair-sets",
+          "title": "060 · Prime pair sets",
+          "file": "project-euler/PE_0060_Prime_pair_sets.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0060_Prime_pair_sets.py",
+          "packages": [
+            "sympy"
+          ]
+        },
+        {
+          "id": "pe-0061-cyclical-figurate-numbers",
+          "title": "061 · Cyclical figurate numbers",
+          "file": "project-euler/PE_0061_Cyclical_figurate_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0061_Cyclical_figurate_numbers.py"
+        },
+        {
+          "id": "pe-0062-cubic-permutations",
+          "title": "062 · Cubic permutations",
+          "file": "project-euler/PE_0062_Cubic_permutations.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0062_Cubic_permutations.py"
+        },
+        {
+          "id": "pe-0063-powerful-digit-counts",
+          "title": "063 · Powerful digit counts",
+          "file": "project-euler/PE_0063_Powerful_digit_counts.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0063_Powerful_digit_counts.py"
+        },
+        {
+          "id": "pe-0064-odd-period-square-roots",
+          "title": "064 · Odd period square roots",
+          "file": "project-euler/PE_0064_Odd_period_square_roots.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0064_Odd_period_square_roots.py"
+        },
+        {
+          "id": "pe-0065-convergents-of-e",
+          "title": "065 · Convergents of e",
+          "file": "project-euler/PE_0065_Convergents_of_e.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0065_Convergents_of_e.py"
+        },
+        {
+          "id": "pe-0066-diophantine-equation",
+          "title": "066 · Diophantine equation",
+          "file": "project-euler/PE_0066_Diophantine_equation.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0066_Diophantine_equation.py"
+        },
+        {
+          "id": "pe-0067-maximum-path-sum-ii",
+          "title": "067 · Maximum path sum II",
+          "file": "project-euler/PE_0067_Maximum_path_sum_II.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0067_Maximum_path_sum_II.py",
+          "files": [
+            {
+              "name": "_E67.txt",
+              "file": "project-euler/_E67.txt"
+            }
+          ]
+        },
+        {
+          "id": "pe-0068-magic-5-gon-ring",
+          "title": "068 · Magic 5-gon ring",
+          "file": "project-euler/PE_0068_Magic_5-gon_ring.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0068_Magic_5-gon_ring.py"
+        },
+        {
+          "id": "pe-0069-totient-maximum",
+          "title": "069 · Totient maximum",
+          "file": "project-euler/PE_0069_Totient_maximum.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0069_Totient_maximum.py"
+        },
+        {
+          "id": "pe-0070-totient-permutation",
+          "title": "070 · Totient permutation",
+          "file": "project-euler/PE_0070_Totient_permutation.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0070_Totient_permutation.py",
+          "note": "Le calcul complet peut durer plusieurs minutes."
+        },
+        {
+          "id": "pe-0071-ordered-fractions",
+          "title": "071 · Ordered fractions",
+          "file": "project-euler/PE_0071_Ordered_fractions.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0071_Ordered_fractions.py"
+        },
+        {
+          "id": "pe-0072-counting-fractions",
+          "title": "072 · Counting fractions",
+          "file": "project-euler/PE_0072_Counting_fractions.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0072_Counting_fractions.py"
+        },
+        {
+          "id": "pe-0073-counting-fractions-in-a-range",
+          "title": "073 · Counting fractions in a range",
+          "file": "project-euler/PE_0073_Counting_fractions_in_a_range---.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0073_Counting_fractions_in_a_range---.py",
+          "note": "Le navigateur lance le calcul jusqu’à 12 000, la valeur demandée dans l’énoncé.",
+          "replacements": [
+            [
+              "limit = 120000",
+              "limit = 12000"
+            ]
+          ]
+        },
+        {
+          "id": "pe-0074-digit-factorial-chains",
+          "title": "074 · Digit factorial chains",
+          "file": "project-euler/PE_0074_Digit_factorial_chains.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0074_Digit_factorial_chains.py"
+        },
+        {
+          "id": "pe-0074-digit-factorial-chains-b",
+          "title": "074 · Digit factorial chains b",
+          "file": "project-euler/PE_0074_Digit_factorial_chains_b.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0074_Digit_factorial_chains_b.py"
+        },
+        {
+          "id": "pe-0075-singular-integer-right-triangles",
+          "title": "075 · Singular integer right triangles",
+          "file": "project-euler/PE_0075_Singular_integer_right_triangles.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0075_Singular_integer_right_triangles.py"
+        },
+        {
+          "id": "pe-0076-counting-summations",
+          "title": "076 · Counting summations",
+          "file": "project-euler/PE_0076_Counting_summations.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0076_Counting_summations.py"
+        },
+        {
+          "id": "pe-0077-prime-summations",
+          "title": "077 · Prime summations",
+          "file": "project-euler/PE_0077_Prime_summations.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0077_Prime_summations.py"
+        },
+        {
+          "id": "pe-0078-coin-partitions",
+          "title": "078 · Coin partitions",
+          "file": "project-euler/PE_0078_Coin_partitions.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0078_Coin_partitions.py"
+        },
+        {
+          "id": "pe-0079-passcode-derivation",
+          "title": "079 · Passcode derivation",
+          "file": "project-euler/PE_0079_Passcode_derivation.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0079_Passcode_derivation.py"
+        },
+        {
+          "id": "pe-0080-square-root-digital-expansion",
+          "title": "080 · Square root digital expansion",
+          "file": "project-euler/PE_0080_Square_root_digital_expansion.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0080_Square_root_digital_expansion.py"
+        },
+        {
+          "id": "pe-0081-path-sum-two-ways",
+          "title": "081 · Path sum two ways",
+          "file": "project-euler/PE_0081_Path_sum_two_ways.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0081_Path_sum_two_ways.py",
+          "files": [
+            {
+              "name": "PE_0081.txt",
+              "file": "project-euler/PE_0081.txt"
+            }
+          ]
+        },
+        {
+          "id": "pe-0082-path-sum-three-ways",
+          "title": "082 · Path sum three ways",
+          "file": "project-euler/PE_0082_Path_sum_three_ways.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0082_Path_sum_three_ways.py",
+          "files": [
+            {
+              "name": "PE_0082.txt",
+              "file": "project-euler/PE_0082.txt"
+            }
+          ]
+        },
+        {
+          "id": "pe-0083-path-sum-four-ways",
+          "title": "083 · Path sum four ways",
+          "file": "project-euler/PE_0083_Path_sum_four_ways.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0083_Path_sum_four_ways.py",
+          "files": [
+            {
+              "name": "PE_0083.txt",
+              "file": "project-euler/PE_0083.txt"
+            }
+          ]
+        },
+        {
+          "id": "pe-0084-monopoly-odds",
+          "title": "084 · Monopoly odds",
+          "file": "project-euler/PE_0084_Monopoly_odds.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0084_Monopoly_odds.py"
+        },
+        {
+          "id": "pe-0085-counting-rectangles",
+          "title": "085 · Counting rectangles",
+          "file": "project-euler/PE_0085_Counting_rectangles.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0085_Counting_rectangles.py"
+        },
+        {
+          "id": "pe-0086-cuboid-route",
+          "title": "086 · Cuboid route",
+          "file": "project-euler/PE_0086_Cuboid_route.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0086_Cuboid_route.py"
+        },
+        {
+          "id": "pe-0087-prime-power-triples",
+          "title": "087 · Prime power triples",
+          "file": "project-euler/PE_0087_Prime_power_triples.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0087_Prime_power_triples.py"
+        },
+        {
+          "id": "pe-0088-product-sum-numbers",
+          "title": "088 · Product-sum numbers",
+          "file": "project-euler/PE_0088_Product-sum_numbers.py",
+          "github": "https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0088_Product-sum_numbers.py"
+        }
+      ]
+    },
+    {
+      "id": "sololearn",
+      "title": "SoloLearn",
+      "entries": [
+        {
+          "id": "100-hello-world-no-loop",
+          "title": "100 Hello World no loop",
+          "file": "python-challenges/100_Hello_World_no_loop.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/100_Hello_World_no_loop.py"
+        },
+        {
+          "id": "a-man-on-stairs-of-n-steps",
+          "title": "A Man On Stairs of n Steps",
+          "file": "python-challenges/A Man_On_Stairs_of_n_Steps.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/A%20Man_On_Stairs_of_n_Steps.py"
+        },
+        {
+          "id": "a-man-on-stairs-of-n-steps-2",
+          "title": "A Man On Stairs of n Steps 2",
+          "file": "python-challenges/A Man_On_Stairs_of_n_Steps_2.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/A%20Man_On_Stairs_of_n_Steps_2.py"
+        },
+        {
+          "id": "alphabetic-balance-scale-2",
+          "title": "Alphabetic Balance Scale 2",
+          "file": "python-challenges/Alphabetic Balance Scale 2.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Alphabetic%20Balance%20Scale%202.py"
+        },
+        {
+          "id": "alphabetic-balance-scale",
+          "title": "Alphabetic Balance Scale",
+          "file": "python-challenges/Alphabetic Balance Scale.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Alphabetic%20Balance%20Scale.py"
+        },
+        {
+          "id": "bean-machine",
+          "title": "Bean Machine",
+          "file": "python-challenges/Bean_Machine.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Bean_Machine.py"
+        },
+        {
+          "id": "card-snap",
+          "title": "Card Snap",
+          "file": "python-challenges/Card_Snap.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Card_Snap.py"
+        },
+        {
+          "id": "custom-randomizer",
+          "title": "Custom Randomizer",
+          "file": "python-challenges/Custom Randomizer.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Custom%20Randomizer.py"
+        },
+        {
+          "id": "envelope-and-letter",
+          "title": "Envelope And Letter",
+          "file": "python-challenges/Envelope_And_Letter.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Envelope_And_Letter.py"
+        },
+        {
+          "id": "even-odd",
+          "title": "Even Odd",
+          "file": "python-challenges/Even_Odd.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Even_Odd.py"
+        },
+        {
+          "id": "flipping-cards",
+          "title": "Flipping-Cards",
+          "file": "python-challenges/Flipping-Cards.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Flipping-Cards.py"
+        },
+        {
+          "id": "floyd-s-triangles",
+          "title": "Floyd's Triangles",
+          "file": "python-challenges/Floyd's_Triangles.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Floyd%27s_Triangles.py",
+          "input": "5\n5"
+        },
+        {
+          "id": "genetic-algorithm-hello-world",
+          "title": "Genetic Algorithm Hello World",
+          "file": "python-challenges/Genetic_Algorithm_Hello_World.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Genetic_Algorithm_Hello_World.py",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "letters-and-boxes",
+          "title": "Letters And Boxes",
+          "file": "python-challenges/Letters_And_Boxes.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Letters_And_Boxes.py"
+        },
+        {
+          "id": "lipogram-hello-world",
+          "title": "Lipogram Hello World!",
+          "file": "python-challenges/Lipogram_Hello_World!.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Lipogram_Hello_World%21.py"
+        },
+        {
+          "id": "longest-code",
+          "title": "Longest Code",
+          "file": "python-challenges/Longest_Code.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Longest_Code.py"
+        },
+        {
+          "id": "magic-number",
+          "title": "Magic Number",
+          "file": "python-challenges/Magic_Number.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Magic_Number.py",
+          "input": "199"
+        },
+        {
+          "id": "multi-base-to-base-converter",
+          "title": "Multi-Base to Base Converter",
+          "file": "python-challenges/Multi-Base_to_Base_Converter.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Multi-Base_to_Base_Converter.py"
+        },
+        {
+          "id": "normal-distribution",
+          "title": "Normal distribution",
+          "file": "python-challenges/Normal_distribution.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Normal_distribution.py",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "numbers-pattern",
+          "title": "Numbers Pattern",
+          "file": "python-challenges/Numbers_Pattern.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Numbers_Pattern.py"
+        },
+        {
+          "id": "palindromic-numbers-multibase",
+          "title": "Palindromic Numbers Multibase",
+          "file": "python-challenges/Palindromic_Numbers_Multibase.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Palindromic_Numbers_Multibase.py"
+        },
+        {
+          "id": "reverse-floyd-triangle",
+          "title": "Reverse Floyd Triangle",
+          "file": "python-challenges/Reverse_Floyd_Triangle.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Reverse_Floyd_Triangle.py"
+        },
+        {
+          "id": "santa-code-s-christmas-conundrum",
+          "title": "Santa Code s Christmas Conundrum",
+          "file": "python-challenges/Santa_Code_s_Christmas_Conundrum.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Santa_Code_s_Christmas_Conundrum.py"
+        },
+        {
+          "id": "strings-stuff",
+          "title": "Strings Stuff",
+          "file": "python-challenges/Strings_Stuff.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Strings_Stuff.py"
+        },
+        {
+          "id": "tetrahedron",
+          "title": "Tetrahedron",
+          "file": "python-challenges/Tetrahedron.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Tetrahedron.py"
+        },
+        {
+          "id": "tricky-sequence",
+          "title": "Tricky Sequence",
+          "file": "python-challenges/Tricky_Sequence.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Tricky_Sequence.py"
+        },
+        {
+          "id": "typoglycemia",
+          "title": "Typoglycemia",
+          "file": "python-challenges/Typoglycemia.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Typoglycemia.py"
+        },
+        {
+          "id": "typoglycemia-2",
+          "title": "Typoglycemia 2",
+          "file": "python-challenges/Typoglycemia_2.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Typoglycemia_2.py"
+        },
+        {
+          "id": "wifi-signal-overlap",
+          "title": "Wifi Signal Overlap",
+          "file": "python-challenges/Wifi Signal Overlap.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Wifi%20Signal%20Overlap.py"
+        },
+        {
+          "id": "words-morphing",
+          "title": "Words Morphing",
+          "file": "python-challenges/Words_Morphing.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Words_Morphing.py",
+          "packages": [
+            "numpy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "codewars",
+      "title": "Codewars",
+      "entries": [
+        {
+          "id": "your-order-please",
+          "title": "Your Order Please",
+          "file": "python-challenges/Your Order Please.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Your%20Order%20Please.py"
+        }
+      ]
+    },
+    {
+      "id": "autres-defis",
+      "title": "Autres défis",
+      "entries": [
+        {
+          "id": "alphabet-parser",
+          "title": "alphabet parser",
+          "file": "python-challenges/alphabet parser.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/alphabet%20parser.py",
+          "input": "a\nh"
+        },
+        {
+          "id": "base-10-to-base-26",
+          "title": "Base 10 to base 26",
+          "file": "python-challenges/Base 10 to base 26.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Base%2010%20to%20base%2026.py"
+        },
+        {
+          "id": "circle",
+          "title": "Circle",
+          "file": "python-challenges/Circle.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Circle.py"
+        },
+        {
+          "id": "code-festival-teams-2",
+          "title": "Code Festival Teams 2",
+          "file": "python-challenges/Code Festival Teams 2.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Code%20Festival%20Teams%202.py"
+        },
+        {
+          "id": "code-festival-teams",
+          "title": "Code Festival Teams",
+          "file": "python-challenges/Code Festival Teams.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Code%20Festival%20Teams.py"
+        },
+        {
+          "id": "decimal-to-roman",
+          "title": "Decimal to Roman",
+          "file": "python-challenges/Decimal_to_Roman.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Decimal_to_Roman.py",
+          "input": "1997"
+        },
+        {
+          "id": "decimal-to-roman-commented",
+          "title": "Decimal to Roman Commented",
+          "file": "python-challenges/Decimal_to_Roman_Commented.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Decimal_to_Roman_Commented.py",
+          "input": "1997"
+        },
+        {
+          "id": "decimal-to-roman-onelined",
+          "title": "Decimal to Roman onelined",
+          "file": "python-challenges/Decimal_to_Roman_onelined.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Decimal_to_Roman_onelined.py",
+          "input": "1997"
+        },
+        {
+          "id": "deficient-numbers",
+          "title": "Deficient Numbers",
+          "file": "python-challenges/Deficient_Numbers.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Deficient_Numbers.py"
+        },
+        {
+          "id": "einstein-riddle",
+          "title": "Einstein Riddle",
+          "file": "python-challenges/Einstein_Riddle.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Einstein_Riddle.py"
+        },
+        {
+          "id": "floats-vs-decimals",
+          "title": "Floats vs Decimals",
+          "file": "python-challenges/Floats_vs_Decimals.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Floats_vs_Decimals.py"
+        },
+        {
+          "id": "fun-with-digits",
+          "title": "Fun With Digits",
+          "file": "python-challenges/Fun_With_Digits.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Fun_With_Digits.py"
+        },
+        {
+          "id": "funny-patterns",
+          "title": "Funny Patterns",
+          "file": "python-challenges/Funny_Patterns.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Funny_Patterns.py"
+        },
+        {
+          "id": "garland-words",
+          "title": "Garland Words",
+          "file": "python-challenges/Garland_Words.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Garland_Words.py",
+          "replacements": [
+            [
+              "print('\\n'.join([''.join([a,' --> ',a[:i]]) for a in (words).split() for i in range(len(a)) if a[:i] == a[-i:]]))\n",
+              ""
+            ]
+          ],
+          "note": "À l’exécution, l’appel en double placé avant la déclaration de words est retiré.",
+          "input": "onion"
+        },
+        {
+          "id": "golden-mountain",
+          "title": "Golden Mountain",
+          "file": "python-challenges/Golden_Mountain.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Golden_Mountain.py"
+        },
+        {
+          "id": "infinite-triplets-for-brains",
+          "title": "Infinite Triplets For Brains",
+          "file": "python-challenges/Infinite__Triplets_For_Brains.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Infinite__Triplets_For_Brains.py",
+          "replacements": [
+            [
+              " '''\n",
+              "'''\n"
+            ]
+          ],
+          "note": "À l’exécution, une indentation au début du fichier est corrigée."
+        },
+        {
+          "id": "infinite-triplets-for-brains-2",
+          "title": "Infinite Triplets For Brains 2",
+          "file": "python-challenges/Infinite_Triplets_For_Brains_2.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Infinite_Triplets_For_Brains_2.py",
+          "replacements": [
+            [
+              "while True:",
+              "for _ in range(500):"
+            ]
+          ],
+          "note": "L’exécuteur affiche les 500 premiers triplets de cette suite infinie."
+        },
+        {
+          "id": "josephus-problem",
+          "title": "Josephus Problem",
+          "file": "python-challenges/Josephus_Problem.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Josephus_Problem.py"
+        },
+        {
+          "id": "kaprekar-constant",
+          "title": "Kaprekar Constant",
+          "file": "python-challenges/Kaprekar_Constant.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Kaprekar_Constant.py"
+        },
+        {
+          "id": "kaprekar-constant-multibase",
+          "title": "Kaprekar Constant Multibase",
+          "file": "python-challenges/Kaprekar_Constant_Multibase.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Kaprekar_Constant_Multibase.py"
+        },
+        {
+          "id": "kaprekar-constant-multibase-results",
+          "title": "Kaprekar Constant Multibase Results",
+          "file": "python-challenges/Kaprekar_Constant_Multibase_Results.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Kaprekar_Constant_Multibase_Results.py",
+          "note": "Ce fichier archive des résultats. Il ne produit aucune sortie à l’exécution."
+        },
+        {
+          "id": "minimal-pairs-product-sum",
+          "title": "Minimal Pairs Product Sum",
+          "file": "python-challenges/Minimal_Pairs_Product_Sum.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Minimal_Pairs_Product_Sum.py"
+        },
+        {
+          "id": "palindromic-numbers-multibase-results",
+          "title": "Palindromic Numbers Multibase results",
+          "file": "python-challenges/Palindromic_Numbers_Multibase_results.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Palindromic_Numbers_Multibase_results.py",
+          "note": "Ce fichier archive des résultats. Il ne produit aucune sortie à l’exécution."
+        },
+        {
+          "id": "pseudo-words-generator",
+          "title": "Pseudo-Words Generator",
+          "file": "python-challenges/Pseudo-Words_Generator.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Pseudo-Words_Generator.py",
+          "packages": [
+            "numpy"
+          ]
+        },
+        {
+          "id": "quine",
+          "title": "Quine",
+          "file": "python-challenges/Quine.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Quine.py"
+        },
+        {
+          "id": "roman-to-decimal",
+          "title": "Roman to Decimal",
+          "file": "python-challenges/Roman_to_Decimal.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Roman_to_Decimal.py"
+        },
+        {
+          "id": "square-root",
+          "title": "Square Root",
+          "file": "python-challenges/Square Root.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Square%20Root.py"
+        },
+        {
+          "id": "summation-calculator",
+          "title": "Summation Calculator",
+          "file": "python-challenges/Summation Calculator.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Summation%20Calculator.py",
+          "input": "2 4 *2"
+        },
+        {
+          "id": "username-check",
+          "title": "Username Check",
+          "file": "python-challenges/Username Check.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Username%20Check.py"
+        },
+        {
+          "id": "what-about-the-knight",
+          "title": "What About The Knight",
+          "file": "python-challenges/What_About_The_Knight.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/What_About_The_Knight.py",
+          "input": "g6\na3\nd3"
+        },
+        {
+          "id": "zeros-indexer",
+          "title": "zeros indexer",
+          "file": "python-challenges/zeros indexer.py",
+          "github": "https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/zeros%20indexer.py",
+          "input": "10100501"
+        }
+      ]
+    },
+    {
+      "id": "projets-python",
+      "title": "Projets Python",
+      "entries": [
+        {
+          "id": "pattern-generator-1",
+          "title": "Motifs ASCII · version 1",
+          "file": "motifs-ascii/Pattern_Generator_1.py",
+          "github": "https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_1.py",
+          "replacements": [
+            [
+              "chars = [chr(i) for i in charnums]",
+              "chars = [bytes([i]).decode('cp437') for i in charnums]"
+            ]
+          ],
+          "note": "À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur."
+        },
+        {
+          "id": "pattern-generator-2",
+          "title": "Motifs ASCII · version 2",
+          "file": "motifs-ascii/Pattern_Generator_2.py",
+          "github": "https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_2.py",
+          "replacements": [
+            [
+              "chars = [chr(i) for i in charnums]",
+              "chars = [bytes([i]).decode('cp437') for i in charnums]"
+            ]
+          ],
+          "note": "À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur."
+        },
+        {
+          "id": "pattern-generator-3",
+          "title": "Motifs ASCII · version 3",
+          "file": "motifs-ascii/Pattern_Generator_3.py",
+          "github": "https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_3.py",
+          "packages": [
+            "numpy"
+          ],
+          "replacements": [
+            [
+              "dic = ",
+              "def chr(number):\n    return bytes([number]).decode('cp437')\n\ndic = "
+            ]
+          ],
+          "note": "À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur."
+        },
+        {
+          "id": "population-1",
+          "title": "Simulation de population · version 1",
+          "file": "life-sim/Population_1.py",
+          "github": "https://github.com/Cpasgrave/Life_Sim/blob/155c3523cbe99d53158392e58c4007a955882a85/Population_1.py"
+        },
+        {
+          "id": "population-2",
+          "title": "Simulation de population · version 2",
+          "file": "life-sim/Population_2.py",
+          "github": "https://github.com/Cpasgrave/Life_Sim/blob/155c3523cbe99d53158392e58c4007a955882a85/Population_2.py"
+        },
+        {
+          "id": "population-3",
+          "title": "Simulation de population · version 3",
+          "file": "life-sim/Population_3.py",
+          "github": "https://github.com/Cpasgrave/Life_Sim/blob/155c3523cbe99d53158392e58c4007a955882a85/Population_3.py"
+        },
+        {
+          "id": "pseudo-words-generator",
+          "title": "Générateur de pseudo-mots multilingue",
+          "file": "pseudo-mots/Pseudo_words_generator.py",
+          "github": "https://github.com/Cpasgrave/Pseudowords-Generator-Multi/blob/6bd6e27dd7377d8360a8b3f69ead832d9546cfbf/Pseudo_words_generator.py",
+          "files": [
+            {
+              "name": "Data/liste.de.mots.francais.frgut.txt",
+              "url": "https://raw.githubusercontent.com/Cpasgrave/Pseudowords-Generator-Multi/6bd6e27dd7377d8360a8b3f69ead832d9546cfbf/Data/liste.de.mots.francais.frgut.txt"
+            }
+          ],
+          "note": "Le premier calcul charge le dictionnaire français et peut prendre un moment."
+        },
+        {
+          "id": "g-a-polevonomials",
+          "title": "Approximation polynomiale par algorithme génétique",
+          "file": "algorithme-genetique/G.A. Polevonomials.py",
+          "github": "https://github.com/Cpasgrave/Genetic-Algorithm---function-approximation-with-polynomials/blob/79a1346e3e59e40a01db6fc6b32d547643c05a67/G.A.%20Polevonomials.py",
+          "packages": [
+            "numpy"
+          ],
+          "note": "La simulation complète comporte 300 générations. Les premiers résultats s’affichent pendant le calcul."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>015 · Lattice paths · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>015 · Lattice paths</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0015_Lattice_paths.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0015_Lattice_paths.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+Euler 15
+
+Starting in the top left corner of a 2×2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
+
+How many such routes are there through a 20×20 grid?
+
+&quot;&quot;&quot;
+def lattice(n):
+    G = [[0]*(n+1)for _ in range(n+1)]
+    G[0][0] = 1
+    for r in range(n+1):
+        for c in range(n+1):
+            up = 0
+            left = 0
+            if r: up = G[r-1][c]
+            if c: left = G[r][c-1]
+            G[r][c] += up + left
+    return G[-1][-1]
+
+for n in range(21):
+    print(n,lattice(n))
+
+# math solution:
+# RDDRRD, RRDRDD, etc ...
+# choosing n elements among 2n:
+# binomial law
+import math
+n = 20
+resultat = math.factorial(2*n)//(math.factorial(n)**2)
+print(resultat)
+
+# Hackerrank version (grid is M x N)
+
+from math import factorial as f
+
+euler_15 = lambda m,n:f(m+n)//(f(m)*f(n))
+
+# n = int(input())
+
+# for i in range(n):
+#     M,N = [*map(int,input().split())]
+#     print(euler_15(M,N)%(10**9+7))</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0015_Lattice_paths.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>074 · Digit factorial chains b · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>074 · Digit factorial chains b</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0074_Digit_factorial_chains_b.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0074_Digit_factorial_chains_b.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from math import factorial
+
+rg10 = range(10)
+rg9 = range(9)
+fac = [factorial(n) for n in rg10]
+
+def tree_add(tree,decaN,size):
+	node = tree
+	for i in rg9:
+		value = decaN[i]
+		if not node[value]: node[value] = [None,None,None,None,None,None,None,None]
+		node = node[value]
+	value = decaN[9]
+	node[value] = size
+
+def tree_check(tree,decaN):
+	node = tree
+	for i in rg10:
+		value = decaN[i]
+		if node[value]==None: return None
+		node = node[value]
+	return node
+
+def decaN(n):
+	D = [0]*10
+	while n:
+		n,m = divmod(n,10)
+		D[m] += 1
+	return D
+
+def next_deca(d):
+	s = 0
+	for i in rg10:
+		s += d[i]*fac[i]
+	return decaN(s)
+
+def euler74(limit,target):
+
+	Tree = [None]*8
+
+	ct = 0
+
+	for n in range(5,limit):
+		
+		# print(n)
+		n = decaN(n)
+		check = tree_check(Tree,n)
+		if check:
+			if check==target: ct += 1
+			continue
+		chain_tree,chain,pos = [None]*8,[],0
+
+		while True:
+			tree_add(chain_tree,n,pos)
+			chain += [n]
+			n = next_deca(n)
+			pos += 1
+			loop_start = tree_check(chain_tree,n)
+			if loop_start: # already present in chain
+				loop_size = pos-loop_start
+				for c in chain:
+					c_pos = tree_check(chain_tree,c)
+					if c_pos&gt;=loop_start: size = loop_size
+					else: size = loop_size + loop_start - c_pos
+					tree_add(Tree,c,size)
+					if size==target: ct += 1
+				break
+	return ct
+
+sixties = euler74(1000000,60)
+print(sixties)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0074_Digit_factorial_chains_b.py"}</script>
+  </main>
+</body>
+</html>

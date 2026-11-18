@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>033 · Digit cancelling fractions · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>033 · Digit cancelling fractions</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0033_Digit_cancelling_fractions.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0033_Digit_cancelling_fractions.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Digit cancelling fractions
+
+The fraction 49/98 is a curious fraction, as an inexperienced
+mathematician in attempting to simplify it may incorrectly believe
+that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+
+We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+
+There are exactly four non-trivial examples of this type of fraction,
+less than one in value, and containing two digits in the numerator
+and denominator.
+
+If the product of these four fractions is given in its lowest
+common terms, find the value of the denominator.
+&#x27;&#x27;&#x27;
+
+den = []
+for n in range(10,100):
+	for d in range(n+1,100):
+		for c in &#x27;123456789&#x27;:
+			sn = str(n)
+			sd = str(d)
+			if any(c not in s for s in (sn,sd)): continue
+			fr = n/d
+			try:
+				nc = int(sn.replace(c,&#x27;&#x27;))
+				dc = int(sd.replace(c,&#x27;&#x27;))
+				cc = nc/dc
+			except:
+				continue
+			if fr == cc:
+				den.append(dc)
+				print(n,d,nc,dc)
+
+res = 1
+for d in den:
+	res *= d
+print(res)
+
+&#x27;&#x27;&#x27;
+16 64 1 4
+19 95 1 5
+26 65 2 5
+49 98 4 8
+
+8
+800
+
+100
+&#x27;&#x27;&#x27;
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0033_Digit_cancelling_fractions.py"}</script>
+  </main>
+</body>
+</html>

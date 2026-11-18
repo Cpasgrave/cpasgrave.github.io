@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Bean Machine · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Bean Machine</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Bean_Machine.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Bean_Machine.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1065685/assignment-bean-machine
+&#x27;&#x27;&#x27;
+[ASSIGNMENT] BEAN MACHINE - wolfsan
+task in this challenge is to create simulation of bean machine or quincunx,which is consists of an upright board with evenly spaced nails in triangular form.
+balls are dropped from the opening of the board. every time a ball hit a nail, it goes left or right. balls are accumulated in the slots.
+write a problem which takes as input number of balls and slots and then guess the numbers of balls in each slots.
+Good luck. 
+&#x27;&#x27;&#x27;
+from random import choice
+h = 7 # height of the bean machine
+n = 753 # number of beans introduced
+
+machine = [[0 for i in range(j)] for j in range(1,h+1)]
+machine[0][0] = n
+
+for raw in range(len(machine)-1):
+    for nail in range(len(machine[raw])):
+        for bean in range(machine[raw][nail]):
+            machine[raw + 1][nail + choice([0,1])] += 1
+machine = [&#x27; &#x27;.join([&#x27;.&#x27;]*(h-len(i))+[&#x27; &#x27;*(len(str(n))-len(str(j)))+str(j) for j in i]+[&#x27;.&#x27;]*(h-len(i))) for i in machine]
+print(&#x27;\n&#x27;.join(machine))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Bean_Machine.py"}</script>
+  </main>
+</body>
+</html>

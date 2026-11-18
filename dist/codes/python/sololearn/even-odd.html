@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Even Odd · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Even Odd</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Even_Odd.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Even_Odd.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># Challenge by Fabio
+# https://www.sololearn.com/Discuss/1156970/challenge-even-or-odd-number
+&#x27;&#x27;&#x27;
+Challenge - Even or Odd number.
+Make a program that takes a given number and let know to the user whether that number is even or not, but you can&#x27;t use any condition nor loop statement like if-else, switch, ternary, while, do while, for, for-each. 
+All languages are welcome. 
+Any question or suggestion is welcome too. 
+Have fun!
+&#x27;&#x27;&#x27;
+a = 19254157
+print(a,&#x27;is&#x27;,[&#x27;even&#x27;,&#x27;odd&#x27;][a%2])
+
+a = 19254158
+print(a,&#x27;is&#x27;,[&#x27;even&#x27;,&#x27;odd&#x27;][a%2])
+
+
+a = 238
+c = str(a/2).replace(&#x27;.0&#x27;,&#x27;even&#x27;).replace(&#x27;.5&#x27;,&#x27;odd &#x27;)[-4:]
+print(a,&#x27;is&#x27;,c)
+
+a = 239
+c = str(a/2).replace(&#x27;.0&#x27;,&#x27;even&#x27;).replace(&#x27;.5&#x27;,&#x27;odd &#x27;)[-4:]
+print(a,&#x27;is&#x27;,c)
+
+a = 3477
+c = int(int(str(a/2)[-1])/5)*&#x27;odd&#x27;+int(int(str(a/2-0.5)[-1])/5)*&#x27;even&#x27;
+print(a,&#x27;is&#x27;,c)
+
+a = 3478
+c = int(int(str(a/2)[-1])/5)*&#x27;odd&#x27;+int(int(str(a/2-0.5)[-1])/5)*&#x27;even&#x27;
+print(a,&#x27;is&#x27;,c)
+
+a = 111143
+b = [&#x27;oden&#x27;,&#x27;even&#x27;,&#x27;odd&#x27;][(-1)**int(str(a)[-1])]
+print(a,&#x27;is&#x27;,b)
+
+a = 111142
+b = [&#x27;oden&#x27;,&#x27;even&#x27;,&#x27;odd&#x27;][(-1)**int(str(a)[-1])]
+print(a,&#x27;is&#x27;,b)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Even_Odd.py"}</script>
+  </main>
+</body>
+</html>

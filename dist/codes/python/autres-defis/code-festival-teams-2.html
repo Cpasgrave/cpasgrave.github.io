@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Code Festival Teams 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Code Festival Teams 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Code%20Festival%20Teams%202.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Code%20Festival%20Teams%202.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># I added a pre-treatment to VcC code to enable the treatment of much longer strings.
+# Array split problem, pseudo polynomial solution  O(N*S) where S=sum of array, N=array size
+# VcC 2017 implementing the dynamic programming algo
+# https://en.wikipedia.org/wiki/Subset_sum_problem#Pseudo-polynomial_time_dynamic_programming_solution
+cnv = &quot; abcdefghijklmnopqrstuvwxyz&quot;
+let2num = lambda v: [cnv.index(x) for x in v]
+num2let = lambda x: [cnv[a] for a in x]
+
+
+def sumset(x, s, q={}):
+    for i in range(len(x)):
+        for j in range(1, s + 1):
+            if x[i] == j:
+                q[(i, j)] = (True, [j])
+            elif i &gt;= 1 and q[(i - 1, j)][0]:
+                q[(i, j)] = (True, q[(i - 1, j)][1])
+            elif i &gt;= 1 and j &gt;= x[i] and q[(i - 1, j - x[i])][0]:
+                q[(i, j)] = (True, q[(i - 1, j - x[i])][1] + [x[i]])
+            else:
+                q[(i, j)] = (False, [])
+        if q[(i, s)][0]:
+            for k in q[(i, s)][1]:
+                x.remove(k)
+            return [q[(i, s)][1], x]
+    return ([[], []])
+
+
+guild = lambda v: (lambda x: (num2let(x[0]), num2let(x[1])))(sumset(let2num(v), sum(let2num(v)) // 2))
+
+h = &#x27;venezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittl&#x27; \
+    &#x27;ebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewith&#x27; \
+    &#x27;champagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyza&#x27; \
+    &#x27;bcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandc&#x27; \
+    &#x27;andlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenve&#x27; \
+    &#x27;nezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittleb&#x27; \
+    &#x27;itofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithch&#x27; \
+    &#x27;ampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabc&#x27; \
+    &#x27;defghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcan&#x27; \
+    &#x27;dlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvene&#x27; \
+    &#x27;zuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebit&#x27; \
+    &#x27;ofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithcham&#x27; \
+    &#x27;pagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcde&#x27; \
+    &#x27;fghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandl&#x27; \
+    &#x27;esonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellentesque&#x27; \
+    &#x27;venezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittl&#x27; \
+    &#x27;ebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewith&#x27; \
+    &#x27;champagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyza&#x27; \
+    &#x27;bcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandc&#x27; \
+    &#x27;andlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenve&#x27; \
+    &#x27;nezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittleb&#x27; \
+    &#x27;itofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithch&#x27; \
+    &#x27;ampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabc&#x27; \
+    &#x27;defghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcan&#x27; \
+    &#x27;dlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvene&#x27; \
+    &#x27;zuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebit&#x27; \
+    &#x27;ofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithcham&#x27; \
+    &#x27;pagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcde&#x27; \
+    &#x27;fghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandl&#x27; \
+    &#x27;esonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellentesque&#x27; \
+    &#x27;venezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittl&#x27; \
+    &#x27;ebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewith&#x27; \
+    &#x27;champagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyza&#x27; \
+    &#x27;bcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandc&#x27; \
+    &#x27;andlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenve&#x27; \
+    &#x27;nezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittleb&#x27; \
+    &#x27;itofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithch&#x27; \
+    &#x27;ampagnehoneyandcaviartoastsandcandlesonthetableandwhynotalittlebitofabcdefghijklmnopqrstuvwxyzabc&#x27; \
+    &#x27;defghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithchampagnehoneyandcaviartoastsandcan&#x27; \
+    &#x27;itofabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzeellenvenezuelanbeavercheesetartinewithch&#x27; \
+
+left = []
+right = []
+temp = list(h)
+temp.sort()
+if len(h) &gt; 20 and len(set(h)) &gt; 20:
+    for i in range(0, len(temp) - 2, 2):
+        l = temp[i]
+        if temp[i + 2] == l:
+            left.append(l)
+            right.append(l)
+    for c in left:
+        temp.remove(c)
+    for c in right:
+        temp.remove(c)
+    g = &#x27;&#x27;.join(temp)
+
+print(&quot;total team number : &quot;, len(h))
+print(&quot;guild 1 : &quot;)
+print(&quot;(&quot;, sum(let2num(guild(g)[0] + left)), &quot;)&quot;)
+print(&quot;&quot;.join(guild(g)[0] + left))
+print(&quot;guild 1 : &quot;)
+print(&quot;(&quot;, sum(let2num(guild(g)[1] + right)), &quot;)&quot;)
+print(&quot;&quot;.join(guild(g)[1] + right))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Code Festival Teams 2.py"}</script>
+  </main>
+</body>
+</html>

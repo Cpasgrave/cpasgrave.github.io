@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Motifs ASCII · version 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Projets Python">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Motifs ASCII · version 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Projets Python</a>
+      <a href="../sources/motifs-ascii/Pattern_Generator_2.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/ASCII-Box-drawing-characters-Pattern-Generator-Python-/blob/5f66da1fc2f461987327b0b6b3b10dd95f1b1a04/Pattern_Generator_2.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from random import choice
+# This code I made gave me the idea for the challenge here:
+# https://www.sololearn.com/Discuss/1026806/challenge-random-visual-pattern-generator
+# It&#x27;s quite a messy code, I would be happy to learn a way to get the sameresult in a more elegant way.
+# I suggest you to try UTF-8 on a computer, it gives nicer results with rounded shapes :)
+
+# ---Choose the size and character set here
+width = 25
+height = 17
+AorU = &#x27;A&#x27;# choose between ASCII (&#x27;A&#x27;) or UTF-8 here (UTF-8 won&#x27;t work on CodePlayground)
+# Next lines represent different character sets, unfortunately you can use only the 128 ascii one here, if you want to try the other ones, copy them into your favorite IDE.
+
+set = choice([1,2,3,4])
+if AorU == &#x27;U&#x27;:
+        # -----UTF-8 tables (random choice)
+    if set==1 or 4:
+        charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547, 9581, 9582, 9583, 9584)
+        ends = (&#x27;lr&#x27;, &#x27;ud&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;ur&#x27;, &#x27;lu&#x27;, &#x27;urd&#x27;, &#x27;lud&#x27;, &#x27;lrd&#x27;, &#x27;lur&#x27;, &#x27;lurd&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;lu&#x27;, &#x27;ur&#x27;)
+    if set==2:
+        charnums = (9552, 9553, 9556, 9559, 9562, 9565, 9568, 9571, 9574, 9577, 9580)
+        ends = (&#x27;lr&#x27;, &#x27;ud&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;ur&#x27;, &#x27;lu&#x27;, &#x27;urd&#x27;, &#x27;lud&#x27;, &#x27;lrd&#x27;, &#x27;lur&#x27;, &#x27;lurd&#x27;)
+    if set==3:
+        charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547)
+        ends = (&#x27;lr&#x27;, &#x27;ud&#x27;, &#x27;rd&#x27;, &#x27;ld&#x27;, &#x27;ur&#x27;, &#x27;lu&#x27;, &#x27;urd&#x27;, &#x27;lud&#x27;, &#x27;lrd&#x27;, &#x27;lur&#x27;, &#x27;lurd&#x27;)
+
+
+else:
+    # -----ASCII tables (random choice)
+    if set==1:
+        charnums = (201,187, 200, 188, 186, 205, 206, 202, 203, 185, 204)
+    if set==2:
+        charnums = (213, 184, 212, 190, 179, 205, 216, 207, 209, 181, 198)
+    if set==3:
+        charnums = (218, 191, 192, 217, 179, 196, 197, 193, 194, 180, 195)
+    ends = (&#x27;rd&#x27;,&#x27;ld&#x27;,&#x27;ur&#x27;,&#x27;lu&#x27;,&#x27;ud&#x27;,&#x27;lr&#x27;,&#x27;lurd&#x27;,&#x27;lur&#x27;,&#x27;lrd&#x27;,&#x27;lud&#x27;,&#x27;urd&#x27;)
+    if set==4:
+        charnums = (179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218)
+        ends = (&#x27;ud&#x27;, &#x27;lud&#x27;, &#x27;lud&#x27;, &#x27;lud&#x27;,&#x27;ld&#x27;,&#x27;ld&#x27;,&#x27;lud&#x27;,&#x27;ud&#x27;,&#x27;ld&#x27;,&#x27;lu&#x27;,&#x27;lu&#x27;,&#x27;lu&#x27;,&#x27;ld&#x27;,&#x27;ur&#x27;,&#x27;lur&#x27;,&#x27;lrd&#x27;,&#x27;urd&#x27;,&#x27;lr&#x27;,&#x27;lurd&#x27;,&#x27;urd&#x27;,&#x27;urd&#x27;,&#x27;ur&#x27;,&#x27;rd&#x27;,&#x27;lur&#x27;,&#x27;lrd&#x27;,&#x27;urd&#x27;,&#x27;lr&#x27;,&#x27;lurd&#x27;,&#x27;lur&#x27;,&#x27;lur&#x27;,&#x27;lrd&#x27;,&#x27;lrd&#x27;,&#x27;ur&#x27;,&#x27;ur&#x27;,&#x27;rd&#x27;,&#x27;rd&#x27;,&#x27;lurd&#x27;,&#x27;lurd&#x27;,&#x27;lu&#x27;,&#x27;rd&#x27;)
+
+# Producing the dictionary I&#x27;ll work with
+chars = [chr(i) for i in charnums]
+dic = {}
+for i in range(len(chars)):
+    dic[chars[i]] = ends[i]
+dic[&#x27; &#x27;] = &#x27;&#x27;
+
+# The cc function is giving a random character, respecting some condition about the connections : &#x27;a&#x27; gives the instructions about what connections the character must have, &#x27;b&#x27; gives the instructions about which connnections the character must not have.
+# Example : if a = &#x27;l&#x27; and b = &#x27;d&#x27;, the char will have to connnect left, but not down. This lets &#x27;┛&#x27;, &#x27;━&#x27;, &#x27;┻&#x27;as possible characters and thus the cc() function will randomly return one of these.
+def cc(a,b):
+    try:
+        c = choice([i for i in dic if all(j in dic[i] for j in a) and all(k not in dic[i] for k in b) and i != &#x27; &#x27;])
+    except:
+        c = &#x27;not&#x27;
+    return c
+
+# The pattern function will use the cc function to progressively produce the pattern.
+# It produces it progressively, starting with edges, and then filling it in, because of the difficulty to get all the lines connected, without having to make a symmetrical pattern or to close it with some after-correction.
+def pattern(n, m = 0):
+    if m == 0: m = n
+    pat = [[&#x27; &#x27;]*m] +[[&#x27; &#x27;, &#x27; &#x27;] for i in range(n)]+ [[&#x27; &#x27;]*m]
+    
+    # corners
+    pat[1].insert(1, cc(&#x27;&#x27;, &#x27;lu&#x27;))
+    pat[1].insert(-1, cc(&#x27;&#x27;, &#x27;ur&#x27;))
+    pat[-1 - 1].insert(1, cc(&#x27;&#x27;, &#x27;ld&#x27;))
+    pat[-1 - 1].insert(-1, cc(&#x27;&#x27;, &#x27;dr&#x27;))
+    
+    # first and last columns
+    for i in range(1, -2, -2):
+        for j in range(n - 2):
+            a = &#x27;&#x27;
+            b = &#x27;l&#x27; if i == 1 else &#x27;r&#x27;
+            if &#x27;d&#x27; in dic[pat[j + 1][int((3 * i - i ** 2) / 2)]]:
+                a += &#x27;u&#x27;
+            else:
+                b += &#x27;u&#x27;
+            if &#x27;u&#x27; in dic[pat[j + 3][int((3 * i ** 2 - i) / 2)]]:
+                a += &#x27;d&#x27;
+            pat[j + 2].insert(i, cc(a, b))
+            
+    # first and last lines
+    for i in range(1, -3, -3):
+        for j in range(m - 2):
+            a = &#x27;&#x27;
+            b = &#x27;u&#x27; if i == 1 else &#x27;d&#x27;
+            if &#x27;r&#x27; in dic[pat[i][j + 1]]:
+                a += &#x27;l&#x27;
+            else:
+                b += &#x27;l&#x27;
+            if j == m - 3:
+                a += &#x27;r&#x27;
+            pat[i].insert(j + 2, cc(a, b))
+            
+    # filling columns from left to right
+    for i in range(n - 2):
+        for j in range(m - 2):
+            a = &#x27;&#x27;; b = &#x27;&#x27;
+            if &#x27;d&#x27; in dic[pat[i + 1][j + 2]]:
+                a += &#x27;u&#x27;
+            else:
+                b += &#x27;u&#x27;
+            if &#x27;r&#x27; in dic[pat[i + 2][j + 1]]:
+                a += &#x27;l&#x27;
+            else:
+                b += &#x27;l&#x27;
+            if i == n - 3:
+                if &#x27;u&#x27; in dic[pat[-2][j + 2]]:
+                    a += &#x27;d&#x27;
+                else:
+                    b += &#x27;d&#x27;
+            if j == m - 3:
+                if &#x27;l&#x27; in dic[pat[i + 2][-2]]:
+                    a += &#x27;r&#x27;
+                else:
+                    b += &#x27;r&#x27;
+            ch = cc(a, b)
+            
+            # Final touch : solving the situations when no solution is available
+            # Here I modify randomly the previous upper or left char if there are not enough possibilities to connect the new character to produce.
+            while ch==&#x27;not&#x27;:
+                u, v, w, y = choice([(1, 2, &#x27;d&#x27;, &#x27;u&#x27;), (2, 1, &#x27;r&#x27;, &#x27;l&#x27;)])
+                a_ = dic[pat[i + u][j + v]] + w
+                b_ = &#x27;&#x27;.join([e for e in &#x27;lurd&#x27; if e not in a_])
+                pat[i + u][j + v] = cc(a_, b_)
+                a += y
+                b = b.replace(y,&#x27;&#x27;)
+                ch = cc(a, b)
+            pat[i + 2].insert(j + 2, ch)
+
+    print(&#x27;\n&#x27;.join([&#x27;&#x27;.join(r) for r in pat]))
+
+pattern(height,width)
+
+</code></pre>
+    <p class="python-note">À l’exécution, les caractères de tracé DOS sont convertis en Unicode pour s’afficher dans le navigateur.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Pattern_Generator_2.py", "code": "from random import choice\n# This code I made gave me the idea for the challenge here:\n# https://www.sololearn.com/Discuss/1026806/challenge-random-visual-pattern-generator\n# It's quite a messy code, I would be happy to learn a way to get the sameresult in a more elegant way.\n# I suggest you to try UTF-8 on a computer, it gives nicer results with rounded shapes :)\n\n# ---Choose the size and character set here\nwidth = 25\nheight = 17\nAorU = 'A'# choose between ASCII ('A') or UTF-8 here (UTF-8 won't work on CodePlayground)\n# Next lines represent different character sets, unfortunately you can use only the 128 ascii one here, if you want to try the other ones, copy them into your favorite IDE.\n\nset = choice([1,2,3,4])\nif AorU == 'U':\n        # -----UTF-8 tables (random choice)\n    if set==1 or 4:\n        charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547, 9581, 9582, 9583, 9584)\n        ends = ('lr', 'ud', 'rd', 'ld', 'ur', 'lu', 'urd', 'lud', 'lrd', 'lur', 'lurd', 'rd', 'ld', 'lu', 'ur')\n    if set==2:\n        charnums = (9552, 9553, 9556, 9559, 9562, 9565, 9568, 9571, 9574, 9577, 9580)\n        ends = ('lr', 'ud', 'rd', 'ld', 'ur', 'lu', 'urd', 'lud', 'lrd', 'lur', 'lurd')\n    if set==3:\n        charnums = (9473, 9475, 9487, 9491, 9495, 9499, 9507, 9515, 9523, 9531, 9547)\n        ends = ('lr', 'ud', 'rd', 'ld', 'ur', 'lu', 'urd', 'lud', 'lrd', 'lur', 'lurd')\n\n\nelse:\n    # -----ASCII tables (random choice)\n    if set==1:\n        charnums = (201,187, 200, 188, 186, 205, 206, 202, 203, 185, 204)\n    if set==2:\n        charnums = (213, 184, 212, 190, 179, 205, 216, 207, 209, 181, 198)\n    if set==3:\n        charnums = (218, 191, 192, 217, 179, 196, 197, 193, 194, 180, 195)\n    ends = ('rd','ld','ur','lu','ud','lr','lurd','lur','lrd','lud','urd')\n    if set==4:\n        charnums = (179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218)\n        ends = ('ud', 'lud', 'lud', 'lud','ld','ld','lud','ud','ld','lu','lu','lu','ld','ur','lur','lrd','urd','lr','lurd','urd','urd','ur','rd','lur','lrd','urd','lr','lurd','lur','lur','lrd','lrd','ur','ur','rd','rd','lurd','lurd','lu','rd')\n\n# Producing the dictionary I'll work with\nchars = [bytes([i]).decode('cp437') for i in charnums]\ndic = {}\nfor i in range(len(chars)):\n    dic[chars[i]] = ends[i]\ndic[' '] = ''\n\n# The cc function is giving a random character, respecting some condition about the connections : 'a' gives the instructions about what connections the character must have, 'b' gives the instructions about which connnections the character must not have.\n# Example : if a = 'l' and b = 'd', the char will have to connnect left, but not down. This lets '┛', '━', '┻'as possible characters and thus the cc() function will randomly return one of these.\ndef cc(a,b):\n    try:\n        c = choice([i for i in dic if all(j in dic[i] for j in a) and all(k not in dic[i] for k in b) and i != ' '])\n    except:\n        c = 'not'\n    return c\n\n# The pattern function will use the cc function to progressively produce the pattern.\n# It produces it progressively, starting with edges, and then filling it in, because of the difficulty to get all the lines connected, without having to make a symmetrical pattern or to close it with some after-correction.\ndef pattern(n, m = 0):\n    if m == 0: m = n\n    pat = [[' ']*m] +[[' ', ' '] for i in range(n)]+ [[' ']*m]\n    \n    # corners\n    pat[1].insert(1, cc('', 'lu'))\n    pat[1].insert(-1, cc('', 'ur'))\n    pat[-1 - 1].insert(1, cc('', 'ld'))\n    pat[-1 - 1].insert(-1, cc('', 'dr'))\n    \n    # first and last columns\n    for i in range(1, -2, -2):\n        for j in range(n - 2):\n            a = ''\n            b = 'l' if i == 1 else 'r'\n            if 'd' in dic[pat[j + 1][int((3 * i - i ** 2) / 2)]]:\n                a += 'u'\n            else:\n                b += 'u'\n            if 'u' in dic[pat[j + 3][int((3 * i ** 2 - i) / 2)]]:\n                a += 'd'\n            pat[j + 2].insert(i, cc(a, b))\n            \n    # first and last lines\n    for i in range(1, -3, -3):\n        for j in range(m - 2):\n            a = ''\n            b = 'u' if i == 1 else 'd'\n            if 'r' in dic[pat[i][j + 1]]:\n                a += 'l'\n            else:\n                b += 'l'\n            if j == m - 3:\n                a += 'r'\n            pat[i].insert(j + 2, cc(a, b))\n            \n    # filling columns from left to right\n    for i in range(n - 2):\n        for j in range(m - 2):\n            a = ''; b = ''\n            if 'd' in dic[pat[i + 1][j + 2]]:\n                a += 'u'\n            else:\n                b += 'u'\n            if 'r' in dic[pat[i + 2][j + 1]]:\n                a += 'l'\n            else:\n                b += 'l'\n            if i == n - 3:\n                if 'u' in dic[pat[-2][j + 2]]:\n                    a += 'd'\n                else:\n                    b += 'd'\n            if j == m - 3:\n                if 'l' in dic[pat[i + 2][-2]]:\n                    a += 'r'\n                else:\n                    b += 'r'\n            ch = cc(a, b)\n            \n            # Final touch : solving the situations when no solution is available\n            # Here I modify randomly the previous upper or left char if there are not enough possibilities to connect the new character to produce.\n            while ch=='not':\n                u, v, w, y = choice([(1, 2, 'd', 'u'), (2, 1, 'r', 'l')])\n                a_ = dic[pat[i + u][j + v]] + w\n                b_ = ''.join([e for e in 'lurd' if e not in a_])\n                pat[i + u][j + v] = cc(a_, b_)\n                a += y\n                b = b.replace(y,'')\n                ch = cc(a, b)\n            pat[i + 2].insert(j + 2, ch)\n\n    print('\\n'.join([''.join(r) for r in pat]))\n\npattern(height,width)\n\n"}</script>
+  </main>
+</body>
+</html>

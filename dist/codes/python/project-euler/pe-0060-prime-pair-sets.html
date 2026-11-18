@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>060 · Prime pair sets · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>060 · Prime pair sets</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0060_Prime_pair_sets.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0060_Prime_pair_sets.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Prime pair sets
+
+The primes 3, 7, 109, and 673, are quite remarkable.
+By taking any two primes and concatenating them in any order
+the result will always be prime. For example, taking 7 and 109,
+both 7109 and 1097 are prime. The sum of these four primes, 792,
+represents the lowest sum for a set of four primes with this property.
+
+Find the lowest sum for a set of five primes for which any
+two primes concatenate to produce another prime.
+&#x27;&#x27;&#x27;
+from sympy import sieve
+from sympy.ntheory.primetest import isprime as ip
+
+limit = 10000
+primes = [*sieve.primerange(0,limit)]
+primeset = set([*sieve.primerange(0,1000000)])
+print(&#x27;primes ok&#x27;)
+
+def isp(n):
+    if n&lt;1000000:
+        return n in primeset
+    else: return ip(n)
+
+for i,p1 in enumerate(primes):
+    sp1 = str(p1)
+
+    for j,p2 in enumerate(primes[i+1:]):
+        sp2 = str(p2)
+        if not isp(int(sp1+sp2)) or not isp(int(sp2+sp1)): continue
+
+        for k,p3 in enumerate(primes[j+1:]):
+            sp3 = str(p3)
+            if not isp(int(sp2+sp3)) or not isp(int(sp3+sp2)): continue
+            if not isp(int(sp1+sp3)) or not isp(int(sp3+sp1)): continue
+
+            for l,p4 in enumerate(primes[k+1:]):
+                sp4 = str(p4)
+                if not isp(int(sp3+sp4)) or not isp(int(sp4+sp3)): continue
+                if not isp(int(sp2+sp4)) or not isp(int(sp4+sp2)): continue
+                if not isp(int(sp1+sp4)) or not isp(int(sp4+sp1)): continue
+                print(p1,p2,p3,p4)
+
+                for p5 in primes[l:]:
+                    sp5 = str(p5)
+                    if not isp(int(sp4+sp5)) or not isp(int(sp5+sp4)): continue
+                    if not isp(int(sp3+sp5)) or not isp(int(sp5+sp3)): continue
+                    if not isp(int(sp2+sp5)) or not isp(int(sp5+sp2)): continue
+                    if not isp(int(sp1+sp5)) or not isp(int(sp5+sp1)): continue
+                    print(p1,p2,p3,p4,p5)
+                    exit()
+
+
+# 13 5197 5701 6733 8389
+# 26033
+
+# Meilleure idée: détecter pour chaque nombre premier en dessous de 10000
+# s&#x27;il s&#x27;assemble avec au moins 4 autres, les stocker sous forme de
+# dictionnaire et puis tourner sur les correspondances.
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["sympy"], "filename": "PE_0060_Prime_pair_sets.py"}</script>
+  </main>
+</body>
+</html>

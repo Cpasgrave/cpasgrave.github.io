@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Reverse Floyd Triangle · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Reverse Floyd Triangle</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Reverse_Floyd_Triangle.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Reverse_Floyd_Triangle.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1035685/assignment-reverse-floyd-s-triangle
+
+&#x27;&#x27;&#x27;
+Challenge by Danijel Ivanović
+Write a program that prints 
+the reverse Floyd&#x27;s triangle.
+
+The program should ask the 
+user how many rows the triangle 
+consists of.
+  
+Floyd&#x27;s triangle consisting 
+of 5 rows looks like this :
+  
+     15   14   13   12   11
+     10     9     8     7
+       6     5     4
+       3     2
+       1
+
+HappyCodings!:-) 👍😊
+&#x27;&#x27;&#x27;
+
+x=7 ; a=1 ; list=[[&#x27;1&#x27;]]
+while len(list)&lt;x:
+    list.insert(0,[])
+    for i in range(len(list[1])+1):
+        a+=1
+        list[0].insert(0,str(a))
+print(&#x27;\n&#x27;.join([&#x27; &#x27;.join(list[i])for i in range(len(list))]))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Reverse_Floyd_Triangle.py"}</script>
+  </main>
+</body>
+</html>

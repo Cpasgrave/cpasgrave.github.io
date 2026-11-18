@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Floyd&#x27;s Triangles · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Floyd&#x27;s Triangles</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Floyd%27s_Triangles.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Floyd%27s_Triangles.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Floyd&#x27;s Triangles Challenge by Danijel Ivanović 
+
+Floyd&#x27;s triangle is a right-angled triangular array of natural numbers, used in computer science education. It is named after Robert Floyd, who was an eminent computer scientist.
+It is defined by filling the rows of the triangle with consecutive numbers, starting with a 1 at the top left corner.
+Write a program to print the Floyd&#x27;s triangle and reverse Floyd&#x27;s triangle by taking the number of rows as input.
+
+For Example:
+Input: 5
+Output:
+Floyd&#x27;s triangle:
+1
+2 3
+4 5 6
+7 8 9 10
+11 12 13 14 15
+
+Reverse Floyd&#x27;s triangle:
+15 14 13 12 11
+10 9 8 7
+6 5 4
+3 2
+1
+&#x27;&#x27;&#x27;
+#########################
+# Both
+#########################
+a = int(input())
+
+for t in [1,-1]:
+  print(&quot;\n&quot;,&quot;-- Floyd&#x27;s triangle --&quot;[::t].center(a*4),&quot;\n&quot;)
+  for i in range(1,a+1)[::t]:
+    m = sum(range(i))
+    n = m+i
+    line = []
+    for i in range(m,n)[::t]:
+      line.append(str(i+1).center(3))
+    print(&#x27; &#x27;.join(line).center(a*4 if a&gt;5 else 24))
+ #########################
+ # Reverse Recursive
+ #########################
+    x = 7
+l = lambda x:[[l(a-1)[0][0]+i for i in range(a,0,-1)] if a&gt;1 else [1] for a in range(x,0,-1)]
+[print(&#x27; &#x27;.join([str(n) for n in r])) for r in l(x)]
+
+#########################
+# Both, onelined
+#########################
+(lambda a:[[print(*[i+1 for i in range(sum(range(i)),sum(range(i+1)))][::t])for i in [*range(1,a+1)[::t],0]]for t in [1,-1]])(int(input()))
+
+#########################
+# Older solution
+#########################
+
+# https://www.sololearn.com/Discuss/1035685/assignment-reverse-floyd-s-triangle
+
+x=7 ; a=1 ; list=[[&#x27;1&#x27;]]
+while len(list)&lt;x:
+    list.insert(0,[])
+    for i in range(len(list[1])+1):
+        a+=1
+        list[0].insert(0,str(a))
+print(&#x27;\n&#x27;.join([&#x27; &#x27;.join(list[i])for i in range(len(list))]))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <label for="python-input">Entrées du programme <span>(une valeur par ligne)</span></label>
+      <textarea id="python-input" rows="2" spellcheck="false">5
+5</textarea>
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Floyd's_Triangles.py"}</script>
+  </main>
+</body>
+</html>

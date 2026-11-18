@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>A Man On Stairs of n Steps 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>A Man On Stairs of n Steps 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/A%20Man_On_Stairs_of_n_Steps_2.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/A%20Man_On_Stairs_of_n_Steps_2.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># -*- coding: utf-8 -*-
+from itertools import *
+
+# This is my anser to the challenge from Chintalacheruvu Sravanth Kumar :
+# https://www.sololearn.com/Discuss/1005502/challenge-coding-problem/
+&#x27;&#x27;&#x27;
+Challenge # coding problem #
+There exists a staircase with N steps, and you can climb up either 1 or 2 steps at a time. Given N, write a function that returns the number of unique ways you can climb the staircase. The order of the steps matters.
+
+For example, if N is 4, then there are 5 unique ways:
+
+1, 1, 1, 12, 1, 11, 2, 11, 1, 22, 2
+
+What if, instead of being able to climb 1 or 2 steps at a time, you could climb any number from a set of positive integers X? For example, if X = {1, 3, 5}, you could climb 1, 3, or 5 steps at a time.&#x27;&#x27;&#x27;
+# This challenge has also been proposed here before, by Gaurav Agrawal:
+# https://www.sololearn.com/Discuss/853148/assignment-a-man-on-stairs-of-n-steps
+&#x27;&#x27;&#x27;
+A man can jump 1 or 2 steps at a time , find number of ways in which the man can climb  n  number of steps  ?
+
+/*
+example :::   input :: 3
+                      output :: 3    // because 3 ways 
+ 1st way) 3 times 1 step (1,1,1)
+ 2nd way)1 time 2 steps together &amp; then 1 step more(2,1)
+ 3rd way) 1 step &amp; then 1 time 2 steps together(1,2)
+ Remember man can take 1 or 2 steps at a time
+*/
+
+//level :: easy &amp; interesting 
+//simple approach is welcome , with some explanation
+
+HAPPY CODING ☺👍
+&#x27;&#x27;&#x27;
+
+# First come the settings : You can play with them. 
+# N should not be too big, values in X must be positive integers, indefinite number of values inside X
+
+N=31
+X={1,3,5,7}
+
+# defining factorial cause I&#x27;ll need it later
+def fact(x):
+    if x&lt;2: return 1
+    else: return x*fact(x-1)
+
+# variables definition
+Y=[] ; C=[] ; sol=0
+
+# producing P
+# P is the list of different combinations that can be used to climb N :
+for n in X:
+    Y+=(N//n)*[n]
+for j in range(len(Y)):
+    for co in (combinations_with_replacement(X,j+1)):
+        if sum(co) == N:
+            C+=[co]
+            
+# Then because in many situations there are too many possible permutations, I just calculate the number of permutations here for each combination from P, then make a total (sol)
+# The math formula is n!/a!b!c!d! if there are 4 repeated elements in the combination, where a is the number of repetitions for the first element and so on ...
+for co in C:
+    repeated=[] ; A=1
+    for i in X:
+        repeated+=[co.count(i)]
+    for i in repeated:
+        A*=fact(i)
+    arr=fact(len(co))/A
+    sol+=arr
+    print(&quot;&quot;.join([str(i) for i in co]), &quot;-&gt;&quot;, int(arr), &quot;perm&quot;)
+
+print(&quot;\nTo climb a staircase with&quot;, N, &quot;steps, \nBy jumping one of these hights :&quot;, X, &quot;at a time,\n there are&quot;, int(sol), &quot;different ways to climb it&quot;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "A Man_On_Stairs_of_n_Steps_2.py"}</script>
+  </main>
+</body>
+</html>

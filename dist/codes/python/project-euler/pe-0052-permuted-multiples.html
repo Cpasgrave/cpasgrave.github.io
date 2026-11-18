@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>052 · Permuted multiples · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>052 · Permuted multiples</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0052_Permuted_multiples.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0052_Permuted_multiples.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Permuted multiples
+
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+
+Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x,
+contain the same digits.
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+
+t = time()
+
+for size in range(2,7):
+    limit = int(&#x27;1&#x27;+&#x27;6&#x27;*(size-1))
+    # number can&#x27;t have first digit &gt; 2
+    # and other digits &gt; 6
+for n in range(10**(size-1),limit):
+    sn = str(n)
+    ssn = set(sn)
+    multiples = [1 for m in range(1,7)if set(str(n*m))!=ssn]
+    if multiples == []:
+        print(n) # 142857
+        break
+
+print(time()-t)
+# oneliner
+t = time()
+print(next((n for s in range(2,7)for n in range(10**(s-1),int(&#x27;1&#x27;+&#x27;6&#x27;*(s-1)))if[1 for m in range(1,7)if set(str(n*m))!=set(str(n))]==[])))
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0052_Permuted_multiples.py"}</script>
+  </main>
+</body>
+</html>

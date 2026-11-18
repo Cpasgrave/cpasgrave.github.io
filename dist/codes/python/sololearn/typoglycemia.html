@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Typoglycemia · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Typoglycemia</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Typoglycemia.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Typoglycemia.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1041633/%EF%B8%8Fchallenge-%EF%B8%8F-typoglycemia
+&#x27;&#x27;&#x27;
+☢️CHALLENGE☢️: Typoglycemia proposed by Murillo Pyaia
+
+Typoglycemia is the mind&#x27;s ability to decipher a mispelled word if the first and last letters of the word are correct.
+Make a program that receives user input and outputs the typoglycemic version of the string.
+Example:
+Input: &quot;I love SoloLearn&quot;
+Output: &quot;I lvoe SLloorean&quot;
+
+Good luck and good coding!&#x27;&#x27;&#x27;
+
+import re
+from random import sample
+
+text = &quot;Hey! I used regex ... It&#x27;s keeping punctuation, while typoglyceming words ;)&quot;
+
+pattern = &#x27;(\w)(\w+)(\w)(\W*)|(\w{1,2})(\W*)&#x27;
+cut = [list(i) for i in re.findall(pattern,text)]
+for i in cut:
+    while True:
+        egg = sample(i[1],len(i[1]))
+        if &#x27;&#x27;.join(egg) != i[1] or len(i[1])&lt;2:
+            break
+    i[1]=&#x27;&#x27;.join(egg)
+    print(&#x27;&#x27;.join(i),end=&#x27;&#x27;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Typoglycemia.py"}</script>
+  </main>
+</body>
+</html>

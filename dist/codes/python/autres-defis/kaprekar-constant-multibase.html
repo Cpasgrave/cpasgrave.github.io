@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Kaprekar Constant Multibase · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Kaprekar Constant Multibase</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Kaprekar_Constant_Multibase.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Kaprekar_Constant_Multibase.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Kaprekar&#x27;s constant challenge by Kuba Siekierzynski
+
+The number 6174 is known as Kaprekar&#x27;s constant. It is the ultimate convergence point of the Kaprekar&#x27;s routine, an algorithm thought up by Indian mathematician D.R. Kaprekar in 1949.
+
+The routine is as follows:
+1. Take any four-digit number (at least two different digits must be used, zeroes allowed).
+2. Arrange the digits in descending and then in ascending order to get two four-digit numbers.
+3. Subtract the smaller number from the larger and get the result.
+4. Repeat steps 2-4 with the new number.
+
+After a few iterations, the algorithm converges to a fixed point and starts to result in the same number  - 6174 - the so-called Kaprekar&#x27;s constant.
+
+For Example:
+n = 5324
+
+5432 - 2345 = 3087
+8730 - 0378 = 8352
+8532 - 2358 = 6174
+7641 - 1467 = 6174
+
+For numbers beyond four digits the routine might converge to 0 (zero), other constants or &quot;loops&quot; (infinitely repetitive sequences of the same numbers over and over again).
+Challenge - level: Easy
+Write a code which finds the Kaprekar&#x27;s constant for any four-digit number.
+
+Challenge - level: Medium
+Write a code which finds Kaprekar&#x27;s constant for any number in the range of 101-9999, checking if the digits of the number are not too repetitive (no repetitions for three-digit numbers and max 2 repetitions for four-digit ones).
+
+Challenge - level: Hard
+Write a code that universally finds Kaprekar&#x27;s constants and/or loop for any K-digit number. If a sequence is found, all the numbers comprising it have to be returned.
+-------------------------------------
+-------------------------------------
+-------------------------------------
+This code is meant to be used on a local interpreter.
+
+The following settings here are very narrow, for it
+to run as an example on SL.
+&#x27;&#x27;&#x27;
+# from base
+b1 = 2
+# up to base (included)
+b2 =10
+# from d1 digits numbers
+d1 = 3
+# up to d2 digits numbers (included)
+d2 = 3
+
+def convert(a,in_base,out_base):
+    num = [&#x27;0&#x27;, &#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27;, &#x27;4&#x27;, &#x27;5&#x27;, &#x27;6&#x27;, &#x27;7&#x27;, &#x27;8&#x27;, &#x27;9&#x27;, &#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;, &#x27;E&#x27;, &#x27;F&#x27;, &#x27;G&#x27;, &#x27;H&#x27;, &#x27;I&#x27;, &#x27;J&#x27;, &#x27;K&#x27;, &#x27;L&#x27;,
+           &#x27;M&#x27;, &#x27;N&#x27;, &#x27;O&#x27;, &#x27;P&#x27;, &#x27;Q&#x27;, &#x27;R&#x27;, &#x27;S&#x27;, &#x27;T&#x27;, &#x27;U&#x27;, &#x27;V&#x27;, &#x27;W&#x27;, &#x27;X&#x27;, &#x27;Y&#x27;, &#x27;Z&#x27;, &#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;, &#x27;g&#x27;, &#x27;h&#x27;,
+           &#x27;i&#x27;, &#x27;j&#x27;, &#x27;k&#x27;, &#x27;l&#x27;, &#x27;m&#x27;, &#x27;n&#x27;, &#x27;o&#x27;, &#x27;p&#x27;, &#x27;q&#x27;, &#x27;r&#x27;, &#x27;s&#x27;, &#x27;t&#x27;, &#x27;u&#x27;, &#x27;v&#x27;, &#x27;w&#x27;, &#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;, &#x27;{&#x27;, &#x27;}&#x27;]
+    table = dict(zip(num,range(len(num))))
+    dec = 0
+    b= list(a)[::-1]
+    for i in range(len(b)):
+        dec += table[b[i]]*in_base**i
+    res = []
+    while dec:
+        test = dec % out_base
+        dec = (dec - test) // out_base
+        res.append(num[test])
+    result = &#x27;&#x27;.join(res[::-1])
+    return result
+
+def kaprekar(n,base):
+    chain = [n]
+    while True:
+        a = sorted(list(n))
+        b = a[::-1]
+        c = int(convert(b,base,10))-int(convert(a,base,10))
+        if c == 0:
+            return [&#x27;0&#x27;]
+        c = str(c)
+        c = convert(c,10,base)
+        while len(c)&lt;len(a): c=&#x27;0&#x27;+c
+        if c in chain:
+            return chain[chain.index(c):]
+        chain.append(c)
+        n = c
+
+for b in range(b1,b2+1):
+    print(chr(1),chr(6),&#x27; Base {:2d} {}&#x27;.format(b,chr(6)*20),sep=&#x27;&#x27;)
+    for d in range(d1,d2+1):
+        kaps = []
+        kapsets = []
+        freq = []
+        for n in range(b**(d-1),b**d):
+            n = convert(str(n),10,b)
+            k = kaprekar(n,b)
+            if set(k) not in kapsets:
+                kaps.append(k)
+                kapsets.append(set(k))
+                freq.append(1)
+            else:
+                freq[kapsets.index(set(k))] +=1
+        freq_percent = [100*i/sum(freq) for i in freq]
+        print(chr(25),chr(6)*6,&#x27; with {} digits :&#x27;.format(d),sep=&#x27;&#x27;)
+        for i in range(len(kaps)):
+            loop =&#x27;&#x27;
+            if len(kaps[i])==1:
+                kap = kaps[i][0]
+            else:
+                kap = &quot;loop&quot;
+                loop = &#x27;-&gt;&#x27;.join(kaps[i])
+            print(chr(5),&#x27; {:&lt;9}-{:&gt;8}--&gt; {:7.3f}%  - {}&#x27;.format(kap,freq[i],freq_percent[i],loop),sep=&#x27;&#x27;)
+        print(chr(3),chr(6)*32,sep=&#x27;&#x27;)
+    print(&#x27;&#x27;)
+    
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Kaprekar_Constant_Multibase.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Infinite Triplets For Brains 2 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Infinite Triplets For Brains 2</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Infinite_Triplets_For_Brains_2.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Infinite_Triplets_For_Brains_2.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">a=&#x27;123&#x27;
+# a is a string
+while True:
+# while true is here to produce an infinite loop
+    print(a)
+# a will be printed at each iteration.
+    a = a[1:]+str(int(a[-1])%9+1)
+# and this is the center of the code : at each iteration, &#x27;a&#x27; is modified. a[1:] takes the 2 last characters of a (e.g.: if a is &#x27;123&#x27;, a[1:] is &#x27;23&#x27;, if a = &#x27;789&#x27;, a[1:] = &#x27;89&#x27;, ...)
+# then a[-1] is the last character of a, for a = &#x27;123&#x27;, a[-1] = &#x27;3&#x27;. int(a[-1]) turns it to an integer. %9 will keep it unchanged unless it is 9. and then it will give 0. + 1 adds one to this number, and finally str() turns it back to a string.
+# The first process is doing :
+# a = &#x27;123&#x27;
+# print(a)
+# ---&gt; 123
+# a = &#x27;23&#x27; + &#x27;4&#x27; (=&#x27;234&#x27;)
+# next iteration :
+# print(a)
+# ---&gt; 234
+# a = &#x27;34&#x27; + &#x27;5&#x27; (=&#x27;345&#x27;)
+# etc ...
+</code></pre>
+    <p class="python-note">L’exécuteur affiche les 500 premiers triplets de cette suite infinie.</p>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Infinite_Triplets_For_Brains_2.py", "code": "a='123'\n# a is a string\nfor _ in range(500):\n# while true is here to produce an infinite loop\n    print(a)\n# a will be printed at each iteration.\n    a = a[1:]+str(int(a[-1])%9+1)\n# and this is the center of the code : at each iteration, 'a' is modified. a[1:] takes the 2 last characters of a (e.g.: if a is '123', a[1:] is '23', if a = '789', a[1:] = '89', ...)\n# then a[-1] is the last character of a, for a = '123', a[-1] = '3'. int(a[-1]) turns it to an integer. %9 will keep it unchanged unless it is 9. and then it will give 0. + 1 adds one to this number, and finally str() turns it back to a string.\n# The first process is doing :\n# a = '123'\n# print(a)\n# ---> 123\n# a = '23' + '4' (='234')\n# next iteration :\n# print(a)\n# ---> 234\n# a = '34' + '5' (='345')\n# etc ...\n"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>069 · Totient maximum · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>069 · Totient maximum</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0069_Totient_maximum.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0069_Totient_maximum.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+Totient maximum
+
+Euler&#x27;s Totient function, φ(n) [sometimes called the phi function],
+is used to determine the number of numbers less than n which are
+relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8,
+are all less than nine and relatively prime to nine, φ(9)=6.
+
+n	Relatively Prime	φ(n)	n/φ(n)
+2	1	                1   	2
+3	1,2	                2	    1.5
+4	1,3	                2     	2
+5	1,2,3,4	            4     	1.25
+6	1,5	                2     	3
+7	1,2,3,4,5,6	        6     	1.1666...
+8	1,3,5,7	            4     	2
+9	1,2,4,5,7,8	        6     	1.5
+10	1,3,7,9	            4    	2.5
+
+It can be seen that n=6 produces a maximum n/φ(n) for n ≤ 10.
+
+Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
+&quot;&quot;&quot;
+
+def phi(n) :
+    tot,p = n,1
+    while p*p &lt;= n:
+        p += 1+(p&gt;2)
+        if not n%p:
+            while not n%p: n //= p
+            tot *= 1-1/p
+    if n &gt; 1: tot *= 1-1/n
+    return int(tot)
+
+m = (0,0)
+# for n in range(1,1000000):
+#     m = max(m,(n/phi(n),n))
+print(m) # (5.539388020833333, 510510)
+print(2*3*5*7*11*13*17)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0069_Totient_maximum.py"}</script>
+  </main>
+</body>
+</html>

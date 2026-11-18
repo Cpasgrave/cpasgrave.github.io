@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Base 10 to base 26 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Base 10 to base 26</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Base%2010%20to%20base%2026.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Base%2010%20to%20base%2026.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># -*- coding: utf-8 -*-
+
+# ----------------------------------------------------------------------------
+# Challenge for Nerds!!!
+# From - Jacob Pembleton
+# Use C++ or Java to have an integer input (base 10) and convert it to base 26.
+# For example, 28=bc, 25=z. Binary is 0’s and 1’s, meaning that it is base2.
+# Base 26 means a=0, b=1, ... z=25 ba=26 and it is like 10.
+# Comment links to your code.
+# ----------------------------------------------------------------------------
+
+# any base 10 positive integer can be given (b10)
+b10 = 2334199994
+n = 0;list = [];myint = b10
+
+# finding the number of columns in base 26
+while True:
+    if b10 &lt; 26**(n + 1): break
+    n += 1
+    
+# producing a list with the number in base 26 to place in each column
+while n &gt;= 0:
+    list.append(b10//26**n)
+    b10 %= 26**n
+    n -= 1
+    
+# transforming the numbers in the list to a string of letters
+result = &#x27;&#x27;.join(chr(i+97) for i in list)
+print(myint,&quot;--&gt;&quot;,result)
+
+# I made the oneline reverse function, producing the base10 number
+# corresponding to a given string of letters (only from the 26 basic latin)
+
+b26 = &quot;tryme&quot;
+print(b26,&quot;--&gt;&quot;,sum((ord(b26[::-1][i])-97)*26**i for i in range(len(b26))))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Base 10 to base 26.py"}</script>
+  </main>
+</body>
+</html>

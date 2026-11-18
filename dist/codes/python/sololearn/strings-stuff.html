@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Strings Stuff · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Strings Stuff</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Strings_Stuff.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Strings_Stuff.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+This is my answer to :
+CHALLENGE: Strings stuff
+proposed by QuentinJanuel
+https://www.sololearn.com/Discuss/993086/challenge-strings-stuff
+
+Hi there, I found a challenge for you:
+
+The function takes 2 strings and returns false only if there is no way for you to:
+- choose a character index in the 2nd string as your starting point,
+- keep moving to the right or left char,
+- keep going until you eventually have read the 1st string.
+
+For instance:
+- &quot;dcdcb&quot; in &quot;abcde&quot;, I can start at the 4th char (&quot;d&quot;), and do the following moves: ←→←←, so that at the end I got &quot;dcdcb&quot;. It is possible, returns true.
+- &quot;ac&quot; in &quot;abc&quot;, no solution exists, it returns false.
+
+Good luck!&quot;&quot;&quot;
+
+# ---------------------------------------
+# ---------------------------------------
+
+# test cases :
+
+testcases = [[&quot;kayaks&quot;, &quot;skay&quot;],[&quot;bit&quot;, &quot;bite&quot;],[&quot;code&quot;, &quot;coddle&quot;],[&quot;atatata&quot;, &quot;ta&quot;],[&quot;trirtotrtopip&quot;, &quot;tptirtopit&quot;], [&quot;abcbcbab&quot;, &quot;abcba...cba&quot;]]
+
+# function :
+
+def read(words):
+    
+ a = words[0] ; b = &quot;*&quot;+ words[1]+&quot;*&quot;
+ paths = {p for p, c in enumerate(b) if c == a[0]}
+    
+ while True:
+  temp = [p for p in paths]
+  a = a[1:]
+  for t in temp:
+   if a == &quot;&quot;: return &quot;True&quot;
+   if b[t-1] == a[0]:paths.add(t-1)
+   elif b[t+1] == a[0]: paths.add(t+1)
+   paths.remove(t)
+   if len(paths)==0:return &quot;False&quot;
+
+# just printing the results when applying the function to our testcases :
+
+[[print(words[0],&quot;-&quot;, words[1],&quot;-&gt;&quot;,read(words),&quot;\n&quot;)] for words in testcases]
+
+# ---------------------------------------
+# ---------------------------------------
+
+# The method used in this code :
+
+&#x27;&#x27;&#x27;
+- First I call a the left word and b the right word
+
+- Then I add stars &quot;*&quot; before and after the second word
+  -&gt; ex: a becomes &quot;kayaks&quot; and b  &quot;*skay*&quot;
+   
+- The stars are added to let the index -1 and index +1
+  be usable from any letter in the word 
+  (no index out of range error returned)
+  of course, it wouldn&#x27;t work if a or b initially
+  contains the &quot;*&quot; character. This depends on the words tested, 
+  you cans choose anything instead of *, just need to know
+  what character is never used in the testcase strings.
+  There also could be an additional line of code checking that,
+  but ... well
+   
+- Then the engine of the code happens within {paths}
+  paths is a set. It will follow the multiple possible 
+  &quot;reading paths&quot;. It is first defined as a set containing
+  the indexes for each occurence of the first character of a in b.
+  ex : a=&quot;kayaks&quot; b=&quot;*skay*&quot; paths={2} (1st character is &quot;k&quot;)
+  ex : a=&quot;abcbcbab&quot; b=&quot;*abcba...cba*&quot; paths={1, 5, 11}
+  ex : a=&quot;trirtotrtopip&quot; b=&quot;*tptirtopit*&quot; paths={1, 3, 6, 10} (1st character is &quot;t&quot;)
+   
+- The processing then starts with a wile True (infinite loop)
+  this loop will stop by returning &quot;True&quot; at line 38
+  or returning &quot;False&quot; at line 64
+    
+- The idea here is simple :
+  For each position in paths, check if the next 
+  character in a can be found next to the actual 
+  character.
+  ex : in &quot;kayaks&quot;, the reader is at {2}, reading &quot;k&quot;
+      so we want to check if b[1] or b[3] is the
+      next character in a, which is &quot;a&quot;
+  After doing so, then the paths set has to be updated
+  from {2} becoming {3} because &quot;a&quot; is found at position
+  3 in b.
+  It&#x27;s nice because this allows to fork paths if the
+  letter is found both left and right like in firosuke&#x27;s
+  &quot;abcbcbab&quot;, &quot;abcba...cba&quot; test case. 
+  
+  Lets follow this test case :
+        
+  a=&quot;abcbcbab&quot;, b=&quot;*abcba...cba*&quot; 
+  first : char &quot;a&quot; --&gt; paths={1, 5, 11}
+  next : char &quot;b&quot; --&gt; paths={2, 4, 10}
+  next : char &quot;c&quot; --&gt; paths={3, 9}
+  it&#x27;s interesting at this point to see that two paths 
+  lead to the same point, we don&#x27;t need to follow two paths.
+  If this goes till the end, it will return &quot;True&quot;, it would 
+  need some addition to the code if we wanted to be able to 
+  check how many paths are possible.
+  next : char &quot;b&quot; --&gt; paths={2, 4, 10}
+  Here there is a fork, two possiblme directions from position
+  3 when next character is &quot;b&quot;
+  next : char &quot;c&quot; --&gt; paths={3, 9}
+  next : char &quot;b&quot; --&gt; paths={2, 4, 10}
+  next : char &quot;a&quot; --&gt; paths={1, 5, 11}
+  because paths is not empty and we arrived to the last character
+  the answer returned will be &quot;True&quot;
+  
+  an other test case :
+  &quot;code&quot;, &quot;*coddle*&quot;
+  first : char &quot;c&quot; --&gt; paths={1}
+  next : char &quot;o&quot; --&gt; paths={2}
+  next : char &quot;d&quot; --&gt; paths={3}
+  next : char &quot;e&quot; --&gt; paths={}
+  an empty path immediately returns &quot;False&quot;
+  
+- Technically, to do what I showed just above,
+  I had to create a temp list called temp by copying 
+  the paths set. This is because the for loop
+  is taking steps from temp ( for t in temp, line 37 )
+  modifying paths.
+  It couldn&#x27;t take steps from paths and modify 
+  paths at the same time (which is the goal)
+  
+- Each round of the loop, a is shortened from its first letter
+  then comes the check : if a is empty, end of word, &quot;True&quot;
+  lines 39 - 41 are updating paths
+  and finally there&#x27;s the check to see if paths is empty
+  if it&#x27;s the case, &quot;False&quot; is returned.&#x27;&#x27;&#x27;
+  
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Strings_Stuff.py"}</script>
+  </main>
+</body>
+</html>

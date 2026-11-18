@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>partitions · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>partitions</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/_partitions.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/_partitions.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">from time import perf_counter as tm
+
+# all possible partitions, preserved order
+def part_ord(a):
+	if len(a)==1: yield [a];return
+	a0 = a[0]
+	for p in part_ord(a[1:]): 
+		yield [[a0]+p[0]]+p[1:]
+		yield [[a0],*p]
+
+# all possible partitions, all orders
+def part(a):
+	if len(a)==1: yield [a];return
+	a0 = a[0]
+	for p in part(a[1:]): 
+		yield [[a0],*p]
+		for i in range(len(p)):
+			yield p[:i]+[[a0]+p[i]]+p[i+1:]
+
+# all k-long
+def part_k(a,k):
+	if k==1: yield [a]
+	elif len(a)&gt;1:
+		a0 = [a[0]]
+		for p in part_k(a[1:],k-1):	yield [a0]+p
+		for p in part_k(a[1:],k):
+			for i in range(k): yield p[:i]+[a0+p[i]]+p[i+1:]
+
+# same, bit faster
+def partition_k(a,k,m=None):
+	if m==None: m=k
+	if len(a)&gt;1:
+		for p in partition_k(a[1:],k,m-1):
+			lp = len(p)
+			if lp&gt;k: continue
+			if lp&gt;=m:
+			  for n, subset in enumerate(p): yield p[:n]+[[a[0]]+subset]+p[n+1:]
+			if lp&lt;k: yield [[a[0]]]+p
+	else: yield [a]
+
+
+
+a = [1,2,3,4]
+k = 3
+
+t = tm()
+pk = [*part_ord(a)]
+print(tm()-t)
+print(len(pk))
+print(pk)
+
+t = tm()
+pk = [*part(a)]
+print(tm()-t)
+print(len(pk))
+print(pk)
+
+t = tm()
+pk = [*part_k(a,k)]
+print(tm()-t)
+print(len(pk))
+print(pk)</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "_partitions.py"}</script>
+  </main>
+</body>
+</html>

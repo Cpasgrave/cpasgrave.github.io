@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Normal distribution · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Normal distribution</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Normal_distribution.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Normal_distribution.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;My answer to the challenge proposed by Pedro Demingos : [Challenge] Normal Distribution
+https://www.sololearn.com/Discuss/1048207/challenge-normal-distribution
+description after the code
+&#x27;&#x27;&#x27;
+from numpy import sum, random as r
+from collections import Counter
+
+# Number of games :
+N = 2317
+
+# Number of dices rolled/game
+n = 7
+
+g= r.random_integers(6,size=(N, n))
+sums= [sum(g[i]) for i in range(len(g))]
+tab= Counter(sums)
+m= max(tab.values())
+
+print(&#x27;\n&#x27;.join([&#x27;{0: &gt;2} &#x27;.format(t)+((int(tab[t]*30/m)*chr(219)+&#x27; &#x27;+str(tab[t])) if t in tab else&#x27;&#x27;)for t in range(n,6*n+1)]))
+
+&#x27;&#x27;&#x27;
+&gt; Make a game that rolls a dice n times and returns the MEAN result value. 
+&gt; Play that game N times and keep track of the returns you&#x27;re getting. 
+&gt; Show the result somehow. 
+
+The distribution of results will be within [1, 6] and should look like a normal distribution around 3.5 (due to the central limit theorem -- see Wikipedia for that). 
+
+I made a python code using the toss of a coin, so it goes from 0 to 1:
+PC: https://code.sololearn.com/cLVOcQU9LqiV/#py
+Phone: https://code.sololearn.com/cKhrPsZBgD2H/#py
+These are my first ones in SoloLearn, so I also accept critics on them. 
+
+You don&#x27;t need to do it in python. 
+
+Happy coding.
+
+Pedro Demingos&#x27;&#x27;&#x27;
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"packages": ["numpy"], "filename": "Normal_distribution.py"}</script>
+  </main>
+</body>
+</html>

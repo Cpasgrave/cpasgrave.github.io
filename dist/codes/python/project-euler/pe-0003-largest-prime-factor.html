@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>003 · Largest prime factor · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>003 · Largest prime factor</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0003_Largest_prime_factor.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0003_Largest_prime_factor.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">#  Largest prime factor
+
+&quot;&quot;&quot;
+The prime factors of 13195 are 5, 7, 13 and 29.
+
+What is the largest prime factor of the number 600851475143 ?
+&quot;&quot;&quot;
+
+
+def primesTo(n):
+	sieve=[1]*(n+1)
+	primes = []
+	for m in range(2,n+1):
+		if sieve[m]:
+			primes += [m]
+			for j in range(2*m,n+1,m):
+				sieve[j] = 0
+	return primes
+
+primes = primesTo(1000000)
+
+def largestP(n,large=0):
+	i,p = 0,2
+	while p&lt;=n**.5:
+		if n%p==0: return largestP(n//p)
+		i += 1
+		p = primes[i]
+	return large or n
+
+cases = [
+	10, # 5
+	17, # 17
+	10**12+1
+]
+for case in cases:
+	lp = largestP(case)
+	print(lp)</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0003_Largest_prime_factor.py"}</script>
+  </main>
+</body>
+</html>

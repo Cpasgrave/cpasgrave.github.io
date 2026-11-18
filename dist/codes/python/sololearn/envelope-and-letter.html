@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Envelope And Letter · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Envelope And Letter</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Envelope_And_Letter.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Envelope_And_Letter.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1065546/challenge-envelope-letter
+&#x27;&#x27;&#x27; My answer to Challenge by Gaurav Agrawal :&#x27;&#x27;&#x27;
+from itertools import permutations as perm
+
+n = 7
+
+def how_many (n):
+    letters = [i for i in range(1, n + 1)]
+    permuts = [j for j in perm(letters)]
+    p = 0
+    while p &lt; len(permuts):
+        for k in range(n):
+            if permuts[p][k] == k + 1:
+                permuts.remove(permuts[p])
+                p-=1
+                break
+        p += 1
+    print(&#x27;{} letters and envelopes - {} possible ways to totally fail the mailing&#x27;.format(n,len(permuts)))
+
+how_many(n)
+    
+&#x27;&#x27;&#x27;👉👉👉 CHALLENGE ::: ENVELOPE 📧 &amp; LETTER 💌
+U have to find number of ways in which no letter goes to correct envelope 
+example ::: if in.put is 3 
+then , 3 envelope  E1,E2,E3  
+           3 letters   L1,L2,L3
+//correct combination :::  (E1L1 , E2L2 , E3L3)
+👉 possible arrangements
+ (E1L2 , E2L3 , E3L1)
+ (E1L3 , E2L1 , E3L2)
+/*therefore 2 such combinations for 3 letters and 3 envelopes such that no letter goes in correct envelope*/
+//output must be 2 
+
+Bonus ::: print the combinations 🙌
+
+all languages are welcome ☺ 
+
+//best of luck  &amp; happy coding ☺👍&#x27;&#x27;&#x27;
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Envelope_And_Letter.py"}</script>
+  </main>
+</body>
+</html>

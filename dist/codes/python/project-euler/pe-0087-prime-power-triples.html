@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>087 · Prime power triples · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>087 · Prime power triples</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0087_Prime_power_triples.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0087_Prime_power_triples.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+Prime power triples
+
+The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is 28. In fact, there are exactly four numbers below fifty that can be expressed in such a way
+
+28 = 2**2 + 2**3 + 2**4
+33 = 3**2 + 2**3 + 2**4
+49 = 5**2 + 2**3 + 2**4
+47 = 2**2 + 3**3 + 2**4
+
+How many numbers below fifty million can be expressed as the sum of a prime square, prime cube, and prime fourth power
+&quot;&quot;&quot;
+
+from time import perf_counter as tm
+
+def primes_to(n):
+
+	sieve=[1]*(n+1)
+	primes = []
+	for m in range(2,n+1):
+		if sieve[m]:
+			primes += [m]
+			for j in range(m*m,n+1,m): sieve[j]=0
+	return primes
+
+
+def PE87(target):
+
+	primes = primes_to(int(target**.5)+1)
+
+	sqr = []
+	cub = []
+	frt = []
+	for n in primes:
+		n2 = n*n
+		if n2 &lt; target:
+			sqr += [n2]
+			n3 = n2*n
+			if n3 &lt; target:
+				cub += [n3]
+				n4 = n3*n
+				if n4&lt;target:
+					frt += [n4]
+		else: break
+
+	print(*map(len,[sqr,cub,frt]))
+	sqrfrt = set()
+	for s in sqr:
+		for f in frt:
+			sf = s+f
+			if sf&lt;target:
+				sqrfrt |= {sf}
+			else: break
+
+	sqrcubfrt = set()
+	for s in sqrfrt:
+		for c in cub:
+			scf = s+c
+			if scf&lt;target:
+				sqrcubfrt |= {scf}
+			else: break
+	return len(sqrcubfrt)
+
+t = tm()
+target = 50_000_000 # 29028
+r = PE87(target)
+print(r)
+print(tm()-t)
+
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0087_Prime_power_triples.py"}</script>
+  </main>
+</body>
+</html>

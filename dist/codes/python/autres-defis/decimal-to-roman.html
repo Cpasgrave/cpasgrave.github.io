@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Decimal to Roman · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Decimal to Roman</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Decimal_to_Roman.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Decimal_to_Roman.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Challenge Roman Numerals proposed by William SELLIER
+    
+Converts decimal number to Roman&#x27;&#x27;&#x27;
+
+n = str(input()) # up to 3 999 999
+
+pat = [&#x27;&#x27;,&#x27;0&#x27;,&#x27;00&#x27;,&#x27;000&#x27;,&#x27;01&#x27;,&#x27;1&#x27;,&#x27;10&#x27;,&#x27;100&#x27;,&#x27;1000&#x27;,&#x27;02&#x27;]
+
+res = [&#x27;&#x27;.join([&#x27;IVXLCDMvxlcdm&#x27;[int(i)+2*s] for i in pat[int(n[::-1][s])]]) for s in range(len(n))]
+
+print(&#x27;&#x27;.join(res[::-1]))
+</code></pre>
+    <form class="python-console" id="python-console">
+      <label for="python-input">Entrées du programme <span>(une valeur par ligne)</span></label>
+      <textarea id="python-input" rows="2" spellcheck="false">1997</textarea>
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Decimal_to_Roman.py"}</script>
+  </main>
+</body>
+</html>

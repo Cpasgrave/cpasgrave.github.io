@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>079 · Passcode derivation · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>079 · Passcode derivation</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0079_Passcode_derivation.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0079_Passcode_derivation.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+A common security method used for online banking is to ask the user for three random characters from a passcode. 
+For example, if the passcode was 531278, they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.
+
+The text file, keylog.txt, contains fifty successful login attempts.
+319 680 180 690 129 620 762 689 762 318 368 710 720 710 629 168 160 689 716 731 736 729 316 729 729 710 769 290 719 680 318 389 162 289 162 718 729 319 790 680 890 362 319 760 316 729 380 319 728 716 
+
+Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
+&quot;&quot;&quot;
+
+from random import sample
+
+
+
+
+
+attempts = [&#x27;319&#x27;, &#x27;680&#x27;, &#x27;180&#x27;, &#x27;690&#x27;, &#x27;129&#x27;, &#x27;620&#x27;, &#x27;762&#x27;, &#x27;689&#x27;, &#x27;762&#x27;, &#x27;318&#x27;, &#x27;368&#x27;, &#x27;710&#x27;, &#x27;720&#x27;, &#x27;710&#x27;, &#x27;629&#x27;, &#x27;168&#x27;, &#x27;160&#x27;, &#x27;689&#x27;, &#x27;716&#x27;, &#x27;731&#x27;, &#x27;736&#x27;, &#x27;729&#x27;, &#x27;316&#x27;, &#x27;729&#x27;, &#x27;729&#x27;, &#x27;710&#x27;, &#x27;769&#x27;, &#x27;290&#x27;, &#x27;719&#x27;, &#x27;680&#x27;, &#x27;318&#x27;, &#x27;389&#x27;, &#x27;162&#x27;, &#x27;289&#x27;, &#x27;162&#x27;, &#x27;718&#x27;, &#x27;729&#x27;, &#x27;319&#x27;, &#x27;790&#x27;, &#x27;680&#x27;, &#x27;890&#x27;, &#x27;362&#x27;, &#x27;319&#x27;, &#x27;760&#x27;, &#x27;316&#x27;, &#x27;729&#x27;, &#x27;380&#x27;, &#x27;319&#x27;, &#x27;728&#x27;, &#x27;716&#x27;]
+
+
+
+hints_make = lambda base,length,number: [&#x27;&#x27;.join(sample(str(base),length)) for i in range(number)]
+
+
+def PE79(attempts):
+
+
+
+	return
+
+
+r = PE79(attempts)
+print(r)
+base = &quot;abcdefghijklabcdefghijkl&quot;
+length = 3
+number = 15
+print(hints_make(base,length,number))
+
+
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0079_Passcode_derivation.py"}</script>
+  </main>
+</body>
+</html>

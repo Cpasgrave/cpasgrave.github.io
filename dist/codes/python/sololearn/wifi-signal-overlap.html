@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Wifi Signal Overlap · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Wifi Signal Overlap</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Wifi%20Signal%20Overlap.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Wifi%20Signal%20Overlap.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># Challenge :
+# Mike&#x27;s Challenge Series #1
+# https://www.sololearn.com/Discuss/805779/mike-s-challenge-series-1
+
+&quot;&quot;&quot;
+Question:
+A network tower has a range of 0.35 miles, and is located 1.75 miles from your WIFI access point which has a range of 0.02 miles.
+Display the area of positions you can access both your WIFI and Network signals in metres.
+
+HINT: ()
+&quot;&quot;&quot;
+
+# d = distance from tower to wifi
+# tr = tower&#x27;s range
+# wr = wifi range
+
+import math
+
+d = 1.75
+tr = 1.35
+wr = 1.0
+
+if tr+wr&lt;d :
+    print(&quot;There is no overlapping area of the signals,\nyour wifi and the tower are just too far from each other !\n---)--(---&quot;)
+else :
+    h=((tr+wr)-d)/2
+    Ax=(tr*tr)*math.acos((tr-h)/tr)-(tr-h)*math.sqrt((2*tr*h)-(h*h))
+    Az=(wr*wr)*math.acos((wr-h)/wr)-(wr-h)*math.sqrt((2*wr*h)-(h*h))
+    A=Ax+Az
+    print(&quot;Area available is...&quot;) 
+    print(str(round(A,3))+&#x27; square miles&#x27;)
+    print(&quot;And in metres&quot;)
+    Area=A*1609.344
+    print(str(round(Area,1))+&#x27; square meters&#x27;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Wifi Signal Overlap.py"}</script>
+  </main>
+</body>
+</html>

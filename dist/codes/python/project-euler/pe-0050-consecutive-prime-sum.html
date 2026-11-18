@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>050 · Consecutive prime sum · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Project Euler">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>050 · Consecutive prime sum</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Project Euler</a>
+      <a href="../sources/project-euler/PE_0050_Consecutive_prime_sum.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/P.E./blob/9079069ec560c2a763894bbd7e21ca69d40409a7/PE_0050_Consecutive_prime_sum.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&#x27;&#x27;&#x27;
+Consecutive prime sum
+
+The prime 41, can be written as the sum of six consecutive primes:
+
+41 = 2 + 3 + 5 + 7 + 11 + 13
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+&#x27;&#x27;&#x27;
+from time import perf_counter as time
+
+t = time()
+
+limit = 10**6
+
+sieve = [0]+[1]*((limit-1)//2)
+for i in range(3,int(limit**0.5)+1,2):
+    for j in range(i**2//2,(limit+1)//2,i):
+        sieve[j]=0
+primes = [2]+[2*i+1 for i,j in enumerate(sieve)if j]
+primeset = set(primes)
+
+lp = len(primes)
+upperLim = next(i for i in range(lp)if sum(primes[:i])&gt;limit)-1
+seqLen = upperLim
+print(upperLim)
+found = 0
+
+while found == 0:
+    for i in range(upperLim-seqLen+1):
+        s = sum(primes[i:i+seqLen])
+        if s in primeset:
+            found = s
+            break
+    seqLen -= 1
+    upperLim += 1
+
+print(found) # 997651
+print(time()-t)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "PE_0050_Consecutive_prime_sum.py"}</script>
+  </main>
+</body>
+</html>

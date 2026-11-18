@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Minimal Pairs Product Sum · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Minimal Pairs Product Sum</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Minimal_Pairs_Product_Sum.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Minimal_Pairs_Product_Sum.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"> 
+&quot;&quot;&quot;
+Write a function that receives an array of integers and returns the minimal sum of the array (sum of products of each two adjacent numbers).
+
+For Example: 
+Without sorting the array [40,25,10,5,1], the sum is:
+(40*25) + (25*10) + (10*5) + (5*1) = 1305
+
+The challenge is to find the best possible sort of the array elements, to have the minimal sum result.
+&quot;&quot;&quot;
+
+a = [40,25,10,5,1]
+
+b = [sorted(a)[::-1][i] for i in [j*(-1)**(j+len(a)%2*(j&gt;len(a)//2)) for j in range(len(a))]]
+
+c = sum([i*j for i,j in zip(b[:-1],b[1:])])
+
+print(b,c)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Minimal_Pairs_Product_Sum.py"}</script>
+  </main>
+</body>
+</html>

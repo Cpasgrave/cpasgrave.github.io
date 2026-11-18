@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Username Check · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Username Check</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/Username%20Check.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Username%20Check.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># -*- coding: utf-8 -*-
+# Answer to CHALLENGE (description after the code)
+# Proposed by George Victor
+
+user1 = &quot;Goubi3#&quot;
+user2 = &quot;troubi#4&quot;
+user3 = &quot;Fou fobi@5&quot;
+user4 = &quot;Bi4*&quot;
+users = [user1, user2, user3, user4]
+
+def check(user):
+    if 4 &lt; len(user) &lt; 11 and any(c.isupper() for c in user) and any(c.isdigit() for c in user) and any(c in &quot;@#*=&quot; for c in user) and all(c != &quot; &quot; for c in user):
+        return &quot;PASS&quot;
+    else:
+        return &quot;FAIL&quot;
+
+n = 0
+for u in users:
+    n += 1
+    print(&quot;user&quot;, u, &quot;:&quot;, check(u))
+    
+    # Sam wants to select a username to register on a website. The rules for selecting username:
+# 1. The minimum length of the username must be 5 characters and the maximum may be 10.
+# 2. It should contain at least one letter from A-Z
+# 3. It should have at least one digit from 0-9
+# 4. It should have at least one character from amongst @#*=
+# 5. It should not have any spaces
+
+# Write a program which accepts 4 usernames (one username per line)
+# as input and checks whether each of them satisfy the above mentioned conditions.
+# If it does, the program should print PASS (in uppercase)  else print FAIL
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Username Check.py"}</script>
+  </main>
+</body>
+</html>

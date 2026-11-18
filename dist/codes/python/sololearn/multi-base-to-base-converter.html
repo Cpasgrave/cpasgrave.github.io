@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Multi-Base to Base Converter · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à SoloLearn">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Multi-Base to Base Converter</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">SoloLearn</a>
+      <a href="../sources/python-challenges/Multi-Base_to_Base_Converter.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/Multi-Base_to_Base_Converter.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source"># https://www.sololearn.com/Discuss/1031820/challenge-base-10-to-binary-converter
+# https://www.sololearn.com/Discuss/663896/challenge-time-d/
+
+&#x27;&#x27;&#x27;
+create a code that converts any base to binary. or vise-versa, 
+mine is base 10 to binary...
+happy challenge. ..
+&#x27;&#x27;&#x27;
+
+import sys
+
+a = -564.63       # your number to convert
+# you must write it as a string if it contains letters.
+# E.g. &#x27;fd563.11D&#x27;, and be careful to use a corresponding 
+# in_base (there must not be any numeral in your number that
+# is not covered by your base).
+# Both in and out bases must be integers from 2 to 64.
+# Numerals used in the bases are 0-9 then a-z then A-Z
+# I added &#x27;!&#x27; and &#x27;?&#x27; to make it a total of 64 different numerals.
+in_base = 10         # your number&#x27;s original base
+out_base = 2         # the target base
+
+&#x27;&#x27;&#x27; Here is the table used :
+   {&#x27;0&#x27;: 0,  &#x27;1&#x27;: 1,  &#x27;2&#x27;: 2,  &#x27;3&#x27;: 3,  &#x27;4&#x27;: 4,  &#x27;5&#x27;: 5,  &#x27;6&#x27;: 6, 
+    &#x27;7&#x27;: 7,  &#x27;8&#x27;: 8,  &#x27;9&#x27;: 9,  &#x27;a&#x27;: 10, &#x27;b&#x27;: 11, &#x27;c&#x27;: 12, &#x27;d&#x27;: 13, 
+    &#x27;e&#x27;: 14, &#x27;f&#x27;: 15, &#x27;g&#x27;: 16, &#x27;h&#x27;: 17, &#x27;i&#x27;: 18, &#x27;j&#x27;: 19, &#x27;k&#x27;: 20, 
+    &#x27;l&#x27;: 21, &#x27;m&#x27;: 22, &#x27;n&#x27;: 23, &#x27;o&#x27;: 24, &#x27;p&#x27;: 25, &#x27;q&#x27;: 26, &#x27;r&#x27;: 27, 
+    &#x27;s&#x27;: 28, &#x27;t&#x27;: 29, &#x27;u&#x27;: 30, &#x27;v&#x27;: 31, &#x27;w&#x27;: 32, &#x27;x&#x27;: 33, &#x27;y&#x27;: 34, 
+    &#x27;z&#x27;: 35, &#x27;A&#x27;: 36, &#x27;B&#x27;: 37, &#x27;C&#x27;: 38, &#x27;D&#x27;: 39, &#x27;E&#x27;: 40, &#x27;F&#x27;: 41, 
+    &#x27;G&#x27;: 42, &#x27;H&#x27;: 43, &#x27;I&#x27;: 44, &#x27;J&#x27;: 45, &#x27;K&#x27;: 46, &#x27;L&#x27;: 47, &#x27;M&#x27;: 48, 
+    &#x27;N&#x27;: 49, &#x27;O&#x27;: 50, &#x27;P&#x27;: 51, &#x27;Q&#x27;: 52, &#x27;R&#x27;: 53, &#x27;S&#x27;: 54, &#x27;T&#x27;: 55, 
+    &#x27;U&#x27;: 56, &#x27;V&#x27;: 57, &#x27;W&#x27;: 58, &#x27;X&#x27;: 59, &#x27;Y&#x27;: 60, &#x27;Z&#x27;: 61, &#x27;!&#x27;: 62,
+    &#x27;?&#x27;: 63}&#x27;&#x27;&#x27;
+
+def convert(a,in_base,out_base,num,out_num,system = &#x27;&#x27;):
+    table = dict(zip(num,range(len(num))))
+    dec = [] ; temp = 0 ; neg = 0
+    if isinstance(a,str):
+        if any(table[i] &gt; in_base for i in a.replace(&#x27;.&#x27;,&#x27;&#x27;).replace(&#x27;-&#x27;,&#x27;&#x27;)):
+            print(&quot;trouber with the numble, id toesn&#x27;t bit your fase !&quot;)
+            sys.exit()
+        if a[0] == &#x27;-&#x27;:
+            neg = 1
+            b = a[1:]
+        else:
+            b = a
+    elif isinstance(a,int) or isinstance(a,float):
+        if any(int(i) &gt; in_base for i in str(a).replace(&#x27;.&#x27;,&#x27;&#x27;).replace(&#x27;-&#x27;,&#x27;&#x27;)):
+            print(&quot;trouber with the numble, id toesn&#x27;t bit your fase !&quot;)
+            sys.exit()
+        if a &lt; 0:
+            neg = 1
+            b = str(-a)
+        else:
+            b = str(a)
+    else:
+        print(&#x27;Nak nak nak ! Not a good number ... Run it once again !&#x27;)
+        sys.exit()
+
+    c = [list(i)[::-1] for i in b.split(&#x27;.&#x27;)]
+    for i in c:
+        for j in range(len(i)):
+            temp += table[i[j]]*in_base**j
+        dec.append(temp)
+        temp = 0
+
+    result = []
+    for i in range(len(dec)):
+        part = []
+        j = 1
+        while dec[i]:
+            test = dec[i] % out_base
+            dec[i] = (dec[i] - test) // out_base
+            part.append(out_num[test])
+        result.append(part[::-1])
+    result = neg*&#x27;-&#x27;+&#x27;.&#x27;.join([&#x27;&#x27;.join(i) for i in result])
+
+    print(a, &#x27;in base&#x27;,in_base,&#x27;equals\n&gt;&gt;&gt;&#x27;,result,&#x27;in base&#x27;, system or out_base, &#x27;\n&#x27;)
+
+num = [&#x27;0&#x27;,&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;,&#x27;4&#x27;,&#x27;5&#x27;,&#x27;6&#x27;,&#x27;7&#x27;,&#x27;8&#x27;,&#x27;9&#x27;,&#x27;a&#x27;,&#x27;b&#x27;,&#x27;c&#x27;,&#x27;d&#x27;,&#x27;e&#x27;,&#x27;f&#x27;,&#x27;g&#x27;,&#x27;h&#x27;,&#x27;i&#x27;,&#x27;j&#x27;,&#x27;k&#x27;,&#x27;l&#x27;,&#x27;m&#x27;,&#x27;n&#x27;,&#x27;o&#x27;,&#x27;p&#x27;,&#x27;q&#x27;,&#x27;r&#x27;,&#x27;s&#x27;,&#x27;t&#x27;,&#x27;u&#x27;,&#x27;v&#x27;,&#x27;w&#x27;,&#x27;x&#x27;,&#x27;y&#x27;,&#x27;z&#x27;,&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;D&#x27;,&#x27;E&#x27;,&#x27;F&#x27;,&#x27;G&#x27;,&#x27;H&#x27;,&#x27;I&#x27;,&#x27;J&#x27;,&#x27;K&#x27;,&#x27;L&#x27;,&#x27;M&#x27;,&#x27;N&#x27;,&#x27;O&#x27;,&#x27;P&#x27;,&#x27;Q&#x27;,&#x27;R&#x27;,&#x27;S&#x27;,&#x27;T&#x27;,&#x27;U&#x27;,&#x27;V&#x27;,&#x27;W&#x27;,&#x27;X&#x27;,&#x27;Y&#x27;,&#x27;Z&#x27;,&#x27;!&#x27;,&#x27;?&#x27;]
+shadok = [&#x27;GA&#x27;,&#x27;BU&#x27;,&#x27;ZO&#x27;,&#x27;MEU&#x27;]
+bibi = [&#x27;Ho&#x27;,&#x27;Ha&#x27;,&#x27;He&#x27;,&#x27;Hi&#x27;,&#x27;Bo&#x27;,&#x27;Ba&#x27;,&#x27;Be&#x27;,&#x27;Bi&#x27;,&#x27;Ko&#x27;,&#x27;Ka&#x27;,&#x27;Ke&#x27;,&#x27;Ki&#x27;,&#x27;Do&#x27;,&#x27;Da&#x27;,&#x27;De&#x27;,&#x27;Di&#x27;]
+
+convert(a,in_base,out_base,num,num)
+convert(a,in_base,4,num,shadok,&#x27;shadok&#x27;)
+print(&#x27;&#x27;&#x27;wikipedia.org/wiki/Les_Shadoks\n&#x27;&#x27;&#x27;)
+convert(a,in_base,16,num,bibi,&#x27;bibi-binary&#x27;)
+print(&#x27;&#x27;&#x27;wikipedia.org/wiki/Bibi-binary\n&#x27;&#x27;&#x27;)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Multi-Base_to_Base_Converter.py"}</script>
+  </main>
+</body>
+</html>

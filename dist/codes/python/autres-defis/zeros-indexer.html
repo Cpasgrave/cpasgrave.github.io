@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>zeros indexer · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Autres défis">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>zeros indexer</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Autres défis</a>
+      <a href="../sources/python-challenges/zeros%20indexer.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Python-Challenges/blob/7f0feb563fe427c4f93fd2d4b253478cec53debb/zeros%20indexer.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">&quot;&quot;&quot;
+this code returns the index of the 3 first zeros in the input number or string if there are any.
+&quot;&quot;&quot;
+
+data = input(&quot;come on give me your number !  ---&gt;\n&quot;)
+list = [i for i in range(len(data)) if data.startswith(&#x27;0&#x27;, i)][:3]
+order = [&#x27;first:&#x27;, &#x27;second:&#x27;, &#x27;third:&#x27;]
+for i in range(3) :
+    if i &lt; data.count(&#x27;0&#x27;) :
+        print (order[i]+str(list[i]))
+    else :
+        print (&#x27;not found&#x27;)
+        break
+</code></pre>
+    <form class="python-console" id="python-console">
+      <label for="python-input">Entrées du programme <span>(une valeur par ligne)</span></label>
+      <textarea id="python-input" rows="2" spellcheck="false">10100501</textarea>
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "zeros indexer.py"}</script>
+  </main>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9f825a">
+  <title>Simulation de population · version 1 · Cépagrave</title>
+  <link rel="icon" type="image/jpeg" href="../../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="../../../style.css?v=sections">
+  <link rel="stylesheet" href="../catalogue.css">
+  <script defer src="../runner.js"></script>
+</head>
+<body>
+  <main class="portal python-reader">
+    <header class="identity">
+      <a class="identity-home" href="index.html" aria-label="Retour à Projets Python">
+        <img class="avatar" src="../../../assets/avatar-cpasgrave.jpg" alt="" width="460" height="460">
+      </a>
+      <h1>Simulation de population · version 1</h1>
+    </header>
+
+    <div class="python-links">
+      <a href="index.html">Projets Python</a>
+      <a href="../sources/life-sim/Population_1.py" download>Télécharger le .py</a>
+      <a href="https://github.com/Cpasgrave/Life_Sim/blob/155c3523cbe99d53158392e58c4007a955882a85/Population_1.py">Source sur GitHub</a>
+    </div>
+    <h2>Code Python</h2>
+    <pre class="python-source" tabindex="0" aria-label="Code Python"><code id="python-source">import re
+from random import choice
+&#x27;&#x27;&#x27;There is a population, with specific behaviour :
+A, B, C, D, E, ... upper case characters are female.
+a, b, c, d, e, ... lower case characters are male.
+- When they are next to each other, one female and one male will mate and randomly bring to life 0 to 3 newborns.
+- Incest, of course is allowed as it is in every biology lab. A male can mate with two females,
+ but a female with one male only.
+- Newborns can be male or female (randomly), and they will be situated bewtween their parents (including them) in the alphabetical order.
+- Reproduction cycle length is one day.
+- Everyday, 25 % of the population will move (random individuals).
+  Moving involves jumping over the head of 1 or 2 neighbours, randomly to the left or to the right.
+- Death happens in a way that&#x27;s very specific to characters : When they happen to make a
+consonant-vowel-consonant group, they are taken away to the words world.
+- The life cycles will end if the population stabilises, crashes, or get to a max number you can set to 60.
+- Last rule(suggestion) : use Regex
+
+ex : 
+day 1 : Az
+day 2 : ArZz
+__Nobody moved today (random individual from 25% of 4 --&gt; 0)
+day 3 : AberQZz (here, &#x27;A&#x27; and &#x27;r&#x27; had two newborns &#x27;b&#x27; and &#x27;e&#x27;, &#x27;r&#x27; and &#x27;Z&#x27; gave birth to &#x27;Q&#x27;
+__death : &#x27;ber&#x27; are taken away together.
+day 3 : AQZz
+__no movements again
+day 4 : AQZzZZz (the only possible reproduction was between &#x27;Z&#x27; and &#x27;z&#x27; they had 3 newborns : &#x27;zZZ&#x27;
+_movement : population of 7 : 1 traveller. first Z came two places leftwards :
+day 4 : ZAQzZZz
+day 5 : ZAQrTzZZz
+etc ...
+&#x27;&#x27;&#x27;
+
+pop = &#x27;aZ&#x27;
+
+def rep(pop):
+    patt= &#x27;(?=([a-z][A-Z])|([A-Z][a-z]))&#x27;
+    mates= [([m[i] for i in range(1,3) if m[i]][0], m.end(0)+1) for m in re.finditer(patt,pop)]
+    n = 0 ; b = 0
+    while n&lt;len(mates)-1:
+        if mates[n+1][1]==mates[n][1]+1 and 64&lt;ord(mates[n][0][1])&lt;91:
+            mates.remove(choice([mates[n],mates[n+1]]))
+        n+=1
+    p=0
+    for parents in mates:
+        limit = 1+int((201-len(pop))/(3*len(mates)))
+        for j in range(choice([i for i in range(0,limit if limit&lt;6 else 5)])):
+            b +=1
+            nb = chr(choice([i for i in range(97,123)]))
+            nb = choice([nb,nb.upper()])
+            pop = pop[:parents[1]+p]+nb+pop[parents[1]+p:]
+            p+=1
+    print(&#x27;++++ &#x27;,b,&#x27;births&#x27;)
+    return pop
+
+def kill(pop):
+    #patt = &#x27;[^aeiou][aeiou][^aeiou]&#x27;
+    #pop = re.sub(patt,&#x27;&#x27;,pop,flags=re.IGNORECASE)
+    #patt1 = r&#x27;([a-z])(\1)(\1*)&#x27;
+    #pop = re.sub(patt1,choice([r&#x27;\1&#x27;,r&#x27;\2&#x27;]),pop,flags=re.IGNORECASE)
+    patt2 = &#x27;([A-Z])([a-z])([a-z])+&#x27;
+    pop = re.sub(patt2, choice([r&#x27;\1\2&#x27;, r&#x27;\1\3&#x27;]), pop)
+    patt3 = &#x27;([a-z])+([a-z])([A-Z])&#x27;
+    pop = re.sub(patt3, choice([r&#x27;\1\3&#x27;, r&#x27;\2\3&#x27;]), pop)
+    patt4 = &#x27;([A-Z])([A-Z])([A-Z])&#x27;
+    pop = re.sub(patt4, r&#x27;\1&#x27;+r&#x27;\3&#x27;, pop)
+    return pop
+
+def move(pop):
+    for i in range(len(pop)//2):
+        pos = choice([i for i in range(len(pop))])
+        t = pop[pos]
+        mov = choice([pos+i if 0&lt;=pos+i&lt;=len(pop) else pos for i in[-3,-2,-1,1,2,3]])
+        pop = pop[:pos]+pop[pos+1:]
+        pop = pop[:mov]+t+pop[mov:]
+    return pop
+
+def life(pop):
+    print(pop)
+    gen=0
+    while True:
+        ancestor = pop
+        gen += 1
+        print(&#x27;--------------------pop size :&#x27;,len(pop),&#x27; - {} generations&#x27;.format(gen))
+        pop = rep(pop)
+        print(&#x27;repr ---&gt;&#x27;,pop)
+        pop = move(pop)
+        print(&#x27;move ---&gt;&#x27;,pop)
+        pop = kill(pop)
+        print(&#x27;kill ---&gt;&#x27;,pop)
+        if pop == ancestor:
+            print(&#x27;---- no change&#x27;)
+            break
+        if len(pop) &gt; 300:
+            print(&#x27;---- overcrowding&#x27;)
+            break
+            
+pop = life(pop)
+</code></pre>
+    <form class="python-console" id="python-console">
+      <div class="python-controls">
+        <button class="project project--small" id="python-run" type="submit" disabled>Exécuter</button>
+        <button class="python-stop" id="python-stop" type="button" disabled>Arrêter</button>
+        <span id="python-status" role="status"></span>
+      </div>
+      <h2 id="python-output-label">Sortie</h2>
+      <pre id="python-output" class="python-output" tabindex="0" aria-labelledby="python-output-label"></pre>
+    </form>
+    <noscript><p>Active JavaScript pour exécuter le code.</p></noscript>
+    <script type="application/json" id="python-options">{"filename": "Population_1.py"}</script>
+  </main>
+</body>
+</html>
