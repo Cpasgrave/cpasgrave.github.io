@@ -63,10 +63,10 @@ const WoodSynthesis = (() => {
     data[data.length - 1] = 0;
     return finish(data, .58);
   }
-  return { friction, contact };
+  return { friction, contact, random, finish };
 })();
 
-function createWoodAudio({ enabled = () => true, volume = () => .35,
+function createWoodAudio({ enabled = () => true, volume = () => .35, synthesis = WoodSynthesis,
   contextFactory = () => new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" }),
   random = Math.random, visible = () => !document.hidden } = {}) {
   let context = null, master = null, lastFamily = -1, sequence = 0;
@@ -124,13 +124,13 @@ function createWoodAudio({ enabled = () => true, volume = () => .35,
     if (!available()) return;
     // Six contact families, with fresh synthesis and no immediately repeated family.
     lastFamily = (lastFamily + 1 + Math.floor(random() * 5)) % 6;
-    makeVoice(WoodSynthesis.contact(context.sampleRate, seed(), lastFamily, piece),
+    makeVoice(synthesis.contact(context.sampleRate, seed(), lastFamily, piece),
       { gain: .6 * scale * (.85 + random() * .15), pan });
   }
   function startSlide({ piece = 0, group = false, pan = 0 } = {}) {
     if (!available()) return null;
     const scale = group ? .23 : 1;
-    const voice = makeVoice(WoodSynthesis.friction(context.sampleRate, 4, seed()), { loop: true, pan });
+    const voice = makeVoice(synthesis.friction(context.sampleRate, 4, seed(), piece), { loop: true, pan });
     const baseRate = .9 + random() * .2;
     let ended = false, lastPan = pan;
     return {

@@ -8,13 +8,18 @@ Jeu statique, sans serveur de jeu, sans dépendance réseau au lancement. Ouvrir
 - `ai-worker.js` : calcul hors du fil de l’interface, annulé à l’ouverture des réglages, lors d’un retour en arrière ou du changement de partie.
 - `app.js` : interface, configuration individuelle, glisser-déposer, clavier, animations et historique. Les réglages sont mémorisés localement ; les parties ne le sont pas.
 - `style.css` : matériaux, couleurs des joueurs et mise en page adaptative.
-- `assets/nut-steel.png` : écrou photographique avec transparence, y compris dans son trou central. Les finitions rouge, bleue, verte et jaune sont appliquées en CSS. Aucun numéro n’est superposé aux pions.
-- `assets/maple-light.png` : texture photographique d’érable clair pour le fond, les cases et le cadre. Le noyer reste utilisé pour les barrières sombres. Ces deux images sont aplaties ; les cases, barrières, numéros gravés, commandes et couleurs restent des composants éditables.
+- `assets/pion-*.webp` : quatre pions en bois sur fond transparent, exportés séparément depuis la planche Imagegen. Les pions, leurs ombres, les flèches et les pastilles de départ restent indépendants du plateau. Les anciens écrous sont conservés dans `assets/nut-steel.png`.
+- `sound.js` : frottement du bois pour le brun noir, verre pour le beige, güiro pour le vert et note d’archet glissée pour l’orange. Le son d’une barrière se joue à la pose. Chaque mouvement produit une variation.
+- `assets/maple-light.png` : texture photographique d’érable clair pour les cases et le cadre. Le noyer reste utilisé pour les barrières sombres.
+- `assets/cuivre-martele.webp` : copie WebP de l’image de cuivre martelé fournie pour le fond. L’original PNG est conservé à la racine de l’espace de travail. La couche sombre est réglable en CSS.
 - `assets/bolt-steel.png` : ancien visuel conservé, inutilisé dans la version actuelle.
 
-Les textures et polices existantes de Quarto, le noyer du portail et le moteur de
-sons de Quarto sont réutilisés par des chemins relatifs, sans modification de ces
-originaux. Aucune image globale du plateau : cases, barrières, pions et textes
+Les variantes en tôle striée et en papier tressé sont conservées dans la copie locale.
+Les textures sont aplaties. Les pastilles de départ, les flèches, les commandes
+et les teintes restent éditables en HTML et CSS.
+
+Les polices de Quarto, le noyer du portail et le moteur audio partagé sont réutilisés
+par des chemins relatifs. Aucune image globale du plateau : cases, barrières, pions et textes
 restent indépendants.
 
 L’interface se joue sans boutons de mode ni points indicateurs. Une case accessible
@@ -22,7 +27,9 @@ peut être choisie directement. Prendre une barrière bloque les mouvements du p
 la reposer dans la réserve ou annuler le geste les réactive. « Tourner (R) »
 fonctionne au toucher et à la souris ; tourner la réserve ne prend pas la barrière.
 Les stocks sont représentés visuellement et le cadre jaune indique le joueur actif.
-Sur petit écran, les fiches des joueurs restent au-dessus du plateau.
+La flèche sur chaque fiche indique le bord à atteindre. La pastille de même couleur
+sur le cadre indique le bord de départ. Sur petit écran, les fiches des joueurs
+restent au-dessus du plateau, dont le cadre s’affine pour agrandir les cases.
 
 Règles de référence : https://export.gigamic.com/wp-content/uploads/2021/01/INS-RULES-QUORIDOR_10-2016.pdf
 (le paragraphe allemand précise également le saut latéral lorsqu’un troisième

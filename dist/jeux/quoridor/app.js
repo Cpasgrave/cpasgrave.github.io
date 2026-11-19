@@ -1,10 +1,17 @@
 "use strict";
 const Q = Quoridor, $ = id => document.getElementById(id);
 const board = $('board'), frame = $('board-frame'), statusNode = $('status'), hint = $('hint');
+const wallTarget = $('wall-preview');
 const setup = $('setup-dialog'), rules = $('rules-dialog'), win = $('win-dialog');
-const FINISHES = ['Rouge', 'Bleu', 'Vert', 'Jaune'];
+const PAWNS = [
+  { color: 'brun noir', image: 'brun-noir' },
+  { color: 'beige', image: 'beige' },
+  { color: 'vert feuille', image: 'vert' },
+  { color: 'orange terre cuite', image: 'orange' }
+];
 const GOALS = { N: 'le haut', E: 'la droite', S: 'le bas', W: 'la gauche' };
 const ARROWS = { N: '↑', E: '→', S: '↓', W: '←' };
+const OPPOSITE = { N: 'S', E: 'W', S: 'N', W: 'E' };
 const STORAGE = 'cepagrave-quoridor-settings-v1';
 const defaults = () => ({ count: 2, seats: Array.from({ length: 4 }, (_, i) => ({ type: i === 0 ? 'human' : 'ai', level: 3 })), sound: true, volume: 30, starter: '0' });
 let config = defaults();
@@ -20,13 +27,13 @@ let interaction = 'move', orientation = 'h', preview = null, drag = null;
 let animating = false, thinking = false, epoch = 0, worker = null, aiTimer = 0, watchdog = 0;
 let suppressClickUntil = 0, currentLegal = [], legalWallKeys = new Set();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const audio = createWoodAudio({ enabled: () => config.sound, volume: () => config.volume / 100 });
+const audio = createWoodAudio({ enabled: () => config.sound, volume: () => config.volume / 100, synthesis: QuoridorSounds });
 const dialogsOpen = () => setup.open || rules.open || win.open;
 const humanTurn = () => active && state.winner === null && config.seats[state.turn].type === 'human' && !animating && !dialogsOpen();
 const label = i => `Joueur ${i + 1}`;
 const cellName = position => `${String.fromCharCode(65 + position % 9)}${9 - Math.floor(position / 9)}`;
 const wallKey = wall => `${wall.o}${wall.r}${wall.c}`;
-const pieceHTML = () => '<img src="assets/nut-steel.png" alt="" draggable="false">';
+const pieceHTML = i => `<img src="assets/pion-${PAWNS[i].image}.webp" alt="" draggable="false">`;
 const tokenHTML = i => `<div class="pawn-token finish-${i}">${pieceHTML(i)}</div>`;
 function saveConfig() { try { localStorage.setItem(STORAGE, JSON.stringify(config)); } catch {} }
 
@@ -66,12 +73,13 @@ function message(text = '', error = false) {
 function showPreview(wall) {
   if (!humanTurn() || interaction !== 'wall') return;
   preview = wall;
-  const element = $('wall-preview'); element.hidden = false; wallPosition(element, wall);
   const error = Q.wallError(state, wall);
-  element.classList.toggle('invalid', Boolean(error));
+  wallPosition(wallTarget, wall);
+  wallTarget.classList.toggle('invalid', Boolean(error));
+  wallTarget.hidden = false;
   message(error, Boolean(error));
 }
-function clearPreview() { preview = null; $('wall-preview').hidden = true; }
+function clearPreview() { preview = null; wallTarget.hidden = true; }
 function updateInteractions() {
   const enabled = humanTurn();
   currentLegal = enabled ? Q.moves(state) : [];
@@ -105,21 +113,26 @@ function render() {
   $('pawns').replaceChildren();
   state.players.forEach((player, i) => {
     const pawn = document.createElement('button'); pawn.type = 'button'; pawn.className = `pawn finish-${i}`; pawn.dataset.player = i;
-    pawn.setAttribute('aria-label', `${label(i)}, écrou ${FINISHES[i].toLowerCase()} en ${cellName(player.position)}, arrivée vers ${GOALS[player.goal]}`);
+    pawn.setAttribute('aria-label', `${label(i)}, pion ${PAWNS[i].color} en ${cellName(player.position)}, arrivée vers ${GOALS[player.goal]}`);
     pawn.style.left = `${(player.position % 9 + .5) / 9 * 100}%`; pawn.style.top = `${(Math.floor(player.position / 9) + .5) / 9 * 100}%`;
     pawn.innerHTML = pieceHTML(i);
     pawn.addEventListener('pointerdown', event => beginDrag(event, 'move', pawn));
     pawn.addEventListener('click', () => { if (performance.now() > suppressClickUntil && humanTurn()) setMode('move'); });
     $('pawns').append(pawn);
   });
-  $('players').innerHTML = state.players.map((player, i) => `<section class="player-card${state.turn === i && state.winner === null ? ' active' : ''}"${state.turn === i && state.winner === null ? ' aria-current="true"' : ''} aria-label="${label(i)}, écrou ${FINISHES[i].toLowerCase()}, ${config.seats[i].type === 'human' ? 'humain' : 'IA niveau ' + config.seats[i].level}">
-    <header>${tokenHTML(i)}<div><h3>${label(i)}</h3><p>${config.seats[i].type === 'human' ? 'Humain' : `IA · niveau ${config.seats[i].level}`}</p></div></header>
+  $('players').innerHTML = state.players.map((player, i) => `<section class="player-card finish-${i}${state.turn === i && state.winner === null ? ' active' : ''}"${state.turn === i && state.winner === null ? ' aria-current="true"' : ''} aria-label="${label(i)}, pion ${PAWNS[i].color}, ${config.seats[i].type === 'human' ? 'humain' : 'IA niveau ' + config.seats[i].level}">
+    <header>${tokenHTML(i)}<div class="player-identity"><h3>${label(i)}</h3><p>${config.seats[i].type === 'human' ? 'Humain' : `IA · niveau ${config.seats[i].level}`}</p></div></header>
     <div class="wall-tally" aria-label="${player.walls} barrières restantes">${'<i aria-hidden="true"></i>'.repeat(player.walls)}</div>
-    <p>${ARROWS[player.goal]} Arrivée vers ${GOALS[player.goal]}</p></section>`).join('');
-  for (const goal of ['N', 'E', 'S', 'W']) {
-    const i = state.players.findIndex(player => player.goal === goal), element = $(`goal-${goal}`);
-    element.hidden = i < 0;
-    if (i >= 0) { element.innerHTML = `<span>${i + 1}</span>`; element.setAttribute('aria-label', `Arrivée du ${label(i)}`); }
+    <span class="player-direction" role="img" aria-label="Arrivée vers ${GOALS[player.goal]}">${ARROWS[player.goal]}</span></section>`).join('');
+  for (const side of Object.keys(OPPOSITE)) {
+    const i = state.players.findIndex(player => player.goal === OPPOSITE[side]);
+    const marker = $(`start-${side}`);
+    marker.hidden = i < 0;
+    marker.className = `start-marker start-${side.toLowerCase()}`;
+    if (i >= 0) {
+      marker.classList.add(`finish-${i}`);
+      marker.setAttribute('aria-label', `Départ du ${label(i)}, pion ${PAWNS[i].color}`);
+    }
   }
   document.body.classList.toggle('thinking', thinking);
   statusNode.textContent = state.winner !== null ? `${label(state.winner)} a trouvé son chemin !` : !active ? 'À deux ou à quatre, chacun son chemin.' : thinking ? `${label(state.turn)} réfléchit…` : config.seats[state.turn].type === 'ai' ? `${label(state.turn)} va jouer…` : `${label(state.turn)} — à toi de jouer`;
@@ -158,10 +171,10 @@ function attemptWall(wall, origin) {
   if (error) { showPreview(wall); message(error, true); return; }
   perform({ type: 'wall', ...wall }, origin);
 }
-function sizeWallGhost(ghost) {
-  const size = board.getBoundingClientRect().width;
-  ghost.style.width = `${size * (orientation === 'h' ? .215 : .023)}px`;
-  ghost.style.height = `${size * (orientation === 'h' ? .023 : .215)}px`;
+function sizeWallGhost(ghost, direction = orientation) {
+  const size = board.clientWidth;
+  ghost.style.width = `${size * (direction === 'h' ? .215 : .023)}px`;
+  ghost.style.height = `${size * (direction === 'h' ? .023 : .215)}px`;
 }
 function beginDrag(event, kind, source) {
   if (!humanTurn() || drag || event.button !== 0 || (kind === 'wall' && !state.players[state.turn].walls) || (kind === 'move' && interaction === 'wall')) return;
@@ -188,7 +201,7 @@ document.addEventListener('pointermove', event => {
     if (drag.kind === 'move') { ghost.innerHTML = pieceHTML(state.turn); ghost.style.width = `${drag.rect.width}px`; }
     else sizeWallGhost(ghost);
     document.body.append(ghost); drag.ghost = ghost; drag.source.classList.add('drag-source'); document.body.classList.add('dragging');
-    drag.sound = audio.startSlide({ piece: state.turn });
+    if (drag.kind === 'move') drag.sound = audio.startSlide({ piece: state.turn });
   }
   if (!drag.ghost) return;
   event.preventDefault();
@@ -200,7 +213,9 @@ document.addEventListener('pointermove', event => {
 }, { passive: false });
 document.addEventListener('pointerup', event => {
   if (!drag || drag.pointer !== event.pointerId) return;
-  const held = drag, moved = Boolean(held.ghost), origin = { x: event.clientX, y: event.clientY };
+  const held = drag, moved = Boolean(held.ghost);
+  const origin = { x: event.clientX, y: event.clientY, slide: held.sound };
+  held.sound = null;
   cancelDrag();
   if (!moved) {
     // A tap toggles taking/returning the wall in the click handler below.
@@ -212,7 +227,7 @@ document.addEventListener('pointerup', event => {
   else {
     const to = cellAt(origin.x, origin.y);
     if (humanTurn() && Q.moves(state).includes(to)) perform({ type: 'move', to }, origin);
-    else message('Ce déplacement n’est pas possible.', true);
+    else { origin.slide?.stop(); message('Ce déplacement n’est pas possible.', true); }
   }
 });
 document.addEventListener('pointercancel', cancelDrag);
@@ -236,18 +251,34 @@ document.addEventListener('keydown', () => audio.unlock(), { capture: true });
 async function animateAction(action, origin) {
   if (action.type === 'pass') return;
   const rect = board.getBoundingClientRect(), actor = state.turn;
-  const source = action.type === 'move' ? board.querySelector(`[data-player="${actor}"]`) : $('wall-source');
+  const movingPawn = action.type === 'move';
+  const soundPiece = movingPawn ? actor : QuoridorSounds.BARRIER;
+  const source = movingPawn ? board.querySelector(`[data-player="${actor}"]`) : $('wall-source');
   const fromRect = source.getBoundingClientRect();
   const from = origin || { x: fromRect.left + fromRect.width / 2, y: fromRect.top + fromRect.height / 2 };
-  const to = action.type === 'move' ? { x: rect.left + (action.to % 9 + .5) / 9 * rect.width, y: rect.top + (Math.floor(action.to / 9) + .5) / 9 * rect.height } : { x: rect.left + (action.c + 1) / 9 * rect.width, y: rect.top + (action.r + 1) / 9 * rect.height };
-  if (reducedMotion.matches) { audio.place({ piece: actor }); return; }
+  const column = movingPawn ? action.to % 9 + .5 : action.c + 1;
+  const row = movingPawn ? Math.floor(action.to / 9) + .5 : action.r + 1;
+  const to = {
+    x: rect.left + board.clientLeft + column * board.clientWidth / 9,
+    y: rect.top + board.clientTop + row * board.clientHeight / 9
+  };
+  if (reducedMotion.matches) {
+    if (origin?.slide) origin.slide.stop({ landed: true });
+    else audio.place({ piece: soundPiece });
+    return;
+  }
   const ghost = document.createElement('div');
-  ghost.className = action.type === 'move' ? `pawn drag-ghost finish-${actor}` : 'barrier drag-ghost';
-  if (action.type === 'move') { ghost.innerHTML = pieceHTML(actor); ghost.style.width = `${fromRect.width}px`; source.classList.add('drag-source'); }
-  else { ghost.style.width = `${rect.width * (action.o === 'h' ? .215 : .023)}px`; ghost.style.height = `${rect.height * (action.o === 'h' ? .023 : .215)}px`; }
+  ghost.className = movingPawn ? `pawn drag-ghost finish-${actor}` : 'barrier drag-ghost';
+  if (movingPawn) {
+    ghost.innerHTML = pieceHTML(actor);
+    ghost.style.width = `${fromRect.width}px`;
+  } else sizeWallGhost(ghost, action.o);
+  ghost.style.left = `${from.x}px`;
+  ghost.style.top = `${from.y}px`;
+  source.classList.add('drag-source');
   document.body.append(ghost);
   const duration = origin ? 180 : 440, started = performance.now();
-  const slide = audio.startSlide({ piece: actor });
+  const slide = movingPawn ? (origin?.slide ?? audio.startSlide({ piece: soundPiece })) : null;
   let last = from, lastTime = started;
   await new Promise(resolve => {
     function step(now) {
@@ -260,13 +291,13 @@ async function animateAction(action, origin) {
     }
     requestAnimationFrame(step);
   });
-  slide?.stop({ landed: true }); if (!slide) audio.place({ piece: actor });
+  slide?.stop({ landed: true }); if (!slide) audio.place({ piece: soundPiece });
   ghost.remove(); source.classList.remove('drag-source');
 }
 async function perform(action, origin) {
-  if (!active || animating || state.winner !== null || dialogsOpen()) return;
+  if (!active || animating || state.winner !== null || dialogsOpen()) { origin?.slide?.stop(); return; }
   let next;
-  try { next = Q.apply(state, action); } catch (error) { message(error.message, true); return; }
+  try { next = Q.apply(state, action); } catch (error) { origin?.slide?.stop(); message(error.message, true); return; }
   cancelAI(); animating = true; clearPreview(); updateInteractions();
   const before = state, actor = state.turn;
   try { await animateAction(action, origin); }
@@ -276,7 +307,7 @@ async function perform(action, origin) {
   if (state.winner !== null) {
     $('winner-pawn').innerHTML = tokenHTML(state.winner);
     $('win-title').textContent = `${label(state.winner)} gagne !`;
-    $('win-text').textContent = `L’écrou ${FINISHES[state.winner].toLowerCase()} a rejoint son bord d’arrivée.`;
+    $('win-text').textContent = `Le pion ${PAWNS[state.winner].color} a rejoint son bord d’arrivée.`;
     win.showModal(); updateInteractions();
   } else scheduleTurn();
 }
@@ -315,7 +346,9 @@ $('undo').addEventListener('click', () => {
 });
 
 function selectedCount() { return Number(document.querySelector('input[name="count"]:checked').value); }
-function buildSeats(seats = config.seats) {
+let setupSeats;
+let editingSettings = false;
+function buildSeats(seats) {
   const count = selectedCount();
   $('seat-settings').innerHTML = Array.from({ length: count }, (_, i) => `<div class="seat-row">
     <div class="seat-heading">${tokenHTML(i)}<strong>${label(i)}</strong></div>
@@ -328,18 +361,28 @@ function buildSeats(seats = config.seats) {
   const previousStarter = $('starter').value || config.starter;
   $('starter').innerHTML = '<option value="random">Tirage au sort</option>' + Array.from({ length: count }, (_, i) => `<option value="${i}">${label(i)}</option>`).join('');
   $('starter').value = previousStarter === 'random' || Number(previousStarter) < count ? previousStarter : '0';
-  $('apply-settings').hidden = !active || count !== state.players.length;
-  $('setup-note').textContent = active ? count === state.players.length ? 'Appliquer conserve la partie. Commencer remet les pions au départ.' : 'Changer le nombre de joueurs commence une nouvelle partie.' : 'Tu peux mélanger les joueurs humains et les IA, ou les laisser jouer entre elles.';
+  $('apply-settings').hidden = !editingSettings || count !== state.players.length;
 }
-function readSeats() { return Array.from({ length: 4 }, (_, i) => ({ type: $(`controller-${i}`)?.value || config.seats[i].type, level: Number($(`level-${i}`)?.value || config.seats[i].level) })); }
-document.querySelectorAll('input[name="count"]').forEach(radio => radio.addEventListener('change', () => buildSeats(readSeats())));
-function openSetup() {
+function readSeats() {
+  return setupSeats.map((seat, i) => ({
+    type: $(`controller-${i}`)?.value ?? seat.type,
+    level: Number($(`level-${i}`)?.value ?? seat.level)
+  }));
+}
+document.querySelectorAll('input[name="count"]').forEach(radio => radio.addEventListener('change', () => {
+  setupSeats = readSeats();
+  buildSeats(setupSeats);
+}));
+function openSetup(mode = 'new') {
   if (animating) return;
   cancelAI(); cancelDrag(); audio.stopAll();
+  editingSettings = active && mode === 'settings';
+  setupSeats = config.seats;
+  $('setup-title').textContent = mode === 'settings' ? 'Réglages' : 'Nouvelle partie';
   document.querySelector(`input[name="count"][value="${config.count}"]`).checked = true;
   $('sound-enabled').checked = config.sound; $('sound-volume').value = config.volume; $('sound-output').textContent = `${config.volume} %`;
-  $('starter').value = config.starter; buildSeats();
-  $('start-game').textContent = active ? 'Commencer' : 'Jouer';
+  $('starter').value = config.starter; buildSeats(setupSeats);
+  $('start-game').textContent = editingSettings ? 'Nouvelle partie' : active ? 'Commencer' : 'Jouer';
   setup.showModal(); render();
 }
 function collectSettings() {
@@ -354,8 +397,8 @@ $('setup-form').addEventListener('submit', event => {
 });
 $('apply-settings').addEventListener('click', () => { if (selectedCount() !== state.players.length) return; cancelAI(); collectSettings(); setup.close(); render(); scheduleTurn(); });
 $('sound-volume').addEventListener('input', () => { $('sound-output').textContent = `${$('sound-volume').value} %`; });
-$('settings-open').addEventListener('click', openSetup);
-$('new-game').addEventListener('click', openSetup);
+$('settings-open').addEventListener('click', () => openSetup('settings'));
+$('new-game').addEventListener('click', () => openSetup());
 $('play-again').addEventListener('click', () => { win.close(); openSetup(); });
 $('rules-open').addEventListener('click', () => { cancelAI(); cancelDrag(); rules.showModal(); updateInteractions(); });
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => $(button.dataset.close).close()));
