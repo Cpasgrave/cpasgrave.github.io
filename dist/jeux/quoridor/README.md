@@ -4,7 +4,7 @@ Jeu statique, sans serveur de jeu, sans dépendance réseau au lancement. Ouvrir
 `http://127.0.0.1:8876/jeux/quoridor/` avec le serveur local habituel.
 
 - `engine.js` : règles pures, deux ou quatre joueurs, sauts, murs, chemins et victoire.
-- `ai.js` calcule les distances vers chaque bord en tenant compte des barrières, des sauts et de l’ordre des tours. En duel, la recherche utilise minimax avec élagage alpha-bêta. À quatre, MaxN estime pour chaque joueur l’intérêt d’avancer ou de freiner le rival le plus proche de la victoire. Chaque pion garde en mémoire son trajet récent jusqu’à la pose d’une barrière. Les huit niveaux partagent ces règles de course et disposent de budgets de recherche progressifs.
+- `ai.js` calcule les distances vers chaque bord en tenant compte des barrières, des sauts disponibles et de l’ordre des tours. En duel, la recherche utilise minimax avec élagage alpha-bêta. À quatre, MaxN suit les intérêts de chaque joueur, la distance des trois adversaires et leurs réserves. Les huit niveaux partagent la règle de course du pion sans barrière.
 - `ai-worker.js` : calcul hors du fil de l’interface, annulé à l’ouverture des réglages, lors d’un retour en arrière ou du changement de partie.
 - `app.js` : interface, configuration individuelle, glisser-déposer, clavier, animations et historique. Les réglages sont mémorisés localement ; les parties ne le sont pas.
 - `style.css` : matériaux, couleurs des joueurs et mise en page adaptative.
@@ -38,6 +38,23 @@ coup légal passe automatiquement son tour ; cette convention est indiquée dans
 les règles de l’adaptation.
 
 Vérification depuis la racine du dépôt : `node --test tests/quoridor.test.cjs`.
+
+### Stratégie et comparaison des versions
+
+Quand un joueur a épuisé sa réserve, seuls les pas ou sauts légaux qui laissent la distance de marche minimale jusqu’à son bord sont candidats. Les barrières en place sont fixes et les positions des autres pions sont réévaluées au tour suivant. À partir du niveau 4, si plusieurs trajets sont à égalité, l’IA estime de combien une seule barrière adverse pourrait rallonger chacun d’eux.
+
+La valeur des dernières barrières dépend du temps restant avant la première arrivée. À quatre, le score combine la course contre le joueur de tête, les écarts avec ses poursuivants et la réserve propre face au total adverse. La recherche de niveau 6 et plus examine aussi les barrages éloignés sur un chemin complet vers chaque arrivée adverse. Tout mur qui allonge la distance de marche doit couper ce chemin.
+
+À quatre, aux niveaux 6 à 8, l’IA évalue aussi le détour qu’une seule barrière adverse pourrait lui imposer après son déplacement. Une barrière défensive qui préserve sa sortie en occupant la rainure dangereuse peut ainsi entrer dans les coups retenus.
+
+Le calcul de distance et l’évaluation des réserves s’appuient sur les questions étudiées dans [Mastering Quoridor, de Lisa Glendenning](https://www.labri.fr/perso/renault/working/teaching/projets/files/glendenning_ugrad_thesis.pdf). La sélection des murs à explorer et les comparaisons entre moteurs ont aussi été éclairées par [le projet de gorisanson](https://github.com/gorisanson/quoridor-ai). Pour le jeu à quatre, [Wilson, Zuckerman et Nau](https://www.ifaamas.org/Proceedings/aamas2011/papers/D2_G54.pdf) étudient l’effet des intérêts de plusieurs joueurs sur les choix de recherche. Les coefficients du jeu sont propres à cette adaptation.
+
+Pour rejouer une comparaison entre versions depuis le dépôt, placer l’ancien `ai.js` et son `engine.js` côte à côte dans un dossier séparé. Les deux moteurs jouent au niveau 8, disposent du même temps par coup et échangent leurs places sur chaque ouverture. Exemples pour six duels puis huit parties à quatre avec un moteur isolé face à trois adversaires de l’autre version.
+
+```sh
+node tools/quoridor-arena.cjs ../ancienne-version/ai.js 2 1200 3
+node tools/quoridor-arena.cjs ../ancienne-version/ai.js 4 1200 1 0 solo
+```
 
 `tests/quoridor-interactions.js` vérifie dans le contexte JavaScript de la page les
 nouveaux gestes, l’absence de points et de compteurs, le retour en réserve et les

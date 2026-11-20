@@ -86,7 +86,7 @@ test('a temporarily immobilized player places a wall if possible, and only other
 test('tactical levels block an opponent one move from victory', () => {
   for(const count of [2,4]) {
     const s=Q.createGame(count);const rival=count===2?1:2;
-    s.players[0].position=60;s.players[rival].position=67;
+    s.players[0].position=60;s.players[rival].position=67;s.players[0].walls=1;
     for(const level of [3,5,8]) {
       const result=AI.choose(s,level,{budget:80,random:()=>.5});
       assert.equal(result.action.type,'wall');
@@ -100,6 +100,10 @@ test('complete games produce legal moves, preserve every route, and finish', () 
     let s=Q.createGame(count), history=[];
     for(let turn=0;turn<220 && s.winner===null;turn++) {
       const result=AI.choose(s,level,{budget:35,random:()=>.5,trails:AI.pawnTrails(s,history)});
+      if (s.players[s.turn].walls === 0 && result.action.type === 'move') {
+        const distanceAfter = to => Q.distance(Q.apply(s, { type: 'move', to }), s.turn);
+        assert.equal(distanceAfter(result.action.to), Math.min(...Q.moves(s).map(distanceAfter)));
+      }
       history.push(s); s=Q.apply(s,result.action);
       assert.equal(new Set(s.players.map(p=>p.position)).size,count);
       for(let i=0;i<count;i++)assert.ok(Number.isFinite(Q.distance(s,i)));
@@ -152,4 +156,55 @@ test('a previous square is still playable when it is the only way out', () => {
   assert.deepEqual(Q.moves(state), [43]);
   const { action } = AI.choose(state, 8, { trails: [[], [], [], [43]] });
   assert.deepEqual(action, { type: 'move', to: 43 });
+});
+
+test('an empty-handed orange advances in the tunnel even when returning would delay a loss', () => {
+  let state = Q.createGame(4);
+  [75, 32, 23, 41].forEach((pos, i) => { state.players[i].position = pos; });
+  const walls = '0h34 1h44 2h62 3h75 0v02 1v65 2h01 3h70 0v53 1h57 3v10 0h11 3v60 0h77 3h50';
+  for (const [player, o, r, c] of walls.split(' ')) {
+    state.turn = Number(player);
+    state = Q.apply(state, wall(Number(r), Number(c), o));
+  }
+  state.turn = 3;
+  assert.deepEqual(state.players.map(p => p.walls), [0, 2, 3, 0]);
+  assert.deepEqual(asSet(Q.moves(state)), asSet([40, 42]));
+  for (let level = 1; level <= 8; level++) {
+    assert.deepEqual(AI.choose(state, level, { trails: [[], [], [], [42]] }).action, { type: 'move', to: 40 });
+  }
+});
+
+test('four-player wall evaluation credits a detour for the leader and a second rival', () => {
+  let state = Q.createGame(4);
+  const opening = [67,37,3,43,'v34',38,'h36','h46',58,39,'v12','h14',57,40,'v52','h33','v04','h24',12,'h55','v35',49,21,44,48,50];
+  for (const a of opening) {
+    const action = typeof a === 'number' ? { type: 'move', to: a } : wall(+a[1], +a[2], a[0]);
+    state = Q.apply(state, action);
+  }
+  const distances = s => s.players.map((_, i) => Q.distance(s, i));
+  assert.deepEqual(distances(state), [6, 3, 7, 10]);
+  // With no search time the static assessment alone must see this wall.
+  const { action } = AI.choose(state, 8, { budget: 0 });
+  assert.equal(action.type, 'wall');
+  assert.deepEqual(distances(Q.apply(state, action)), [6, 7, 7, 11]);
+});
+
+test('an empty-handed duelist chooses the less exposed of two seven-step finishes', () => {
+  let state = Q.createGame(2);
+  state.players[0].position = 57;
+  state.players[1].position = 13;
+  const walls = 'h75 v73 v71 h31 h45 v07 h43 h66 v35 v14 v47 v44 h16 h24 v10'.split(' ');
+  for (const [i, [o, r, c]] of walls.entries()) {
+    state.turn = i % 3 === 1 ? 1 : 0;
+    state = Q.apply(state, wall(+r, +c, o));
+  }
+  state.turn = 0;
+  assert.deepEqual(state.players.map(p => p.walls), [0, 5]);
+  for (const [to, expectedDelay] of [[48, 4], [56, 1]]) {
+    const next = Q.apply(state, { type: 'move', to });
+    assert.equal(Q.distance(next, 0), 7);
+    const delays = Q.legalWalls(next).map(w => Q.distance(Q.apply(next, w), 0) - 7);
+    assert.equal(Math.max(...delays), expectedDelay);
+  }
+  assert.deepEqual(AI.choose(state, 8, { budget: 0 }).action, { type: 'move', to: 56 });
 });

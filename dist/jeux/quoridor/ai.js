@@ -57,14 +57,37 @@ const QuoridorAI = (() => {
       const turns = walking + Math.min(2, 1 + nextDistance - walking) * (wait ? .6 : 1);
       arrivals.push((immediate[i] ? 1 : turns) + wait / count);
     }
-    const scores = state.players.map((p, i) => {
-      const rivals = arrivals.filter((_, j) => j !== i);
-      const reserve = state.players.filter((_, j) => j !== i).reduce((sum, other) => sum + other.walls, 0) / rivals.length;
-      const lead = Math.min(...rivals) - arrivals[i];
-      if (count === 2) return lead + .16 * (p.walls - reserve);
-      // In a free-for-all, slowing down a trailing rival has little value.
-      // Giving up our own progress to trade walls also benefits two bystanders.
-      return lead - .34 * arrivals[i] + .08 * rivals.reduce((a, b) => a + b, 0) / rivals.length + .16 * (p.walls - reserve);
+    // A reserve buys future turns only while the race is still open. The last
+    // wall also buys the option of answering a threat anywhere on the board.
+    const horizon = Math.min(1, Math.min(...arrivals) / 4);
+    const totalWalls = state.players.reduce((total, p) => total + p.walls, 0);
+    const strength = state.players.map((p, i) => {
+      const stock = .72 * p.walls + .75 * Math.min(p.walls, 2) + (p.walls ? 1.15 : 0);
+      const opposingWalls = totalWalls - p.walls;
+      const exposure = Math.log2(1 + opposingWalls);
+      const field = board.fields[i], here = field[p.position];
+      // A choice of forward routes makes it harder for one wall to seal
+      // the next step. Look at the actual legal exits, including jumps.
+      const exits = moves[i].filter(to => field[to] < here).length;
+      const risk = exposure * (exits > 1 ? .16 : .32);
+      return -arrivals[i] + horizon * (stock - risk);
+    });
+    if (count === 2) {
+      const margin = strength[0] - strength[1];
+      return { moves, immediate, scores: [margin, -margin] };
+    }
+    const scores = strength.map((own, i) => {
+      // Rank opponents by time to finish, including seat order. Explicitly
+      // value the second and third rival as well: a single wall may slow two.
+      const rivals = [0, 1, 2, 3].filter(j => i !== j).sort((a, b) => arrivals[a] - arrivals[b]);
+      const [leader, second, third] = rivals;
+      // A continuous blend near a tie avoids abrupt score changes when
+      // players exchange the lead. Stocks affect power separately from ETA.
+      const margin = arrivals[leader] - arrivals[i];
+      const gap = j => Math.min(4, arrivals[j] - arrivals[leader]);
+      const raceLead = margin + .28 * gap(second) + .14 * gap(third);
+      const rivalPower = Math.max(...rivals.map(j => strength[j]));
+      return .58 * raceLead + .50 * (own - rivalPower) + .35 * own;
     });
     return { moves, immediate, scores };
   }
@@ -92,7 +115,7 @@ const QuoridorAI = (() => {
     const ago = trails[actor].lastIndexOf(to);
     const recency = trails[actor].length - ago;
     const repetition = ago < 0 || progress > 0 ? 0 : 2.8 / recency;
-    return .22 * progress - repetition;
+    return .07 * progress - repetition;
   }
 
   function wallsAcross(a, b, ids) {
@@ -108,15 +131,34 @@ const QuoridorAI = (() => {
 
   // At the root consider every possible placement. In replies concentrate on
   // routes that opponents can use next, including both segments of a jump.
-  function replyWalls(state, board) {
+  function replyWalls(state, board, fullRoutes) {
     const ids = new Set(), occupied = new Set(state.players.map(p => p.position));
     for (const [i, p] of state.players.entries()) {
       if (i === state.turn) continue;
       const field = board.fields[i], from = p.position;
+      // A wall that lengthens the walking distance must cut EVERY shortest
+      // route, so it must cut this one too. Two wall slots can cover each edge.
+      // This includes remote bottlenecks while keeping the reply set small.
+      if (fullRoutes) {
+        let here = from;
+        while (field[here] > 0) {
+          const next = board.edges[here].find(to => to >= 0 && field[to] < field[here]);
+          wallsAcross(here, next, ids);
+          here = next;
+        }
+      }
       for (const next of board.edges[from]) {
         if (next < 0) continue;
-        if (field[next] < field[from] || occupied.has(next)) wallsAcross(from, next, ids);
+        if (field[next] < field[from]) {
+          wallsAcross(from, next, ids);
+          // Also consider a barrier one step ahead, before the opponent
+          // reaches a junction or can secure it with a crossing wall.
+          for (const after of board.edges[next]) {
+            if (after >= 0 && field[after] < field[next]) wallsAcross(next, after, ids);
+          }
+        }
         if (occupied.has(next)) {
+          wallsAcross(from, next, ids);
           for (const landing of board.edges[next]) {
             if (landing >= 0 && field[landing] < field[from]) wallsAcross(next, landing, ids);
           }
@@ -164,6 +206,32 @@ const QuoridorAI = (() => {
       return next;
     }
 
+    function exposedRoutes(parent, board, destinations) {
+      const actor = parent.turn, field = board.fields[actor];
+      const risks = new Map(destinations.map(to => [to, 0]));
+      const threats = [];
+      const rivals = parent.players.map((_, i) => i).filter(i => i !== actor && parent.players[i].walls);
+      if (!rivals.length) return { risks, threats };
+      for (const wall of WALLS) {
+        if (Q.wallError(parent, wall, rivals[0], false)) continue;
+        const after = boardWithWall({ ...parent, walls: [...parent.walls, wall] });
+        if (parent.players.some((p, i) => i !== actor && after.fields[i][p.position] === UNREACHABLE)) continue;
+        const cost = Math.min(...rivals.map(i => {
+          const from = parent.players[i].position;
+          return after.fields[i][from] - board.fields[i][from];
+        }));
+        for (const to of destinations) {
+          const remaining = after.fields[actor][to];
+          if (remaining === UNREACHABLE) continue;
+          const delay = remaining - field[to] - cost;
+          risks.set(to, Math.max(risks.get(to), delay));
+          if (to === parent.players[actor].position && delay >= 2) threats.push({ wall, delay, blocker: rivals[0] });
+        }
+      }
+      threats.sort((a, b) => b.delay - a.delay);
+      return { risks, threats };
+    }
+
     function candidates(parent, board, situation, trails, atRoot) {
       const actor = parent.turn, pawn = parent.players[actor], moves = situation.moves[actor];
       const win = moves.find(to => Q.goalReached(to, pawn.goal));
@@ -183,21 +251,44 @@ const QuoridorAI = (() => {
         const action = { type: 'move', to: win };
         return [{ action, state: Q.apply(parent, action, false), bias: 0, rank: WIN, danger: 0 }];
       }
-      for (const to of moves) {
+      // With an empty reserve the race is compulsory, even in a forced loss.
+      // Compare the remaining walk after the currently legal step or jump.
+      // Other pawns may move before the next turn; walls are permanent.
+      const field = board.fields[actor];
+      const shortest = pawn.walls ? Infinity : moves.reduce((best, to) => Math.min(best, field[to]), Infinity);
+      const destinations = moves.filter(to => field[to] <= shortest);
+      // When two shortest routes tie, test what one actual legal enemy wall
+      // could do to either route. No opposing stock means no wall exposure.
+      const assessExposure = (!duel && level >= 6 && pawn.walls > 0) ||
+        (!pawn.walls && level >= 4 && destinations.length > 1);
+      const exposure = atRoot && assessExposure ? exposedRoutes(parent, board, [pawn.position, ...destinations]) : null;
+      const currentRisk = exposure?.risks.get(pawn.position) ?? 0;
+      for (const to of destinations) {
         const action = { type: 'move', to };
         const next = Q.apply(parent, action, false);
         let bias = moveBias(board, parent, to, trails);
+        if (exposure) {
+          const risk = exposure.risks.get(to);
+          bias += pawn.walls ? .36 * (Math.min(8, currentRisk) - Math.min(8, risk)) : -.3 * risk;
+        }
         if (atRoot && previousPositions.size && previousPositions.has(Q.key(next))) bias -= 1.5;
         add(action, next, board, bias);
       }
       if (pawn.walls && (level > 1 || !moves.length)) {
-        const placements = atRoot || !moves.length ? WALLS : replyWalls(parent, board);
+        const placements = atRoot || !moves.length ? WALLS : replyWalls(parent, board, level >= 6);
         for (const wall of placements) {
           if (!atRoot) checkTime();
           if (Q.wallError(parent, wall, actor, false)) continue;
           const next = Q.apply(parent, wall, false), geometry = boardWithWall(next);
           if (next.players.some((p, i) => geometry.fields[i][p.position] === UNREACHABLE)) continue;
-          add(wall, next, geometry, 0);
+          // A defensive wall can secure a corridor by occupying or crossing
+          // the very slot an opponent needs to close its exit.
+          let protection = 0;
+          if (exposure?.threats.length) {
+            const stillOpen = exposure.threats.find(t => !Q.wallError(next, t.wall, t.blocker, false));
+            protection = Math.max(0, Math.min(8, currentRisk) - Math.min(8, stillOpen?.delay ?? 1));
+          }
+          add(wall, next, geometry, .36 * protection);
         }
       }
       if (!ranked.length) {
@@ -211,6 +302,12 @@ const QuoridorAI = (() => {
       const selected = safe.slice(0, width);
       const bestMove = safe.find(c => c.action.type === 'move');
       if (bestMove && !selected.includes(bestMove)) selected[selected.length - 1] = bestMove;
+      if (!duel && level >= 6) {
+        const wall = safe.find(c => c.action.type === 'wall');
+        if (wall && wall.rank >= safe[0].rank - 2 && !selected.some(c => c.action.type === 'wall')) {
+          selected[selected.length - 1] = wall;
+        }
+      }
       return selected;
     }
 
@@ -224,7 +321,14 @@ const QuoridorAI = (() => {
 
     function search(child, remaining, ply, trails, alpha, beta) {
       checkTime();
-      if (!remaining) return child.info.scores;
+      if (!remaining) {
+        // The next seat moves before anyone can intervene. A winning step
+        // at the search horizon is just as certain as one inside the tree.
+        if (child.info.immediate[child.state.turn]) {
+          return terminal({ ...child.state, winner: child.state.turn }, child.board, ply + 1);
+        }
+        return child.info.scores;
+      }
       const actor = child.state.turn;
       const choices = child.replies ??= candidates(child.state, child.board, child.info, trails, false);
       let best = null;
@@ -253,7 +357,7 @@ const QuoridorAI = (() => {
     const board = readBoard(state);
     const roots = candidates(state, board, race(state, board), initialTrails, true);
     let best = roots[0], depth = 1;
-    if (best.state.winner === null) {
+    if (roots.length > 1 && best.state.winner === null) {
       const jitter = new Map(roots.map(c => [c, settings.noise ? (rng() - .5) * settings.noise : 0]));
       const noisyRank = c => c.rank + jitter.get(c);
       best = roots.reduce((a, b) => noisyRank(a) >= noisyRank(b) ? a : b);
@@ -268,6 +372,8 @@ const QuoridorAI = (() => {
           }
         } catch (error) { if (error !== timeout) throw error; break; }
         best = choice; depth = d;
+        roots.splice(roots.indexOf(best), 1);
+        roots.unshift(best);
         if (highest > WIN / 2) break;
       }
     }

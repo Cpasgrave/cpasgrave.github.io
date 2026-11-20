@@ -329,7 +329,7 @@ function scheduleTurn() {
     aiTimer = setTimeout(() => { if (id === epoch) perform(action); }, Math.max(0, 550 - (performance.now() - began)));
   };
   try {
-    worker = new Worker('ai-worker.js?v=8-arrivees');
+    worker = new Worker('ai-worker.js?v=9-strategie');
     worker.onmessage = event => { if (event.data.id === id) accept(event.data); };
     worker.onerror = event => { event.preventDefault(); accept(null); };
     watchdog = setTimeout(() => accept(null), 6000);
