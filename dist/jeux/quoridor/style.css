@@ -110,14 +110,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .finish-2{--player:#4e6437}
 .finish-3{--player:#ac5024}
 .pawn img,.pawn-token img{object-fit:contain}
-.start-marker{
-  position:absolute;z-index:2;width:16px;aspect-ratio:1;border-radius:50%;
-  background:var(--player);
+.goal-marker{
+  --diameter:min(10%,calc(2 * (var(--frame-padding) - 2px)));
+  position:absolute;z-index:2;pointer-events:none;background:var(--player);
 }
-.start-n{left:50%;top:calc(var(--frame-padding) / 2);transform:translate(-50%,-50%)}
-.start-s{left:50%;bottom:calc(var(--frame-padding) / 2);transform:translate(-50%,50%)}
-.start-w{left:calc(var(--frame-padding) / 2);top:50%;transform:translate(-50%,-50%)}
-.start-e{right:calc(var(--frame-padding) / 2);top:50%;transform:translate(50%,-50%)}
+.goal-n,.goal-s{left:50%;width:var(--diameter);aspect-ratio:2;transform:translateX(-50%)}
+.goal-w,.goal-e{top:50%;height:var(--diameter);aspect-ratio:1/2;transform:translateY(-50%)}
+.goal-n{top:2px;border-radius:0 0 50% 50% / 0 0 100% 100%}
+.goal-s{bottom:2px;border-radius:50% 50% 0 0 / 100% 100% 0 0}
+.goal-w{left:2px;border-radius:0 100% 100% 0 / 0 50% 50% 0}
+.goal-e{right:2px;border-radius:100% 0 0 100% / 50% 0 0 50%}
 .player-card{
   display:grid;grid-template-columns:minmax(0,1fr) auto;
   grid-template-areas:'identity direction' 'walls direction';column-gap:6px;
@@ -171,8 +173,7 @@ html:has(#setup-dialog[open]){overflow:hidden}
   .copper-surface i{background-size:max(100vw, 86vh) auto}
   .copper-surface i:nth-child(even){display:none}
   .masthead{gap:15px;margin-bottom:20px}
-  .board-frame{--frame-padding:13px;border-radius:9px}
-  .start-marker{width:9px}
+  .board-frame{--frame-padding:clamp(15px,4.5vw,31px);border-radius:9px}
   .game-layout{display:flex;flex-direction:column;gap:14px}
   .workbench{display:contents}
   .players{order:0;position:sticky;top:6px;z-index:20;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:7px}

@@ -11,7 +11,6 @@ const PAWNS = [
 ];
 const GOALS = { N: 'le haut', E: 'la droite', S: 'le bas', W: 'la gauche' };
 const ARROWS = { N: '↑', E: '→', S: '↓', W: '←' };
-const OPPOSITE = { N: 'S', E: 'W', S: 'N', W: 'E' };
 const STORAGE = 'cepagrave-quoridor-settings-v1';
 const defaults = () => ({ count: 2, seats: Array.from({ length: 4 }, (_, i) => ({ type: i === 0 ? 'human' : 'ai', level: 3 })), sound: true, volume: 30, starter: '0' });
 let config = defaults();
@@ -124,14 +123,14 @@ function render() {
     <header>${tokenHTML(i)}<div class="player-identity"><h3>${label(i)}</h3><p>${config.seats[i].type === 'human' ? 'Humain' : `IA · niveau ${config.seats[i].level}`}</p></div></header>
     <div class="wall-tally" aria-label="${player.walls} barrières restantes">${'<i aria-hidden="true"></i>'.repeat(player.walls)}</div>
     <span class="player-direction" role="img" aria-label="Arrivée vers ${GOALS[player.goal]}">${ARROWS[player.goal]}</span></section>`).join('');
-  for (const side of Object.keys(OPPOSITE)) {
-    const i = state.players.findIndex(player => player.goal === OPPOSITE[side]);
-    const marker = $(`start-${side}`);
+  for (const side of Object.keys(GOALS)) {
+    const i = state.players.findIndex(player => player.goal === side);
+    const marker = $(`goal-${side}`);
     marker.hidden = i < 0;
-    marker.className = `start-marker start-${side.toLowerCase()}`;
+    marker.className = `goal-marker goal-${side.toLowerCase()}`;
     if (i >= 0) {
       marker.classList.add(`finish-${i}`);
-      marker.setAttribute('aria-label', `Départ du ${label(i)}, pion ${PAWNS[i].color}`);
+      marker.setAttribute('aria-label', `Arrivée du ${label(i)}, pion ${PAWNS[i].color}`);
     }
   }
   document.body.classList.toggle('thinking', thinking);
@@ -321,18 +320,20 @@ function scheduleTurn() {
   }
   thinking = true; render();
   const id = epoch, began = performance.now(), currentState = state;
+  const level = config.seats[state.turn].level;
+  const trails = QuoridorAI.pawnTrails(state, history.slice(-32).map(entry => entry.state));
   const accept = result => {
     if (id !== epoch || currentState !== state || dialogsOpen() || !active) return;
     clearTimeout(watchdog); worker?.terminate(); worker = null;
-    const action = result?.action || QuoridorAI.choose(state, 1).action;
+    const action = result?.action || QuoridorAI.choose(state, level, { trails, budget: 40 }).action;
     aiTimer = setTimeout(() => { if (id === epoch) perform(action); }, Math.max(0, 550 - (performance.now() - began)));
   };
   try {
-    worker = new Worker('ai-worker.js');
+    worker = new Worker('ai-worker.js?v=8-arrivees');
     worker.onmessage = event => { if (event.data.id === id) accept(event.data); };
     worker.onerror = event => { event.preventDefault(); accept(null); };
     watchdog = setTimeout(() => accept(null), 6000);
-    worker.postMessage({ id, state, level: config.seats[state.turn].level, history: history.slice(-24).map(entry => Q.key(entry.state)) });
+    worker.postMessage({ id, state, level, trails });
   } catch { accept(null); }
 }
 $('undo').addEventListener('click', () => {

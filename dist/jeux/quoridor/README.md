@@ -4,18 +4,18 @@ Jeu statique, sans serveur de jeu, sans dépendance réseau au lancement. Ouvrir
 `http://127.0.0.1:8876/jeux/quoridor/` avec le serveur local habituel.
 
 - `engine.js` : règles pures, deux ou quatre joueurs, sauts, murs, chemins et victoire.
-- `ai.js` : évaluation des courses et barrières, recherche progressive MaxN (minimax à deux), huit niveaux. Les niveaux 3 à 8 prennent en charge les menaces immédiates ; les niveaux supérieurs cherchent plus loin avec un budget accru. La recherche reste heuristique, sans garantie de jeu optimal.
+- `ai.js` calcule les distances vers chaque bord en tenant compte des barrières, des sauts et de l’ordre des tours. En duel, la recherche utilise minimax avec élagage alpha-bêta. À quatre, MaxN estime pour chaque joueur l’intérêt d’avancer ou de freiner le rival le plus proche de la victoire. Chaque pion garde en mémoire son trajet récent jusqu’à la pose d’une barrière. Les huit niveaux partagent ces règles de course et disposent de budgets de recherche progressifs.
 - `ai-worker.js` : calcul hors du fil de l’interface, annulé à l’ouverture des réglages, lors d’un retour en arrière ou du changement de partie.
 - `app.js` : interface, configuration individuelle, glisser-déposer, clavier, animations et historique. Les réglages sont mémorisés localement ; les parties ne le sont pas.
 - `style.css` : matériaux, couleurs des joueurs et mise en page adaptative.
-- `assets/pion-*.webp` : quatre pions en bois sur fond transparent, exportés séparément depuis la planche Imagegen. Les pions, leurs ombres, les flèches et les pastilles de départ restent indépendants du plateau. Les anciens écrous sont conservés dans `assets/nut-steel.png`.
+- `assets/pion-*.webp` : quatre pions en bois sur fond transparent, exportés séparément depuis la planche Imagegen. Les pions, leurs ombres, les flèches et les repères d’arrivée restent indépendants du plateau. Les anciens écrous sont conservés dans `assets/nut-steel.png`.
 - `sound.js` : frottement du bois pour le brun noir, verre pour le beige, güiro pour le vert et note d’archet glissée pour l’orange. Le son d’une barrière se joue à la pose. Chaque mouvement produit une variation.
 - `assets/maple-light.png` : texture photographique d’érable clair pour les cases et le cadre. Le noyer reste utilisé pour les barrières sombres.
 - `assets/cuivre-martele.webp` : copie WebP de l’image de cuivre martelé fournie pour le fond. L’original PNG est conservé à la racine de l’espace de travail. La couche sombre est réglable en CSS.
 - `assets/bolt-steel.png` : ancien visuel conservé, inutilisé dans la version actuelle.
 
 Les variantes en tôle striée et en papier tressé sont conservées dans la copie locale.
-Les textures sont aplaties. Les pastilles de départ, les flèches, les commandes
+Les textures sont aplaties. Les demi-cercles d’arrivée, les flèches, les commandes
 et les teintes restent éditables en HTML et CSS.
 
 Les polices de Quarto, le noyer du portail et le moteur audio partagé sont réutilisés
@@ -27,8 +27,8 @@ peut être choisie directement. Prendre une barrière bloque les mouvements du p
 la reposer dans la réserve ou annuler le geste les réactive. « Tourner (R) »
 fonctionne au toucher et à la souris ; tourner la réserve ne prend pas la barrière.
 Les stocks sont représentés visuellement et le cadre jaune indique le joueur actif.
-La flèche sur chaque fiche indique le bord à atteindre. La pastille de même couleur
-sur le cadre indique le bord de départ. Sur petit écran, les fiches des joueurs
+La flèche sur chaque fiche indique le bord à atteindre, marqué sur le cadre
+par un demi-cercle de la couleur du pion. Sur petit écran, les fiches des joueurs
 restent au-dessus du plateau, dont le cadre s’affine pour agrandir les cases.
 
 Règles de référence : https://export.gigamic.com/wp-content/uploads/2021/01/INS-RULES-QUORIDOR_10-2016.pdf

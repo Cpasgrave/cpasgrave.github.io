@@ -6,12 +6,12 @@
   <meta name="description" content="Quoridor à deux ou à quatre : joueurs et IA réglables, bois et métal.">
   <meta name="theme-color" content="#3a231a">
   <title>Quoridor · Cépagrave</title>
-  <link rel="stylesheet" href="style.css?v=7-pions-bois">
+  <link rel="stylesheet" href="style.css?v=8-arrivees">
   <script src="engine.js" defer></script>
-  <script src="ai.js" defer></script>
+  <script src="ai.js?v=8-arrivees" defer></script>
   <script src="../quarto/wood-sound.js?v=7-pions-bois" defer></script>
   <script src="sound.js?v=7-pions-bois" defer></script>
-  <script src="app.js?v=7-pions-bois" defer></script>
+  <script src="app.js?v=8-arrivees" defer></script>
 </head>
 <body>
   <div class="copper-surface" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -29,10 +29,10 @@
       <section class="board-column" aria-label="Plateau de Quoridor">
         <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
         <div class="board-frame" id="board-frame">
-          <div class="start-marker start-n" id="start-N" role="img" hidden></div>
-          <div class="start-marker start-e" id="start-E" role="img" hidden></div>
-          <div class="start-marker start-s" id="start-S" role="img" hidden></div>
-          <div class="start-marker start-w" id="start-W" role="img" hidden></div>
+          <div class="goal-marker goal-n" id="goal-N" role="img" hidden></div>
+          <div class="goal-marker goal-e" id="goal-E" role="img" hidden></div>
+          <div class="goal-marker goal-s" id="goal-S" role="img" hidden></div>
+          <div class="goal-marker goal-w" id="goal-W" role="img" hidden></div>
           <div class="board" id="board" aria-label="Plateau de neuf cases sur neuf">
             <div id="cells"></div><div id="wall-slots"></div><div id="walls" aria-hidden="true"></div><div id="pawns"></div>
             <div id="wall-preview" class="wall-target" hidden aria-hidden="true"></div>
@@ -76,7 +76,7 @@
   <dialog id="rules-dialog" class="wood-panel" aria-labelledby="rules-title">
     <button class="close-button" data-close="rules-dialog" aria-label="Fermer les règles">×</button>
     <h2 id="rules-title">Les règles</h2>
-    <p>Atteins le premier le bord opposé à ton départ. À chaque tour, <strong>déplace ton pion ou pose une barrière</strong>.</p>
+    <p>Atteins le premier une case du bord marqué par le demi-cercle de ta couleur. À chaque tour, <strong>déplace ton pion ou pose une barrière</strong>.</p>
     <p>Ton pion avance d’une case, vers le haut, le bas, la gauche ou la droite. Si un pion est juste devant toi, tu peux le sauter. Si un mur, le bord ou un autre pion empêche ce saut, tu peux passer à sa gauche ou à sa droite, à condition que le passage soit libre. On ne saute jamais deux pions d’un coup.</p>
     <p>Une barrière occupe deux intervalles entre les cases. Les barrières ne se croisent pas et ne se chevauchent pas. <strong>Chacun doit garder au moins un chemin vers son arrivée.</strong></p>
     <p>À deux : dix barrières par joueur. À quatre : cinq barrières par joueur, un départ sur chaque côté, puis les tours dans le sens horaire. Le premier arrivé gagne, sans équipes.</p>

@@ -96,15 +96,60 @@ test('tactical levels block an opponent one move from victory', () => {
   }
 });
 test('complete games produce legal moves, preserve every route, and finish', () => {
-  for(const count of [2,4]) for(const level of [1,3,5]) {
+  for(const count of [2,4]) for(const level of [1,3,5,8]) {
     let s=Q.createGame(count), history=[];
     for(let turn=0;turn<220 && s.winner===null;turn++) {
-      const result=AI.choose(s,level,{budget:35,random:()=>.5,history:history.slice(-24)});
-      history.push(Q.key(s)); s=Q.apply(s,result.action);
+      const result=AI.choose(s,level,{budget:35,random:()=>.5,trails:AI.pawnTrails(s,history)});
+      history.push(s); s=Q.apply(s,result.action);
       assert.equal(new Set(s.players.map(p=>p.position)).size,count);
       for(let i=0;i<count;i++)assert.ok(Number.isFinite(Q.distance(s,i)));
       assert.equal(s.players.reduce((sum,p)=>sum+p.walls,0)+s.walls.length,20);
     }
     assert.notEqual(s.winner,null,`${count} players at level ${level} did not finish`);
   }
+});
+
+test('four master AIs: orange takes the clear three-move finish before beige and green', () => {
+  let state = Q.createGame(4, 3);
+  [79, 67, 41, 3].forEach((position, i) => { state.players[i].position = position; });
+  // All twenty barriers are on the board. Orange moves from D9 to D8.
+  // The old master went straight back to D9 and lost to beige by one turn.
+  const placements = 'v43 v34 h36 v31 h60 h53 v20 h32 h62 h21 h42 h30 v35 v51 v63 h50 v23 h24 v52 v22';
+  for (const [o, r, c] of placements.split(' ')) state = Q.apply(state, wall(Number(r), Number(c), o));
+  const history = [], orangeMoves = [];
+  for (const to of [12, 78, 68, 50]) {
+    history.push(state);
+    state = Q.apply(state, { type: 'move', to });
+  }
+  for (let i = 0; i < 9 && state.winner === null; i++) {
+    const { action } = AI.choose(state, 8, { trails: AI.pawnTrails(state, history) });
+    if (state.turn === 3) orangeMoves.push(action.to);
+    history.push(state);
+    state = Q.apply(state, action);
+  }
+  assert.deepEqual(orangeMoves, [11, 10, 9]);
+  assert.equal(state.winner, 3);
+});
+
+test('each pawn remembers its own route across rival turns and reevaluates it after a wall', () => {
+  let state = Q.createGame(4);
+  const history = [];
+  for (const to of [67, 37, 13, 43, 58]) {
+    history.push(state);
+    state = Q.apply(state, { type: 'move', to });
+  }
+  assert.deepEqual(AI.pawnTrails(state, history), [[76, 67], [36], [4], [44]]);
+  history.push(state);
+  state = Q.apply(state, wall(3, 3, 'h'));
+  assert.deepEqual(AI.pawnTrails(state, history), [[], [], [], []]);
+});
+
+test('a previous square is still playable when it is the only way out', () => {
+  const state = Q.createGame(4, 3);
+  state.players[3].position = 42;
+  state.players[3].walls = 0;
+  state.walls = [wall(3, 5, 'v'), wall(3, 6, 'h'), wall(4, 6, 'h')];
+  assert.deepEqual(Q.moves(state), [43]);
+  const { action } = AI.choose(state, 8, { trails: [[], [], [], [43]] });
+  assert.deepEqual(action, { type: 'move', to: 43 });
 });
