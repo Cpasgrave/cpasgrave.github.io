@@ -306,10 +306,10 @@ h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
   top: 44%;
   left: 50%;
   width: 49px;
-  height: 9px;
-  border: 1px solid #d4ac7c;
+  height: 10px;
+  border: 1px solid #e0766d;
   border-radius: 3px;
-  background: linear-gradient(#ebc38a 0%, #b77a51 34%, #69432f 100%);
+  background: linear-gradient(#e36a60 0%, #ab262e 34%, #771823 100%);
   box-shadow: 0 2px 4px #101714b0;
   transform: translate(-50%, -50%) rotate(var(--wall-angle, 0deg));
   transition: transform .15s ease-out;
