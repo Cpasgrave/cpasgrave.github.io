@@ -78,6 +78,7 @@
     let lastStone = game.lastStone;
     let lastWall = null;
     const stock = [...game.stock];
+    const captures = [...game.captures];
     const point = row * size + col;
 
     if (type === 'stone') {
@@ -85,6 +86,12 @@
       if (stones[point]) return { error: 'occupied' };
       stones[point] = turn;
       lastStone = point;
+      const removed = groupsWithoutLiberties(stones, size, edges, other(turn));
+      for (const captured of removed) stones[captured] = 0;
+      if (groupsWithoutLiberties(stones, size, edges, turn).length) {
+        return { error: 'suicide' };
+      }
+      captures[turn] += removed.length;
     } else if (type === 'wall') {
       if (!stock[turn]) return { error: 'stock' };
       if (!inBounds(row, col, size - 1)) return { error: 'edge' };
@@ -92,15 +99,27 @@
         return { error: 'orientation' };
       }
       const horizontal = orientation === 'horizontal';
+      const beside = point + (horizontal ? 1 : size);
+      const across = horizontal ? size : 1;
       const firstEdge = point * 2 + Number(horizontal);
-      const secondEdge = firstEdge + (horizontal ? 2 : 2 * size);
+      const secondEdge = beside * 2 + Number(horizontal);
       if (edges[firstEdge] || edges[secondEdge]) return { error: 'overlap' };
       if (walls.some(wall => wall.row === row && wall.col === col)) {
         return { error: 'crossing' };
       }
+      if ((stones[point] && stones[point + across]) ||
+          (stones[beside] && stones[beside + across])) {
+        return { error: 'betweenStones' };
+      }
       edges = edges.slice();
       edges[firstEdge] = 1;
       edges[secondEdge] = 1;
+      // Only groups touching one of the two severed links can lose a liberty.
+      for (const end of [point, point + across, beside, beside + across]) {
+        if (stones[end] && !groupAt(stones, size, edges, end).liberties.size) {
+          return { error: 'lastLiberty' };
+        }
+      }
       lastWall = { row, col, orientation };
       walls = [...walls, lastWall];
       stock[turn]--;
@@ -108,19 +127,12 @@
       return { error: 'move' };
     }
 
-    const removed = groupsWithoutLiberties(stones, size, edges, other(turn));
-    for (const captured of removed) stones[captured] = 0;
-    if (groupsWithoutLiberties(stones, size, edges, turn).length) {
-      return { error: 'suicide' };
-    }
     const { previous } = game;
     if (previous && stones.every((stone, index) => stone === previous.stones[index]) &&
         edges.every((edge, index) => edge === previous.edges[index])) {
       return { error: 'ko' };
     }
 
-    const captures = [...game.captures];
-    captures[turn] += removed.length;
     return {
       game: {
         ...game, stones, edges, walls, stock, captures,

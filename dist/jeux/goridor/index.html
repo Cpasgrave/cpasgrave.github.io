@@ -8,9 +8,9 @@
   <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux sur le même écran.">
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
   <link rel="stylesheet" href="styles.css">
-  <script src="rules.js" defer></script>
+  <script src="rules.js?v=libertes" defer></script>
   <script src="board.js" defer></script>
-  <script src="app.js?v=start" defer></script>
+  <script src="app.js?v=libertes" defer></script>
 </head>
 <body>
   <header class="top">
@@ -135,9 +135,10 @@
       <h3>Barrières et libertés</h3>
       <p>Glissez la barrière de sa réserve jusqu’à une rigole, ou sélectionnez-la puis visez un croisement. La flèche dans la réserve la fait pivoter. À la souris, vous pouvez aussi appuyer sur R pendant le glissement.</p>
       <p>Une barrière occupe deux segments d’une rigole et coupe les deux liens qu’elle traverse. Elle agit comme un bord pour les libertés, les groupes et le territoire.</p>
+      <p>À la pose, chaque segment doit avoir au moins une intersection vide d’un côté. Chaque groupe, y compris une pierre isolée, doit garder au moins une liberté après la pose des deux segments. Ces conditions valent pour les deux couleurs.</p>
       <p>Placez-la dans une rigole intérieure, dès le premier tour et même près d’un bord. Une barrière reste en place jusqu’à la fin de la partie. Elle peut toucher une autre barrière par son extrémité, sans la croiser ni la recouvrir.</p>
       <h3>Captures et ko</h3>
-      <p>Après une pose, les groupes adverses sans liberté sont capturés. Si l’un de vos groupes reste sans liberté après ces captures, le coup est interdit. Le ko interdit de rétablir immédiatement la position précédente, barrières comprises.</p>
+      <p>Seule une pierre peut capturer. Après sa pose, le jeu retire les groupes adverses privés de toute liberté. Si l’un de vos groupes reste sans liberté après ces captures, le coup est interdit. Le ko interdit de rétablir immédiatement la position précédente, barrières comprises.</p>
       <h3>Décompte</h3>
       <p>Deux passes de suite ouvrent le décompte. Marquez ensemble les groupes morts, puis validez pour chaque couleur. Chaque intersection vide délimitée par une seule couleur et chaque prisonnier vaut un point. Les Blancs reçoivent 6,5 points de komi.</p>
       <p class="keyboard-note">Au clavier, utilisez les flèches pour viser, Entrée pour jouer et R pour pivoter une barrière.</p>

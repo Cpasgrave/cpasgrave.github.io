@@ -13,6 +13,8 @@
     stock: 'Ce joueur a posé toutes ses barrières.',
     edge: 'Choisissez un croisement de rigoles à l’intérieur du plateau.',
     overlap: 'Une barrière occupe déjà une partie de cette rigole.',
+    betweenStones: 'Un segment passerait entre deux pierres déjà posées.',
+    lastLiberty: 'Cette barrière enlèverait toutes les libertés d’un groupe.',
     crossing: 'Les barrières ne peuvent pas se croiser.',
     suicide: 'Ce coup laisse un de vos groupes sans liberté.',
     ko: 'Ko. Jouez ailleurs avant de reprendre ici.',
