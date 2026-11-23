@@ -430,6 +430,7 @@
   });
   document.querySelectorAll('button[data-size]').forEach(button => {
     button.addEventListener('click', event => start(Number(button.dataset.size), event.detail === 0));
+    button.disabled = false;
   });
   byId('restart').addEventListener('click', () => {
     byId('restart-note').hidden = phase === 'done';
