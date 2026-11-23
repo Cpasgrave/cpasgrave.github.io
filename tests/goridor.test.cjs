@@ -13,6 +13,19 @@ function position(black, white, turn = BLACK) {
 
 const wall = (row, col, orientation) => ({ type: 'wall', row, col, orientation });
 
+test('les deux joueurs disposent de 2, 4 ou 6 barrières selon le plateau', () => {
+  for (const [size, stock] of [[9, 2], [13, 4], [19, 6]]) {
+    let game = createGame(size);
+    assert.deepEqual(game.stock.slice(1), [stock, stock]);
+    for (let index = 0; index < stock; index++) {
+      game = play(game, wall(0, 2 * index, 'horizontal')).game;
+      game = play(game, wall(2, 2 * index, 'horizontal')).game;
+    }
+    assert.deepEqual(game.stock.slice(1), [0, 0]);
+    assert.equal(play(game, wall(4, 0, 'horizontal')).error, 'stock');
+  }
+});
+
 test('either segment between occupied points blocks the wall, regardless of color', () => {
   for (const direction of ['horizontal', 'vertical']) {
     for (const segment of [0, 1]) {
@@ -51,7 +64,7 @@ test('a wall may leave one liberty, including when a second link reaches the sam
   assert.deepEqual([...groupAt(game.stones, 9, game.edges, 0).liberties], [9]);
   assert.deepEqual(game.stones, corner.stones);
   assert.deepEqual(game.captures, corner.captures);
-  assert.equal(game.stock[WHITE], 2);
+  assert.equal(game.stock[WHITE], corner.stock[WHITE] - 1);
   const shared = position([[0, 0], [0, 1], [1, 0]], [[0, 2], [2, 0]]);
   const after = play(shared, wall(1, 0, 'vertical')).game;
   assert.deepEqual([...groupAt(after.stones, 9, after.edges, 0).liberties], [10]);

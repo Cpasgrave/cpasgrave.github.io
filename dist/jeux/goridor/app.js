@@ -431,7 +431,9 @@
     refresh();
   });
   document.querySelectorAll('button[data-size]').forEach(button => {
-    button.addEventListener('click', event => start(Number(button.dataset.size), event.detail === 0));
+    const size = Number(button.dataset.size);
+    button.querySelector('.size-stock').textContent = rules.STOCK[size] + ' barrières chacun';
+    button.addEventListener('click', event => start(size, event.detail === 0));
     button.disabled = false;
   });
   byId('restart').addEventListener('click', () => {

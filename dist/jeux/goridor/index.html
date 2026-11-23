@@ -8,9 +8,9 @@
   <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux sur le même écran.">
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
   <link rel="stylesheet" href="styles.css">
-  <script src="rules.js?v=libertes" defer></script>
+  <script src="rules.js?v=stocks-246" defer></script>
   <script src="board.js" defer></script>
-  <script src="app.js?v=libertes" defer></script>
+  <script src="app.js?v=stocks-246" defer></script>
 </head>
 <body>
   <header class="top">
@@ -47,17 +47,17 @@
           <button type="button" class="size-option" data-size="9" disabled>
             <span class="size-grid size-grid-small" aria-hidden="true"></span>
             <span class="size-label">9 × 9</span>
-            <span class="size-stock">3 barrières chacun</span>
+            <span class="size-stock"></span>
           </button>
           <button type="button" class="size-option" data-size="13" disabled>
             <span class="size-grid size-grid-medium" aria-hidden="true"></span>
             <span class="size-label">13 × 13</span>
-            <span class="size-stock">7 barrières chacun</span>
+            <span class="size-stock"></span>
           </button>
           <button type="button" class="size-option" data-size="19" disabled>
             <span class="size-grid size-grid-large" aria-hidden="true"></span>
             <span class="size-label">19 × 19</span>
-            <span class="size-stock">13 barrières chacun</span>
+            <span class="size-stock"></span>
           </button>
         </div>
       </section>
@@ -69,14 +69,14 @@
             <h3 id="black-label"><span class="stone-icon black-stone" aria-hidden="true"></span>Noirs</h3>
             <dl>
               <div><dt>Captures</dt><dd id="black-captures">0</dd></div>
-              <div><dt>Barrières</dt><dd id="black-stock">3</dd></div>
+              <div><dt>Barrières</dt><dd id="black-stock"></dd></div>
             </dl>
           </article>
           <article class="player player-white" id="player-white" aria-labelledby="white-label">
             <h3 id="white-label"><span class="stone-icon white-stone" aria-hidden="true"></span>Blancs</h3>
             <dl>
               <div><dt>Captures</dt><dd id="white-captures">0</dd></div>
-              <div><dt>Barrières</dt><dd id="white-stock">3</dd></div>
+              <div><dt>Barrières</dt><dd id="white-stock"></dd></div>
             </dl>
           </article>
         </div>
@@ -152,9 +152,9 @@
     </div>
     <p id="restart-note">La partie en cours sera remplacée.</p>
     <div class="size-options restart-options">
-      <button type="button" class="size-option" data-size="9"><span class="size-label">9 × 9</span><span class="size-stock">3 barrières chacun</span></button>
-      <button type="button" class="size-option" data-size="13"><span class="size-label">13 × 13</span><span class="size-stock">7 barrières chacun</span></button>
-      <button type="button" class="size-option" data-size="19"><span class="size-label">19 × 19</span><span class="size-stock">13 barrières chacun</span></button>
+      <button type="button" class="size-option" data-size="9"><span class="size-label">9 × 9</span><span class="size-stock"></span></button>
+      <button type="button" class="size-option" data-size="13"><span class="size-label">13 × 13</span><span class="size-stock"></span></button>
+      <button type="button" class="size-option" data-size="19"><span class="size-label">19 × 19</span><span class="size-stock"></span></button>
     </div>
   </dialog>
 </body>

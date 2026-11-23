@@ -3,7 +3,7 @@
 
   const BLACK = 1;
   const WHITE = 2;
-  const STOCK = Object.freeze({ 9: 3, 13: 7, 19: 13 });
+  const STOCK = Object.freeze({ 9: 2, 13: 4, 19: 6 });
   const KOMI = 6.5;
   const other = player => 3 - player;
 
