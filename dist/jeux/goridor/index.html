@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142521">
+  <title>Goridor · Cépagrave</title>
+  <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux sur le même écran.">
+  <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="rules.js" defer></script>
+  <script src="board.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="brand" href="../../codes/jeux/index.html" aria-label="Goridor, retour aux jeux de Cépagrave" title="Retour aux jeux">
+        <span class="brand-icon" aria-hidden="true"></span>
+        <h1>Goridor</h1>
+      </a>
+      <div class="top-actions">
+        <button class="button quiet" id="restart" type="button" hidden>Nouvelle partie</button>
+        <button class="button quiet" id="open-rules" type="button">Règles</button>
+        <button class="button quiet sound-button" id="sound" type="button" aria-label="Son" aria-pressed="true" title="Couper le son">
+          <span class="sound-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="game-layout">
+    <div class="board-heading">
+      <span id="board-size">Plateau 9 × 9</span>
+      <span>Deux joueurs · en local</span>
+    </div>
+    <div class="board-region">
+      <div class="board-frame">
+        <canvas id="board" aria-label="Aperçu du plateau de Goridor, 9 par 9"></canvas>
+      </div>
+    </div>
+    <aside class="side">
+      <section class="setup panel" id="setup" aria-labelledby="setup-title">
+        <h2 id="setup-title">Nouvelle partie</h2>
+        <p>Choisissez la taille du plateau.</p>
+        <div class="size-options">
+          <button type="button" class="size-option" data-size="9">
+            <span class="size-grid size-grid-small" aria-hidden="true"></span>
+            <span class="size-label">9 × 9</span>
+            <span class="size-stock">3 barrières chacun</span>
+          </button>
+          <button type="button" class="size-option" data-size="13">
+            <span class="size-grid size-grid-medium" aria-hidden="true"></span>
+            <span class="size-label">13 × 13</span>
+            <span class="size-stock">7 barrières chacun</span>
+          </button>
+          <button type="button" class="size-option" data-size="19">
+            <span class="size-grid size-grid-large" aria-hidden="true"></span>
+            <span class="size-label">19 × 19</span>
+            <span class="size-stock">13 barrières chacun</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="game-controls" hidden aria-label="Partie">
+        <h2 id="turn-label" class="turn-label" aria-live="polite">Aux Noirs de jouer</h2>
+        <div class="players">
+          <article class="player player-black" id="player-black" aria-labelledby="black-label">
+            <h3 id="black-label"><span class="stone-icon black-stone" aria-hidden="true"></span>Noirs</h3>
+            <dl>
+              <div><dt>Captures</dt><dd id="black-captures">0</dd></div>
+              <div><dt>Barrières</dt><dd id="black-stock">3</dd></div>
+            </dl>
+          </article>
+          <article class="player player-white" id="player-white" aria-labelledby="white-label">
+            <h3 id="white-label"><span class="stone-icon white-stone" aria-hidden="true"></span>Blancs</h3>
+            <dl>
+              <div><dt>Captures</dt><dd id="white-captures">0</dd></div>
+              <div><dt>Barrières</dt><dd id="white-stock">3</dd></div>
+            </dl>
+          </article>
+        </div>
+        <section class="panel actions" id="play-controls" aria-label="Coup à jouer">
+          <div class="move-options" role="group" aria-label="Type de coup">
+            <div class="stone-tool">
+              <button class="move-option" type="button" id="stone-mode" aria-pressed="true">
+                <span class="stone-icon" aria-hidden="true"></span>Pierre
+              </button>
+              <span class="rotate-shortcut"><kbd>R</kbd> Pivoter la barrière</span>
+            </div>
+            <div class="wall-slot">
+              <button class="move-option wall-tool" type="button" id="wall-mode" aria-pressed="false" data-orientation="horizontal">
+                <span class="wall-piece" aria-hidden="true"></span>
+                <span class="wall-label">Barrière</span>
+              </button>
+              <button class="button quiet rotate-button" type="button" id="rotate" aria-label="Pivoter la barrière" aria-keyshortcuts="R" title="Pivoter la barrière (R)">
+                <span aria-hidden="true">⟳</span>
+              </button>
+            </div>
+          </div>
+          <p class="hint" id="move-hint"></p>
+          <button class="button primary wide" id="confirm-move" type="button" hidden>Poser ici</button>
+          <button class="button quiet pass-button" id="pass" type="button">Passer</button>
+        </section>
+        <section class="panel scoring" id="scoring" hidden aria-label="Décompte">
+          <p id="count-hint">Touchez un groupe pour le marquer mort ou le rétablir.</p>
+          <table>
+            <thead><tr><td></td><th scope="col">Noirs</th><th scope="col">Blancs</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Territoire</th><td id="black-territory">0</td><td id="white-territory">0</td></tr>
+              <tr><th scope="row">Prisonniers</th><td id="black-prisoners">0</td><td id="white-prisoners">0</td></tr>
+              <tr><th scope="row">Komi</th><td>0</td><td>6,5</td></tr>
+            </tbody>
+            <tfoot><tr><th scope="row">Total</th><td id="black-total">0</td><td id="white-total">0</td></tr></tfoot>
+          </table>
+          <button class="button primary wide" id="confirm-score" type="button">Valider pour les Noirs</button>
+        </section>
+      </section>
+    </aside>
+    <p id="feedback" class="feedback" role="status"></p>
+    <p id="keyboard-help" class="sr-only">Flèches pour viser. Entrée ou espace pour jouer. R pour pivoter une barrière.</p>
+    <p id="aim" class="sr-only" role="status"></p>
+  </main>
+  <div class="floating-wall" id="floating-wall" aria-hidden="true" hidden>
+    <span class="wall-piece"></span>
+  </div>
+
+  <dialog id="rules-dialog" aria-labelledby="rules-title">
+    <div class="dialog-top">
+      <h2 id="rules-title">Règles de Goridor</h2>
+      <form method="dialog"><button class="button quiet close-button" aria-label="Fermer" autofocus>×</button></form>
+    </div>
+    <div class="rules-copy">
+      <p>Les Noirs commencent. À chaque tour, posez une pierre, posez une barrière ou passez. Les pierres se posent sur les intersections libres.</p>
+      <h3>Barrières et libertés</h3>
+      <p>Glissez la barrière de sa réserve jusqu’à une rigole, ou sélectionnez-la puis visez un croisement. La flèche dans la réserve la fait pivoter. À la souris, vous pouvez aussi appuyer sur R pendant le glissement.</p>
+      <p>Une barrière occupe deux segments d’une rigole et coupe les deux liens qu’elle traverse. Elle agit comme un bord pour les libertés, les groupes et le territoire.</p>
+      <p>Placez-la dans une rigole intérieure, dès le premier tour et même près d’un bord. Une barrière reste en place jusqu’à la fin de la partie. Elle peut toucher une autre barrière par son extrémité, sans la croiser ni la recouvrir.</p>
+      <h3>Captures et ko</h3>
+      <p>Après une pose, les groupes adverses sans liberté sont capturés. Si l’un de vos groupes reste sans liberté après ces captures, le coup est interdit. Le ko interdit de rétablir immédiatement la position précédente, barrières comprises.</p>
+      <h3>Décompte</h3>
+      <p>Deux passes de suite ouvrent le décompte. Marquez ensemble les groupes morts, puis validez pour chaque couleur. Chaque intersection vide délimitée par une seule couleur et chaque prisonnier vaut un point. Les Blancs reçoivent 6,5 points de komi.</p>
+      <p class="keyboard-note">Au clavier, utilisez les flèches pour viser, Entrée pour jouer et R pour pivoter une barrière.</p>
+    </div>
+  </dialog>
+
+  <dialog id="restart-dialog" aria-labelledby="restart-title">
+    <div class="dialog-top">
+      <h2 id="restart-title">Nouvelle partie</h2>
+      <form method="dialog"><button class="button quiet close-button" aria-label="Fermer" autofocus>×</button></form>
+    </div>
+    <p id="restart-note">La partie en cours sera remplacée.</p>
+    <div class="size-options restart-options">
+      <button type="button" class="size-option" data-size="9"><span class="size-label">9 × 9</span><span class="size-stock">3 barrières chacun</span></button>
+      <button type="button" class="size-option" data-size="13"><span class="size-label">13 × 13</span><span class="size-stock">7 barrières chacun</span></button>
+      <button type="button" class="size-option" data-size="19"><span class="size-label">19 × 19</span><span class="size-stock">13 barrières chacun</span></button>
+    </div>
+  </dialog>
+</body>
+</html>
