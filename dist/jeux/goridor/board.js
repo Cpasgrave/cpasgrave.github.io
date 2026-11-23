@@ -110,7 +110,7 @@
     const { origin, pitch, channel } = layout;
     const x = origin + (wall.col + .5) * pitch;
     const y = origin + (wall.row + .5) * pitch;
-    const thickness = (channel + .75) * 1.15;
+    const thickness = Math.min((channel + .75) * 1.75, pitch * .25);
     const length = pitch * 2 - Math.max(1.6, channel * .37);
     ctx.save();
     ctx.translate(x, y);

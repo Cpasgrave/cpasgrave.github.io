@@ -306,7 +306,7 @@ h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
   top: 44%;
   left: 50%;
   width: 49px;
-  height: 10px;
+  height: 15px;
   border: 1px solid #e0766d;
   border-radius: 3px;
   background: linear-gradient(#e36a60 0%, #ab262e 34%, #771823 100%);
