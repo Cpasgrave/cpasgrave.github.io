@@ -66,10 +66,10 @@ test('le moteur sauve une chaîne en atari et reconnaît une prise en retour per
 
 test('une seconde passe ferme une position gagnante au score', () => {
   const game = rules.createGame(9);
-  // Three separated live strips, each with room for eyes. All neutral liberties remain open.
+  // Three chains, each enclosing two private eyes in the middle row of its strip.
   for (const [start, color] of [[0,1], [27,2], [54,1]]) {
-    for (let p=start; p<start+18; p++) game.stones[p] = color;
-    game.stones[start+2] = game.stones[start+6] = 0;
+    for (let p=start; p<start+27; p++) game.stones[p] = color;
+    game.stones[start+11] = game.stones[start+15] = 0;
   }
   game.captures[1] = 20;
   game.turn = 2;

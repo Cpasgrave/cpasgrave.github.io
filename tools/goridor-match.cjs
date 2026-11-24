@@ -22,10 +22,15 @@ const gameDir = 'dist/jeux/goridor';
 const rules = require('../dist/jeux/goridor/rules.js');
 const candidate = require('../dist/jeux/goridor/monte-carlo.js');
 
-function loadWeights(file) {
+function loadWeights(file, engine) {
   const model = JSON.parse(fs.readFileSync(file,'utf8'));
+  if (engine.modelWeights) {
+    const weights = engine.modelWeights(model);
+    if (!weights) throw new Error('Modèle 9 × 9 incompatible');
+    return weights;
+  }
   if (model.size !== 9 || model.version !== 1 || !Array.isArray(model.weights) ||
-      model.weights.length !== candidate.initialWeights.length || !model.weights.every(Number.isFinite)) {
+      model.weights.length !== engine.initialWeights.length || !model.weights.every(Number.isFinite)) {
     throw new Error('Modèle 9 × 9 incompatible');
   }
   return model.weights;
@@ -44,14 +49,14 @@ try {
     const git = args => execFileSync('git',args,{cwd:root});
     const rev = git(['rev-parse','--verify','--end-of-options',values.reference+'^{commit}']).toString().trim();
     const files = git(['ls-tree','--name-only',rev+':'+gameDir]).toString().trim().split(/\r?\n/);
-    for (const name of ['monte-carlo.js','modele-9.json','rules.js','lecture.js']) {
+    for (const name of ['monte-carlo.js','modele-9.json','rules.js','lecture.js','life.js','scoring.js']) {
       if (files.includes(name)) fs.writeFileSync(path.join(temp,name),git(['show',rev+':'+gameDir+'/'+name]));
     }
   }
   const old = require(path.join(referenceDir,'monte-carlo.js'));
-  const weights = loadWeights(file), original = loadWeights(path.join(referenceDir,'modele-9.json'));
+  const weights = loadWeights(file, candidate), original = loadWeights(path.join(referenceDir,'modele-9.json'), old);
   const stats = {pairs, firstSeed, candidateIterations, reference:values.reference || 'courante', iterations,
-    budgetMs:values.ms ? budgetMs : null, wins:0, losses:0, capped:0, blackWins:0, whiteWins:0};
+    budgetMs:values.ms ? budgetMs : null, wins:0, losses:0, capped:0, unsettled:0, blackWins:0, whiteWins:0};
   for (let pair = 0; pair < pairs; pair++) {
     const seed = firstSeed + pair;
     const opening = generator(seed);
@@ -74,7 +79,9 @@ try {
         if (!game) throw new Error('Coup illégal dans le match');
       }
       if (game.passes < 2) { stats.capped++; continue; }
-      const winner = candidate.terminal(game) > 0 ? 1 : 2;
+      const outcome = candidate.trainingOutcome(game);
+      if (outcome === null) { stats.unsettled++; continue; }
+      const winner = outcome > 0 ? 1 : 2;
       if (winner === color) { stats.wins++; stats[color===1 ? 'blackWins' : 'whiteWins']++; }
       else stats.losses++;
     }

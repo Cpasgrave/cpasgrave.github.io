@@ -11,10 +11,14 @@ fs.mkdirSync(folder, {recursive:true});
 const latest = path.join(folder, 'reprise.json');
 const source = fs.existsSync(latest) ? latest : initial;
 const model = source ? JSON.parse(fs.readFileSync(source,'utf8')) : {
-  version: 1, size: 9, weights: [...ai.initialWeights], games: 0, samples: 0, capped: 0, seed: 2401126
+  version: 2, size: 9, weights: [...ai.initialWeights], games: 0, samples: 0, capped: 0, seed: 2401126
 };
-if (model.version !== 1 || model.size !== 9 || model.weights.length !== ai.initialWeights.length ||
-    !model.weights.every(Number.isFinite)) throw new Error('Point de reprise incompatible');
+const weights = ai.modelWeights(model);
+if (!weights) throw new Error('Point de reprise incompatible');
+model.weights = weights;
+model.version = 2;
+model.unsettled ??= 0;
+model.lifeScoredGames ??= 0;
 function random() {
   model.seed = (Math.imul(1664525, model.seed) + 1013904223) >>> 0;
   return model.seed / 4294967296;
@@ -36,9 +40,10 @@ while (Date.now() < deadline) {
     game = move.type === 'pass' ? rules.pass(game) : rules.play(game, move).game;
     moves++;
   }
+  const target = game.passes === 2 ? ai.trainingOutcome(game) : null;
   if (game.passes < 2) model.capped++;
+  else if (target === null) model.unsettled++;
   else {
-    const target = ai.terminal(game);
     const gradient = model.weights.map(() => 0);
     for (const x of examples) {
       const prediction = ai.estimate(x, model.weights);
@@ -47,9 +52,9 @@ while (Date.now() < deadline) {
     }
     const rate = .06 / Math.sqrt(1 + model.games / 300);
     model.weights = model.weights.map((w,i) => w + rate * gradient[i] / Math.max(1,examples.length));
-    model.games++; model.samples += examples.length;
+    model.games++; model.lifeScoredGames++; model.samples += examples.length;
   }
   snapshot(latest);
-  if ((model.games + model.capped) % 250 === 0) snapshot(path.join(folder, 'parties-' + (model.games + model.capped) + '.json'));
-  console.log(JSON.stringify({time:new Date().toISOString(),games:model.games,samples:model.samples,capped:model.capped,moves}));
+  if ((model.games + model.capped + model.unsettled) % 250 === 0) snapshot(path.join(folder, 'parties-' + (model.games + model.capped + model.unsettled) + '.json'));
+  console.log(JSON.stringify({time:new Date().toISOString(),games:model.games,samples:model.samples,capped:model.capped,unsettled:model.unsettled,lifeScoredGames:model.lifeScoredGames,moves}));
 }

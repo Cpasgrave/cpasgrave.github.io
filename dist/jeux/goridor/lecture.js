@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const rules = typeof module === 'object' ? require('./rules.js') : globalThis.GoridorRules;
+  const life = typeof module === 'object' ? require('./life.js') : globalThis.GoridorLife;
   const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
   const sign = color => color === rules.BLACK ? 1 : -1;
 
@@ -54,7 +55,10 @@
     // Keep the six inputs of the existing trained evaluator in exactly the same units.
     const features = [(game.captures[1] - game.captures[2] - rules.KOMI) / size,
       material / size, influence / size, pressure / size, (game.stock[1] - game.stock[2]) / 2, 1];
-    return { graph, groups, chain, distance, features, occupied, space };
+    const board = {graph, groups, chain};
+    const safety = life.profile(game, board);
+    features.push(safety.strength / size);
+    return {...board, distance, features, occupied, space, life:safety};
   }
 
   function stoneRank(game, info, point) {
@@ -151,17 +155,18 @@
 
   function ranked(game, info, random) {
     const stones = [], walls = [];
+    const eyes = life.eyeMoves(game, info.life);
     const {size} = game;
     // Jitter only breaks similar strategic choices. Clear tactical priorities stay ordered.
     for (let p = 0; p < game.stones.length; p++) {
       const row = Math.floor(p / size), col = p % size;
       if (!game.stones[p]) {
-        const rank = stoneRank(game, info, p);
+        const rank = stoneRank(game, info, p) + (eyes.stones.has(p) ? 10 : 0);
         if (Number.isFinite(rank)) stones.push({move:{type:'stone', row, col}, rank:rank + .85 * random()});
       }
       if (game.stock[game.turn] && row < size-1 && col < size-1 && info.occupied > 1) {
         for (const horizontal of [false,true]) {
-          const rank = wallRank(game, info, p, horizontal);
+          const rank = wallRank(game, info, p, horizontal) + (eyes.walls.has(2*p+Number(horizontal)) ? 10 : 0);
           if (rank < -.9) continue;
           walls.push({move:{type:'wall', row, col, orientation:horizontal ? 'horizontal' : 'vertical'}, rank:rank + .45*random()});
         }

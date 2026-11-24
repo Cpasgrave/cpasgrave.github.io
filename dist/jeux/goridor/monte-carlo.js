@@ -3,21 +3,43 @@
   const node = typeof module === 'object';
   const rules = node ? require('./rules.js') : globalThis.GoridorRules;
   const reading = node ? require('./lecture.js') : globalThis.GoridorReading;
-  const initialWeights = [1.8, 1.5, 1.0, 1.4, .28, .18];
+  const scoring = node ? require('./scoring.js') : globalThis.GoridorScoring;
+  const initialWeights = [1.8, 1.5, 1.0, 1.4, .28, .18, .95];
   const side = game => game.turn === 1 ? 1 : -1;
 
   function estimate(features, weights) {
     return Math.tanh(features.reduce((sum, x, i) => sum + x * weights[i], 0) / 3);
   }
 
+  function modelWeights(model) {
+    if (!model || model.size !== 9 || !Array.isArray(model.weights) || !model.weights.every(Number.isFinite)) return null;
+    if (model.version === 1 && model.weights.length === 6) return [...model.weights, initialWeights[6]];
+    return model.version === 2 && model.weights.length === 7 ? model.weights : null;
+  }
+
+  const endings = new WeakMap();
+  function ending(game) {
+    let result = endings.get(game);
+    if (!result) {
+      result = scoring.adjudicate(game);
+      endings.set(game, result);
+    }
+    return result;
+  }
+
+  function outcome(result) {
+    if (result.uncertain.length || result.conditional.size || result.open.size) return null;
+    return Math.sign(result.totals[1] - result.totals[2]);
+  }
+
   function terminal(game) {
-    const {totals} = rules.score(game, []);
-    return Math.sign(totals[1] - totals[2]);
+    const result = ending(game);
+    return outcome(result) ?? Math.tanh((result.totals[1]-result.totals[2]) / game.size);
   }
 
   function value(game, info, weights) {
-    const area = info.space / game.size + info.features[0] + info.features[1];
-    return .70 * estimate(info.features, weights) + .30 * Math.tanh(area / 2);
+    const lead = scoring.estimate(game, info);
+    return .70 * estimate(info.features, weights) + .30 * Math.tanh(lead / (2*game.size));
   }
 
   function takeLastLiberty(game, group) {
@@ -32,12 +54,12 @@
     const pool = reading.ranked(game, info, random);
     const children = [];
     const late = info.occupied > game.stones.length * .48;
-    const score = late ? rules.score(game, []) : null;
+    const secure = info.life.owner;
     for (const [list, limit] of [[pool.stones, width], [pool.walls, Math.max(2, Math.ceil(width / 3))]]) {
       let count = 0;
       for (const {move, rank} of list) {
         const p = move.row * game.size + move.col;
-        if (move.type === 'stone' && score?.ownership[p] === game.turn && rank < 5) continue;
+        if (move.type === 'stone' && secure[p] === game.turn && rank < 5) continue;
         const next = rules.play(game, move).game;
         if (!next) continue;
         let priority = rank;
@@ -61,7 +83,7 @@
       }
     }
     if (!children.length || late) {
-      const winningPass = late && game.passes === 1 && score.totals[game.turn] > score.totals[3-game.turn];
+      const winningPass = late && game.passes === 1 && outcome(ending(game)) === side(game);
       children.push({move:{type:'pass'}, game:rules.pass(game), rank:winningPass ? 25 : -1.4});
     }
     return children.sort((a,b) => b.rank - a.rank);
@@ -158,7 +180,7 @@
     return root.children.reduce((a,b) => b.visits > a.visits ? b : a).move;
   }
 
-  const api = { initialWeights, inspect:reading.inspect, estimate, search, terminal };
+  const api = {initialWeights, modelWeights, inspect:reading.inspect, estimate, search, terminal, trainingOutcome:game => outcome(ending(game))};
   if (node) module.exports = api;
   else globalThis.GoridorAI = api;
 })();

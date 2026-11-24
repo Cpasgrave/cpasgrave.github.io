@@ -1,14 +1,11 @@
 'use strict';
-importScripts('rules.js?v=mc2', 'lecture.js?v=mc2', 'monte-carlo.js?v=mc2');
+importScripts('rules.js?v=mc2', 'life.js?v=vie1', 'scoring.js?v=vie1', 'lecture.js?v=vie1', 'monte-carlo.js?v=vie1');
 async function publishedWeights() {
   try {
-    const response = await fetch('modele-9.json?v=mc2');
+    const response = await fetch('modele-9.json?v=vie1');
     if (response.ok) {
       const model = await response.json();
-      if (model.size === 9 && model.version === 1 && Array.isArray(model.weights) &&
-          model.weights.length === GoridorAI.initialWeights.length && model.weights.every(Number.isFinite)) {
-        return model.weights;
-      }
+      return GoridorAI.modelWeights(model) ?? GoridorAI.initialWeights;
     }
   } catch {
     // The built-in evaluator also works if the optional weights cannot be loaded.

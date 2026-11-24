@@ -7,10 +7,13 @@
   <title>Goridor · Cépagrave</title>
   <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux ou contre une IA Monte-Carlo.">
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
-  <link rel="stylesheet" href="styles.css?v=historique1">
+  <link rel="stylesheet" href="styles.css?v=vie1">
   <script src="rules.js?v=mc2" defer></script>
-  <script src="board.js?v=barrieres-larges" defer></script>
-  <script src="app.js?v=mc2" defer></script>
+  <script src="life.js?v=vie1" defer></script>
+  <script src="scoring.js?v=vie1" defer></script>
+  <script src="lecture.js?v=vie1" defer></script>
+  <script src="board.js?v=vie1" defer></script>
+  <script src="app.js?v=vie1" defer></script>
 </head>
 <body>
   <header class="top">
@@ -117,8 +120,13 @@
           <button class="button quiet pass-button" id="pass" type="button">Passer</button>
         </section>
         <button class="button primary wide" type="button" id="ai-resume" hidden>Jouer le coup de l’IA</button>
+        <details id="estimate" class="panel scoring" hidden>
+          <summary>Estimer le score</summary>
+          <p id="estimate-value" aria-live="polite"></p>
+        </details>
         <section class="panel scoring" id="scoring" hidden aria-label="Décompte">
           <p id="count-hint">Touchez un groupe pour le marquer mort ou le rétablir.</p>
+          <p id="count-review"></p>
           <table>
             <thead><tr><td></td><th scope="col">Noirs</th><th scope="col">Blancs</th></tr></thead>
             <tbody>
@@ -157,7 +165,9 @@
       <h3>Historique facultatif</h3>
       <p>Les flèches permettent de revoir chaque coup. Jouer un coup différent depuis une position antérieure remplace la suite de la partie. En solo, les Blancs sont joués par l’IA Monte-Carlo.</p>
       <h3>Décompte</h3>
-      <p>Deux passes de suite ouvrent le décompte. Marquez ensemble les groupes morts, puis validez pour chaque couleur. Chaque intersection vide délimitée par une seule couleur et chaque prisonnier vaut un point. Les Blancs reçoivent 6,5 points de komi.</p>
+      <p>Le décompte suit le principe japonais. Chaque intersection vide de territoire et chaque prisonnier valent un point. Une pierre morte peut donc rapporter un prisonnier et libérer un point de territoire. Les Blancs reçoivent 6,5 points de komi.</p>
+      <p>Après deux passes, le jeu propose les pierres mortes en lisant les yeux et les captures avec les barrières en place. Les yeux des groupes reconnus en vie mutuelle (seki) sont neutres. Vérifiez les groupes signalés, notamment les kos. Touchez une pierre pour corriger tout son groupe, ou une intersection vide pour neutraliser ou rétablir son territoire, puis validez.</p>
+      <p>En cours de partie, « Estimer le score » indique une avance probable. Les combats ouverts et les barrières encore en réserve peuvent changer cette estimation.</p>
       <p class="keyboard-note">Au clavier, utilisez les flèches pour viser, Entrée pour jouer et R pour pivoter une barrière.</p>
     </div>
   </dialog>

@@ -2,6 +2,8 @@
   'use strict';
 
   const rules = window.GoridorRules;
+  const scoring = window.GoridorScoring;
+  const estimates = new WeakMap();
   const { BLACK, WHITE } = rules;
   const { createBoard, coordinate } = window.GoridorBoard;
   const byId = id => document.getElementById(id);
@@ -104,7 +106,7 @@
   function requestComputer() {
     if (!computerTurn() || worker) return;
     try {
-      const current = new Worker('ai-worker.js?v=mc2');
+      const current = new Worker('ai-worker.js?v=vie1');
       worker = current;
       current.onmessage = ({data}) => {
         if (current !== worker) return;
@@ -234,7 +236,25 @@
     }
     byId('count-hint').textContent = phase === 'done'
       ? (computer ? 'Score validé.' : 'Score validé par les deux joueurs.')
-      : 'Sélectionnez un groupe pour le marquer mort ou le rétablir.';
+      : 'Les pierres pâles sont proposées mortes. Touchez un groupe pour corriger son statut ou un point vide pour ajuster le territoire.';
+    const notes = [];
+    if (phase !== 'done') {
+      const coordinates = groups => groups.slice(0, 6).map(g => coordinate(
+        Math.floor(g.points[0] / game.size), g.points[0] % game.size, game.size)).join(', ') +
+        (groups.length > 6 ? '…' : '');
+      if (count.uncertain.length) notes.push('Groupes à vérifier (' + coordinates(count.uncertain) + ').');
+      if (count.open.size) notes.push('Une grande zone reste ouverte à une invasion.');
+      if (count.conditional.size) {
+        const groups = [];
+        const seen = new Set();
+        for (const p of count.conditional) {
+          if (!seen.has(p)) groups.push(rules.groupAt(game.stones, game.size, game.edges, p, seen));
+        }
+        notes.push('Mort proposée en lecture locale, ko possible (' + coordinates(groups) + ').');
+      }
+      if (count.seki.length) notes.push('Vie mutuelle détectée (' + coordinates(count.seki) + ').');
+    }
+    byId('count-review').textContent = notes.join(' ');
     confirmScore.textContent = computer ? 'Valider le score' : 'Valider pour les ' + colors[countApproval];
     confirmScore.hidden = phase === 'done';
   }
@@ -253,7 +273,23 @@
     return '';
   }
 
+  function updateEstimate() {
+    const details = byId('estimate');
+    details.hidden = phase !== 'play';
+    if (details.hidden || !details.open) return;
+    if (!estimates.has(game)) {
+      const info = window.GoridorReading.inspect(game);
+      const score = scoring.adjudicate(game);
+      const lead = Math.round(scoring.estimate(game, info, score) * 2) / 2;
+      const text = lead === 0 ? 'Position estimée à égalité.' :
+        colors[lead > 0 ? BLACK : WHITE] + ' en tête d’environ ' + number(Math.abs(lead)) + ' point' + (Math.abs(lead) > 1 ? 's.' : '.');
+      estimates.set(game, text + ' Komi compris.');
+    }
+    byId('estimate-value').textContent = estimates.get(game);
+  }
+
   function refresh() {
+    updateEstimate();
     const playing = phase === 'play';
     const interactive = (playing && !computerTurn()) || phase === 'count';
     byId('history').hidden = phase === 'setup' || !allowHistory;
@@ -292,6 +328,7 @@
     computer = options.querySelector('[data-opponent]').value === 'computer';
     allowHistory = options.querySelector('[data-history]').checked;
     if (restartDialog.open) restartDialog.close();
+    byId('estimate').open = false;
     game = rules.createGame(size);
     phase = 'play';
     mode = 'stone';
@@ -358,7 +395,8 @@
       label = 'Les ' + colors[player] + ' passent.';
       if (game.passes === 2) {
         phase = 'count';
-        count = rules.score(game, dead);
+        count = scoring.adjudicate(game);
+        dead = new Set(count.dead);
         label += ' Deux passes de suite. Le décompte commence.';
       }
     } else {
@@ -384,7 +422,19 @@
 
   function toggleDead(target) {
     const point = target.row * game.size + target.col;
-    if (!game.stones[point]) return;
+    if (!game.stones[point]) {
+      const zone = count.zones[point];
+      if (!zone) return;
+      const flipped = new Set(count.flipped);
+      const key = zone.key;
+      if (!flipped.delete(key)) flipped.add(key);
+      countApproval = BLACK;
+      count = scoring.count(game, dead, count.conditional, flipped);
+      updateScoreFrame();
+      announce('Territoire ajusté en ' + positionLabel(target) + '.');
+      refresh();
+      return;
+    }
     const { points } = rules.groupAt(game.stones, game.size, game.edges, point);
     const remove = dead.has(point);
     for (const member of points) {
@@ -392,7 +442,9 @@
       else dead.add(member);
     }
     countApproval = BLACK;
-    count = rules.score(game, dead);
+    const conditional = new Set(count.conditional);
+    for (const p of points) conditional.delete(p);
+    count = scoring.count(game, dead, conditional, count.flipped);
     updateScoreFrame();
     announce('Groupe en ' + positionLabel(target) + (remove ? ' rétabli.' : ' marqué mort.'));
     refresh();
@@ -550,6 +602,7 @@
     restartDialog.querySelector('[data-history]').checked = allowHistory;
     restartDialog.showModal();
   });
+  byId('estimate').addEventListener('toggle', updateEstimate);
   byId('open-rules').addEventListener('click', () => rulesDialog.showModal());
   sound.addEventListener('click', () => {
     const enabled = sound.getAttribute('aria-pressed') !== 'true';
