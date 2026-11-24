@@ -1,8 +1,8 @@
 'use strict';
-importScripts('rules.js?v=mc1', 'monte-carlo.js?v=mc1');
+importScripts('rules.js?v=mc2', 'lecture.js?v=mc2', 'monte-carlo.js?v=mc2');
 async function publishedWeights() {
   try {
-    const response = await fetch('modele-9.json?v=mc1');
+    const response = await fetch('modele-9.json?v=mc2');
     if (response.ok) {
       const model = await response.json();
       if (model.size === 9 && model.version === 1 && Array.isArray(model.weights) &&
@@ -17,5 +17,5 @@ async function publishedWeights() {
 }
 self.onmessage = async ({ data }) => {
   const weights = data.size === 9 ? await publishedWeights() : GoridorAI.initialWeights;
-  self.postMessage(GoridorAI.search(data, { weights, iterations: 480, budgetMs: 800 }));
+  self.postMessage(GoridorAI.search(data, { weights, iterations: 2400, budgetMs: 800 }));
 };

@@ -104,7 +104,7 @@
   function requestComputer() {
     if (!computerTurn() || worker) return;
     try {
-      const current = new Worker('ai-worker.js?v=mc1');
+      const current = new Worker('ai-worker.js?v=mc2');
       worker = current;
       current.onmessage = ({data}) => {
         if (current !== worker) return;

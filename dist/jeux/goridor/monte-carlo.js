@@ -1,101 +1,13 @@
 (() => {
   'use strict';
-  const rules = typeof module === 'object' ? require('./rules.js') : globalThis.GoridorRules;
-  // Positive values favour Black. Both self-play and the browser use the same representation.
+  const node = typeof module === 'object';
+  const rules = node ? require('./rules.js') : globalThis.GoridorRules;
+  const reading = node ? require('./lecture.js') : globalThis.GoridorReading;
   const initialWeights = [1.8, 1.5, 1.0, 1.4, .28, .18];
-  const pass = { type: 'pass' };
-  function inspect(game) {
-    const { size, stones, edges, turn } = game;
-    const urgent = new Map();
-    const stonesToTry = [];
-    const wallsToTry = [];
-    const visited = new Set();
-    let material = 0, pressure = 0, influence = 0, occupied = 0;
-    for (let p = 0; p < stones.length; p++) {
-      const color = stones[p];
-      if (color) {
-        occupied++;
-        const sign = color === 1 ? 1 : -1;
-        material += sign;
-        if (visited.has(p)) continue;
-        const group = rules.groupAt(stones, size, edges, p, visited);
-        if (group.liberties.size <= 2) {
-          pressure -= sign * group.points.length / group.liberties.size;
-          for (const lib of group.liberties) {
-            const priority = (group.liberties.size === 1 ? 4 : .8) *
-              (1 + Math.log1p(group.points.length)) * (color === turn ? .88 : 1);
-            urgent.set(lib, Math.max(urgent.get(lib) || 0, priority));
-          }
-        }
-        continue;
-      }
-      const near = rules.neighbors(p, size, edges);
-      let black = 0, white = 0;
-      for (const n of near) {
-        if (stones[n] === 1) black++;
-        if (stones[n] === 2) white++;
-      }
-      influence += (black && !white ? 1 : white && !black ? -1 : 0);
-      const own = turn === 1 ? black : white;
-      const enemy = turn === 1 ? white : black;
-      if (!near.length || own === near.length) continue;
-      const row = Math.floor(p / size), col = p % size;
-      const line = Math.min(row, col, size - row - 1, size - col - 1);
-      stonesToTry.push({ p, prior: (enemy && own ? 1.2 : 0) + (enemy ? .4 : 0)
-        + Math.min(2, line) * .35 - own * .24 });
-    }
-    if (game.stock[turn] && occupied) {
-      for (let row = 0; row < size - 1; row++) for (let col = 0; col < size - 1; col++) {
-        const p = row * size + col;
-        const square = [stones[p], stones[p+1], stones[p+size], stones[p+size+1]];
-        if (square.includes(0) && square.includes(3 - turn)) wallsToTry.push({ row, col });
-      }
-    }
-    const features = [(game.captures[1] - game.captures[2] - rules.KOMI) / size,
-      material / size, influence / size, pressure / size, (game.stock[1] - game.stock[2]) / 2, 1];
-    return { features, urgent, stonesToTry, wallsToTry, occupied };
-  }
+  const side = game => game.turn === 1 ? 1 : -1;
 
   function estimate(features, weights) {
     return Math.tanh(features.reduce((sum, x, i) => sum + x * weights[i], 0) / 3);
-  }
-
-  function candidates(game, info, random, width) {
-    const { stonesToTry, urgent, wallsToTry, occupied } = info;
-    const legal = [];
-    const area = game.stones.length;
-    const late = occupied > area * .60;
-    const ownership = late ? rules.score(game, []).ownership : null;
-    for (const item of stonesToTry) item.rank = item.prior + (urgent.get(item.p) || 0) + 3 * random();
-    stonesToTry.sort((a,b) => b.rank - a.rank);
-    for (const {p} of stonesToTry) {
-      if (ownership && ownership[p] === game.turn && !(urgent.get(p) >= 4)) continue;
-      const move = { type: 'stone', row: Math.floor(p / game.size), col: p % game.size };
-      const next = rules.play(game, move).game;
-      if (!next) continue;
-      const gain = next.captures[game.turn] - game.captures[game.turn];
-      const group = rules.groupAt(next.stones, next.size, next.edges, p);
-      if (!gain && group.liberties.size <= 1) continue;
-      legal.push({ move, game: next, prior: Math.min(2, gain) + (urgent.get(p) || 0) * .08 });
-      if (legal.length >= width) break;
-    }
-    // Give walls their own quota, so they cannot drown out stone moves on an open board.
-    let wallCount = 0;
-    for (let i = 0; i < wallsToTry.length && wallCount < Math.ceil(width / 4); i++) {
-      const j = i + Math.floor(random() * (wallsToTry.length - i));
-      [wallsToTry[i], wallsToTry[j]] = [wallsToTry[j], wallsToTry[i]];
-      const first = random() < .5 ? 'vertical' : 'horizontal';
-      for (const orientation of [first, first === 'vertical' ? 'horizontal' : 'vertical']) {
-        const move = { type: 'wall', ...wallsToTry[i], orientation };
-        const next = rules.play(game, move).game;
-        if (!next) continue;
-        legal.push({move, game: next, prior: -.24});
-        wallCount++;
-        break;
-      }
-    }
-    if (!legal.length || late) legal.push({ move: pass, game: rules.pass(game), prior: late ? .08 : 0 });
-    return legal;
   }
 
   function terminal(game) {
@@ -103,48 +15,150 @@
     return Math.sign(totals[1] - totals[2]);
   }
 
-  // UCT tree search with short stochastic continuations and a bounded value estimate.
-  function search(game, { weights = initialWeights, random = Math.random, iterations = 128,
-    budgetMs = Infinity, width = 8, rollout = 2 } = {}) {
-    if (game.passes >= 2) return null;
-    const end = performance.now() + budgetMs;
-    const root = { game, visits: 0, value: 0 };
-    for (let i = 0; i < iterations && (i === 0 || performance.now() < end); i++) {
-      let node = root;
-      const path = [root];
-      while (node.game.passes < 2) {
-        if (!node.children) {
-          node.children = candidates(node.game, inspect(node.game), random, width)
-            .map(choice => ({ ...choice, visits: 0, value: 0, tie: random() * .12 }));
-        }
-        const side = node.game.turn === 1 ? 1 : -1;
-        const exploration = Math.log(node.visits + 2);
-        let best = null, high = -Infinity;
-        for (const child of node.children) {
-          const rank = child.visits
-            ? side * child.value / child.visits + 1.1 * Math.sqrt(exploration / child.visits) + child.prior / (2 + child.visits)
-            : 20 + child.prior + child.tie;
-          if (rank > high) { best = child; high = rank; }
-        }
-        node = best;
-        path.push(node);
-        if (!node.visits) break;
-      }
-      let position = node.game;
-      for (let k = 0; k < rollout && position.passes < 2; k++) {
-        const choices = candidates(position, inspect(position), random, 2);
-        const pick = random() < .72 ? 0 : Math.floor(random() * choices.length);
-        position = choices[pick].game;
-      }
-      const value = position.passes === 2 ? terminal(position) : estimate(inspect(position).features, weights);
-      for (const ancestor of path) { ancestor.visits++; ancestor.value += value; }
-    }
-    const side = game.turn === 1 ? 1 : -1;
-    return root.children.filter(c => c.visits).sort((a,b) => b.visits - a.visits ||
-      side * (b.value/b.visits - a.value/a.visits) || b.prior - a.prior)[0].move;
+  function value(game, info, weights) {
+    const area = info.space / game.size + info.features[0] + info.features[1];
+    return .70 * estimate(info.features, weights) + .30 * Math.tanh(area / 2);
   }
 
-  const api = { initialWeights, inspect, estimate, search, terminal };
-  if (typeof module === 'object') module.exports = api;
+  function takeLastLiberty(game, group) {
+    if (group.liberties.size !== 1) return null;
+    const [p] = group.liberties;
+    const move = {type:'stone', row:Math.floor(p/game.size), col:p%game.size};
+    const next = rules.play(game, move).game;
+    return next ? {next, point:p, gain:next.captures[game.turn] - game.captures[game.turn]} : null;
+  }
+
+  function choices(game, info, random, width) {
+    const pool = reading.ranked(game, info, random);
+    const children = [];
+    const late = info.occupied > game.stones.length * .48;
+    const score = late ? rules.score(game, []) : null;
+    for (const [list, limit] of [[pool.stones, width], [pool.walls, Math.max(2, Math.ceil(width / 3))]]) {
+      let count = 0;
+      for (const {move, rank} of list) {
+        const p = move.row * game.size + move.col;
+        if (move.type === 'stone' && score?.ownership[p] === game.turn && rank < 5) continue;
+        const next = rules.play(game, move).game;
+        if (!next) continue;
+        let priority = rank;
+        if (move.type === 'stone') {
+          const group = rules.groupAt(next.stones, next.size, next.edges, p);
+          const gain = next.captures[game.turn] - game.captures[game.turn];
+          if (group.liberties.size === 1) {
+            const reply = takeLastLiberty(next, group);
+            if (reply) {
+              const capturingChain = rules.groupAt(reply.next.stones, game.size, game.edges, reply.point);
+              const recapture = takeLastLiberty(reply.next, capturingChain);
+              const trade = gain - reply.gain + (recapture?.gain ?? 0);
+              if (trade < 0 && !gain) continue;
+              if (trade < 0) priority = Math.min(priority, trade - 2);
+              if (trade > gain) priority += 2 + Math.log2(1 + trade);
+            }
+          }
+        }
+        children.push({move, game:next, rank:priority});
+        if (++count >= limit) break;
+      }
+    }
+    if (!children.length || late) {
+      const winningPass = late && game.passes === 1 && score.totals[game.turn] > score.totals[3-game.turn];
+      children.push({move:{type:'pass'}, game:rules.pass(game), rank:winningPass ? 25 : -1.4});
+    }
+    return children.sort((a,b) => b.rank - a.rank);
+  }
+
+  // Read alternating forcing replies to a quiet evaluation. A chain can sometimes
+  // be saved by capturing a different chain, so all ataris on the board participate.
+  function read(game, info, weights, cache, depth) {
+    let best = value(game, info, weights);
+    if (!depth) return best;
+    const targets = new Map();
+    for (const group of info.groups) {
+      if (group.liberties.size !== 1) continue;
+      const [p] = group.liberties;
+      targets.set(p, (targets.get(p) || 0) + group.points.length);
+    }
+    const order = [...targets].sort((a,b) => b[1] - a[1]).slice(0, 4);
+    const sense = side(game);
+    for (const [p] of order) {
+      const next = rules.play(game, {type:'stone',row:Math.floor(p/game.size),col:p%game.size}).game;
+      if (!next) continue;
+      const reply = read(next, reading.inspect(next, cache), weights, cache, depth-1);
+      if (sense * reply > sense * best) best = reply;
+    }
+    return best;
+  }
+
+  // PUCT uses tactical priors to allocate simulations. Root moves additionally
+  // get a two-reply tactical reading before the statistical search commits to one.
+  function search(game, {weights = initialWeights, random = Math.random, iterations = 128,
+    budgetMs = Infinity, width = 8, rollout = 2} = {}) {
+    if (game.passes >= 2) return null;
+    const deadline = performance.now() + budgetMs;
+    const cache = new WeakMap();
+    const root = {game, visits:0, sum:0};
+    const inspectNode = n => n.info ??= reading.inspect(n.game, cache);
+    function expand(parent) {
+      const atRoot = parent === root;
+      const list = choices(parent.game, inspectNode(parent), random, atRoot ? 2*width : width);
+      if (atRoot) {
+        const until = Math.min(deadline, performance.now() + budgetMs * .24);
+        for (const child of list) {
+          if (performance.now() >= until) break;
+          if (child.move.type === 'pass') continue;
+          const adjustment = reading.ladderAdjustment(game, child, inspectNode(child), until);
+          child.rank += adjustment;
+          child.tactics = Math.tanh(adjustment / 7);
+        }
+        list.sort((a,b) => b.rank - a.rank);
+      }
+      const maxRank = list[0].rank;
+      let mass = 0;
+      for (const child of list) {
+        child.prior = .045 + Math.exp((child.rank-maxRank) / 2.8);
+        mass += child.prior;
+        child.visits = 0;
+        child.sum = 0;
+      }
+      for (const child of list) child.prior /= mass;
+      parent.children = list;
+    }
+
+    expand(root);
+    const rootValue = value(game, root.info, weights);
+    for (const child of root.children) {
+      child.initial = rootValue;
+      if (child.game.passes === 2) child.initial = terminal(child.game);
+      else if (performance.now() < deadline) {
+        child.initial = read(child.game, inspectNode(child), weights, cache, Math.min(2,rollout));
+        child.initial += side(game) * .18 * (child.tactics || 0);
+      }
+    }
+
+    for (let i=0; i<iterations && (i===0 || performance.now()<deadline); i++) {
+      let current = root;
+      const path = [current];
+      while (current.children) {
+        let best, high = -Infinity;
+        const exploration = 1.65 * Math.sqrt(current.visits+1);
+        for (const child of current.children) {
+          const initial = child.initial ?? (current.visits ? current.sum/current.visits : rootValue);
+          const mean = (child.sum + initial*2) / (child.visits+2);
+          const rank = side(current.game)*mean + exploration * child.prior / (child.visits+1);
+          if (rank > high) { high = rank; best = child; }
+        }
+        current = best;
+        path.push(current);
+        if (current.visits && !current.children && current.game.passes < 2) expand(current);
+      }
+      const result = current.game.passes === 2 ? terminal(current.game)
+        : read(current.game, inspectNode(current), weights, cache, Math.min(1,rollout));
+      for (const ancestor of path) { ancestor.sum += result; ancestor.visits++; }
+    }
+    return root.children.reduce((a,b) => b.visits > a.visits ? b : a).move;
+  }
+
+  const api = { initialWeights, inspect:reading.inspect, estimate, search, terminal };
+  if (node) module.exports = api;
   else globalThis.GoridorAI = api;
 })();

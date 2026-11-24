@@ -69,3 +69,15 @@ test('a wall may leave one liberty, including when a second link reaches the sam
   const after = play(shared, wall(1, 0, 'vertical')).game;
   assert.deepEqual([...groupAt(after.stones, 9, after.edges, 0).liberties], [10]);
 });
+
+test('le ko interdit la reprise immédiate et une pierre peut capturer plusieurs chaînes voisines', () => {
+  const before = position([[1,2], [2,1], [3,2]], [[2,2], [1,3], [2,4], [3,3]]);
+  const capture = play(before, {type:'stone', row:2, col:3}).game;
+  assert.equal(capture.captures[BLACK], 1);
+  assert.equal(play(capture, {type:'stone', row:2, col:2}).error, 'ko');
+
+  const double = position([[0,1], [0,3], [1,0], [1,4], [2,1], [2,3]], [[1,1], [1,3]]);
+  const result = play(double, {type:'stone', row:1, col:2}).game;
+  assert.equal(result.captures[BLACK], 2);
+  assert.equal(result.stones[10] + result.stones[12], 0);
+});

@@ -52,17 +52,6 @@
     return { points, liberties };
   }
 
-  function groupsWithoutLiberties(stones, size, edges, color) {
-    const visited = new Set();
-    const captured = [];
-    for (let point = 0; point < stones.length; point++) {
-      if (stones[point] !== color || visited.has(point)) continue;
-      const group = groupAt(stones, size, edges, point, visited);
-      if (group.liberties.size === 0) captured.push(...group.points);
-    }
-    return captured;
-  }
-
   function inBounds(row, col, size) {
     return Number.isInteger(row) && Number.isInteger(col) &&
       row >= 0 && col >= 0 && row < size && col < size;
@@ -86,12 +75,20 @@
       if (stones[point]) return { error: 'occupied' };
       stones[point] = turn;
       lastStone = point;
-      const removed = groupsWithoutLiberties(stones, size, edges, other(turn));
-      for (const captured of removed) stones[captured] = 0;
-      if (groupsWithoutLiberties(stones, size, edges, turn).length) {
+      // Only opposing chains adjacent through an open edge can lose their last liberty.
+      const checked = new Set();
+      let captured = 0;
+      for (const next of neighbors(point, size, edges)) {
+        if (stones[next] !== other(turn) || checked.has(next)) continue;
+        const group = groupAt(stones, size, edges, next, checked);
+        if (group.liberties.size) continue;
+        for (const member of group.points) stones[member] = 0;
+        captured += group.points.length;
+      }
+      if (!captured && !groupAt(stones, size, edges, point).liberties.size) {
         return { error: 'suicide' };
       }
-      captures[turn] += removed.length;
+      captures[turn] += captured;
     } else if (type === 'wall') {
       if (!stock[turn]) return { error: 'stock' };
       if (!inBounds(row, col, size - 1)) return { error: 'edge' };
