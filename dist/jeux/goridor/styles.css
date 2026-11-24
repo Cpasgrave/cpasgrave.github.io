@@ -438,3 +438,12 @@ dialog::backdrop { background: #091610bf; }
 @media (prefers-reduced-motion: reduce) {
   button, .wall-piece { transition: none !important; }
 }
+
+.game-options { display: grid; gap: 11px; margin: 14px 0 18px; font-size: .9rem; }
+.game-options select { display: block; width: 100%; margin-top: 4px; padding: 8px;
+  border: 1px solid #657869; border-radius: 7px; background: var(--panel); color: inherit; font: inherit; }
+.check-option { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.check-option input { inline-size: 17px; block-size: 17px; accent-color: var(--accent); }
+#history { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center;
+  gap: 8px; text-align: center; font-size: .9rem; font-variant-numeric: tabular-nums; }
+#history button { min-height: 40px; font-size: 1.2rem; padding: 3px; }

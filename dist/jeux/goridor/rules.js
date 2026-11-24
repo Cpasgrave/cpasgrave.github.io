@@ -193,7 +193,7 @@
     return { captures, territory, ownership, totals };
   }
 
-  const rules = { BLACK, WHITE, STOCK, KOMI, createGame, play, pass, score, groupAt };
+  const rules = { BLACK, WHITE, STOCK, KOMI, createGame, play, pass, score, groupAt, neighbors };
   if (typeof module === 'object') module.exports = rules;
-  else window.GoridorRules = rules;
+  else globalThis.GoridorRules = rules;
 })();

@@ -49,14 +49,90 @@
   let count = null;
   let countApproval = BLACK;
   let audio = null;
+  let computer = false;
+  let allowHistory = false;
+  let frames = [];
+  let cursor = 0;
+  let worker = null;
+
+  const computerTurn = () => phase === 'play' && computer && game.turn === WHITE;
+
+  function snapshot(move, label) {
+    return { game, phase, move, label, dead: new Set(dead), count, countApproval };
+  }
+
+  function updateScoreFrame() {
+    if (allowHistory) frames[cursor] = snapshot(frames[cursor].move, frames[cursor].label);
+  }
+
+  function stopComputer() {
+    if (worker) worker.terminate();
+    worker = null;
+  }
+
+  function navigate(index) {
+    if (!allowHistory || index < 0 || index >= frames.length) return;
+    stopComputer();
+    cancelWallDrag();
+    cursor = index;
+    const frame = frames[index];
+    ({game, phase, count, countApproval} = frame);
+    dead = new Set(frame.dead);
+    mode = 'stone';
+    hover = pending = keyboard = null;
+    aim.textContent = '';
+    announce(frame.label);
+    refresh();
+  }
+
+  function record(move, label) {
+    if (allowHistory) {
+      const next = frames[cursor + 1]?.move;
+      if (next && ['type','row','col','orientation'].every(key => next[key] === move[key])) {
+        navigate(cursor + 1);
+        if (cursor === frames.length - 1 && computerTurn()) requestComputer();
+        return;
+      }
+      frames.splice(cursor + 1, frames.length, snapshot(move, label));
+      cursor++;
+    }
+    announce(label);
+    refresh();
+    if (computerTurn()) requestComputer();
+  }
+
+  function requestComputer() {
+    if (!computerTurn() || worker) return;
+    try {
+      const current = new Worker('ai-worker.js?v=mc1');
+      worker = current;
+      current.onmessage = ({data}) => {
+        if (current !== worker) return;
+        stopComputer();
+        applyMove(data);
+      };
+      current.onerror = () => {
+        if (current !== worker) return;
+        stopComputer();
+        refresh();
+        announce('Calcul interrompu. Vous pouvez relancer le coup des Blancs.', true);
+      };
+      current.postMessage(game);
+      refresh();
+    } catch {
+      stopComputer();
+      refresh();
+      announce('Impossible de démarrer le calcul des Blancs.', true);
+    }
+  }
 
   const samePoint = (first, second) => first?.row === second?.row && first?.col === second?.col;
   const number = value => value.toLocaleString('fr-FR');
   const positionLabel = target => coordinate(target.row, target.col, game.size);
 
-  function describeTarget(target) {
+  function describeTarget(target, type = mode) {
     const start = positionLabel(target);
-    if (mode === 'stone') return start;
+    if (type === 'stone') return start;
     const end = coordinate(target.row + 1, target.col + 1, game.size);
     return start + '–' + end;
   }
@@ -114,7 +190,7 @@
 
   function draw() {
     const carrying = Boolean(drag?.active);
-    const target = carrying ? drag.target : hover ?? pending ?? keyboard;
+    const target = computerTurn() ? null : carrying ? drag.target : hover ?? pending ?? keyboard;
     wallMode.classList.toggle('carrying', carrying);
     document.body.classList.toggle('carrying-wall', carrying);
     floatingWall.hidden = !carrying || Boolean(target);
@@ -136,10 +212,12 @@
       : wall
         ? 'Glissez la barrière ou visez un croisement de rigoles.'
         : 'Visez une intersection libre pour poser la pierre.';
-    byId('move-hint').textContent = hint;
+    const locked = computerTurn();
+    byId('move-hint').textContent = locked ? (worker ? 'L’IA choisit son coup.' : 'Utilisez les flèches ou relancez le coup des Blancs.') : hint;
+    stoneMode.disabled = byId('pass').disabled = locked;
     stoneMode.setAttribute('aria-pressed', String(!wall));
     wallMode.setAttribute('aria-pressed', String(wall));
-    wallMode.disabled = rotateButton.disabled = game.stock[game.turn] === 0;
+    wallMode.disabled = rotateButton.disabled = locked || game.stock[game.turn] === 0;
     wallMode.dataset.orientation = orientation;
     wallMode.setAttribute('aria-label', 'Barrière ' + orientations[orientation].toLowerCase());
     stoneMode.querySelector('.stone-icon').classList.toggle('white-stone', game.turn === WHITE);
@@ -155,13 +233,14 @@
       byId(prefix + '-total').textContent = number(count.totals[player]);
     }
     byId('count-hint').textContent = phase === 'done'
-      ? 'Score validé par les deux joueurs.'
+      ? (computer ? 'Score validé.' : 'Score validé par les deux joueurs.')
       : 'Sélectionnez un groupe pour le marquer mort ou le rétablir.';
-    confirmScore.textContent = 'Valider pour les ' + colors[countApproval];
+    confirmScore.textContent = computer ? 'Valider le score' : 'Valider pour les ' + colors[countApproval];
     confirmScore.hidden = phase === 'done';
   }
 
   function turnLabel() {
+    if (computerTurn()) return worker ? 'Les Blancs réfléchissent…' : 'Aux Blancs de jouer';
     if (phase === 'play') return 'Aux ' + colors[game.turn] + ' de jouer';
     if (phase === 'count') return 'Décompte';
     if (phase === 'done') {
@@ -176,7 +255,15 @@
 
   function refresh() {
     const playing = phase === 'play';
-    const interactive = playing || phase === 'count';
+    const interactive = (playing && !computerTurn()) || phase === 'count';
+    byId('history').hidden = phase === 'setup' || !allowHistory;
+    if (allowHistory) {
+      byId('previous').disabled = cursor === 0;
+      byId('next').disabled = cursor >= frames.length - 1;
+      byId('ply').textContent = 'Coup ' + cursor + ' / ' + (frames.length - 1);
+    }
+    byId('ai-resume').hidden = !computerTurn() || Boolean(worker);
+    byId('opponent-label').textContent = phase === 'setup' ? 'Jeu local' : computer ? 'IA Monte-Carlo · Blancs' : 'Deux joueurs · en local';
     setup.hidden = phase !== 'setup';
     byId('restart').hidden = phase === 'setup';
     byId('game-controls').hidden = phase === 'setup';
@@ -200,7 +287,10 @@
     draw();
   }
 
-  function start(size, focusBoard) {
+  function start(size, focusBoard, options) {
+    stopComputer();
+    computer = options.querySelector('[data-opponent]').value === 'computer';
+    allowHistory = options.querySelector('[data-history]').checked;
     if (restartDialog.open) restartDialog.close();
     game = rules.createGame(size);
     phase = 'play';
@@ -211,6 +301,8 @@
     dead = new Set();
     count = null;
     countApproval = BLACK;
+    cursor = 0;
+    frames = allowHistory ? [snapshot(null, 'Début de partie.')] : [];
     aim.textContent = '';
     announce();
     refresh();
@@ -218,7 +310,7 @@
   }
 
   function setMode(next, focusBoard) {
-    if (phase !== 'play' || (next === 'wall' && !game.stock[game.turn])) return;
+    if (phase !== 'play' || computerTurn() || (next === 'wall' && !game.stock[game.turn])) return;
     if (mode !== next) {
       mode = next;
       hover = pending = keyboard = null;
@@ -231,7 +323,7 @@
   }
 
   function rotate() {
-    if (phase !== 'play' || !game.stock[game.turn]) return;
+    if (phase !== 'play' || computerTurn() || !game.stock[game.turn]) return;
     orientation = orientation === 'horizontal' ? 'vertical' : 'horizontal';
     aim.textContent = 'Barrière ' + orientations[orientation].toLowerCase() + '.';
     updateMoveControls();
@@ -252,21 +344,42 @@
   }
 
   function commit(target) {
-    const result = proposal(target);
-    if (result.error) {
-      announce(errors[result.error], true);
-      return;
-    }
+    if (phase !== 'play' || computerTurn()) return;
+    const move = { type: mode, row: target.row, col: target.col };
+    if (mode === 'wall') move.orientation = orientation;
+    applyMove(move);
+  }
+
+  function applyMove(move) {
     const player = game.turn;
-    const captures = result.game.captures[player] - game.captures[player];
-    const action = mode === 'stone' ? 'Pierre' : 'Barrière ' + orientations[orientation].toLowerCase();
-    const after = captures ? ' · ' + captures + (captures === 1 ? ' capture' : ' captures') : '';
-    announce(colors[player] + ' · ' + action + ' en ' + describeTarget(target) + after + '.');
-    playSound(mode);
-    game = result.game;
+    let label;
+    if (move.type === 'pass') {
+      game = rules.pass(game);
+      label = 'Les ' + colors[player] + ' passent.';
+      if (game.passes === 2) {
+        phase = 'count';
+        count = rules.score(game, dead);
+        label += ' Deux passes de suite. Le décompte commence.';
+      }
+    } else {
+      const result = rules.play(game, move);
+      if (result.error) {
+        announce(errors[result.error], true);
+        refresh();
+        return;
+      }
+      const captures = result.game.captures[player] - game.captures[player];
+      const action = move.type === 'stone' ? 'Pierre' : 'Barrière ' + orientations[move.orientation].toLowerCase();
+      const after = captures ? ' · ' + captures + (captures === 1 ? ' capture' : ' captures') : '';
+      label = colors[player] + ' · ' + action + ' en ' + describeTarget(move, move.type) + after + '.';
+      playSound(move.type);
+      game = result.game;
+    }
+    cancelWallDrag();
     mode = 'stone';
-    hover = pending = null;
-    refresh();
+    hover = pending = keyboard = null;
+    aim.textContent = '';
+    record(move, label);
   }
 
   function toggleDead(target) {
@@ -280,6 +393,7 @@
     }
     countApproval = BLACK;
     count = rules.score(game, dead);
+    updateScoreFrame();
     announce('Groupe en ' + positionLabel(target) + (remove ? ' rétabli.' : ' marqué mort.'));
     refresh();
   }
@@ -287,7 +401,7 @@
   function boardAction(target, stageTouch = false) {
     if (phase === 'count') {
       toggleDead(target);
-    } else if (phase === 'play') {
+    } else if (phase === 'play' && !computerTurn()) {
       if (stageTouch && !samePoint(target, pending)) {
         pending = target;
         hover = keyboard = null;
@@ -303,7 +417,7 @@
 
   canvas.addEventListener('pointerdown', event => { pointerType = event.pointerType; });
   canvas.addEventListener('pointermove', event => {
-    if ((phase !== 'play' && phase !== 'count') || event.pointerType !== 'mouse') return;
+    if (computerTurn() || (phase !== 'play' && phase !== 'count') || event.pointerType !== 'mouse') return;
     const target = board.pick(event, mode === 'wall');
     if (samePoint(hover, target) && !keyboard) return;
     hover = target;
@@ -316,7 +430,7 @@
     draw();
   });
   canvas.addEventListener('click', event => {
-    if (phase !== 'play' && phase !== 'count') return;
+    if (computerTurn() || (phase !== 'play' && phase !== 'count')) return;
     const target = board.pick(event, mode === 'wall');
     if (!target) {
       if (phase === 'play') announce(mode === 'wall' ? errors.edge : errors.bounds, true);
@@ -331,7 +445,7 @@
     draw();
   });
   canvas.addEventListener('keydown', event => {
-    if (phase !== 'play' && phase !== 'count') return;
+    if (computerTurn() || (phase !== 'play' && phase !== 'count')) return;
     const directions = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
     const delta = directions[event.key];
     if (!delta && event.key !== 'Enter' && event.key !== ' ') return;
@@ -407,20 +521,13 @@
   });
   confirmMove.addEventListener('click', () => { if (pending) commit(pending); });
   byId('pass').addEventListener('click', () => {
-    cancelWallDrag();
-    announce('Les ' + colors[game.turn] + ' passent.');
-    game = rules.pass(game);
-    mode = 'stone';
-    hover = pending = keyboard = null;
-    if (game.passes === 2) {
-      phase = 'count';
-      count = rules.score(game, dead);
-      announce('Deux passes de suite. Le décompte commence.');
-    }
-    refresh();
+    if (phase === 'play' && !computerTurn()) applyMove({type:'pass'});
   });
+  byId('previous').addEventListener('click', () => navigate(cursor - 1));
+  byId('next').addEventListener('click', () => navigate(cursor + 1));
+  byId('ai-resume').addEventListener('click', requestComputer);
   confirmScore.addEventListener('click', () => {
-    if (countApproval === BLACK) {
+    if (countApproval === BLACK && !computer) {
       countApproval = WHITE;
       announce('Décompte validé par les Noirs.');
     } else {
@@ -428,16 +535,19 @@
       hover = pending = keyboard = null;
       announce();
     }
+    updateScoreFrame();
     refresh();
   });
   document.querySelectorAll('button[data-size]').forEach(button => {
     const size = Number(button.dataset.size);
     button.querySelector('.size-stock').textContent = rules.STOCK[size] + ' barrières chacun';
-    button.addEventListener('click', event => start(size, event.detail === 0));
+    button.addEventListener('click', event => start(size, event.detail === 0, button.closest('#setup, dialog')));
     button.disabled = false;
   });
   byId('restart').addEventListener('click', () => {
     byId('restart-note').hidden = phase === 'done';
+    restartDialog.querySelector('[data-opponent]').value = computer ? 'computer' : 'human';
+    restartDialog.querySelector('[data-history]').checked = allowHistory;
     restartDialog.showModal();
   });
   byId('open-rules').addEventListener('click', () => rulesDialog.showModal());

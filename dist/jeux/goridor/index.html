@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#142521">
   <title>Goridor · Cépagrave</title>
-  <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux sur le même écran.">
+  <meta name="description" content="Un duel de Go avec des barrières, à jouer à deux ou contre une IA Monte-Carlo.">
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
-  <link rel="stylesheet" href="styles.css?v=barrieres-larges">
-  <script src="rules.js?v=stocks-246" defer></script>
+  <link rel="stylesheet" href="styles.css?v=historique1">
+  <script src="rules.js?v=mc1" defer></script>
   <script src="board.js?v=barrieres-larges" defer></script>
-  <script src="app.js?v=stocks-246" defer></script>
+  <script src="app.js?v=historique1" defer></script>
 </head>
 <body>
   <header class="top">
@@ -32,7 +32,7 @@
   <main class="game-layout">
     <div class="board-heading">
       <span id="board-size">Plateau 9 × 9</span>
-      <span>Deux joueurs · en local</span>
+      <span id="opponent-label">Jeu local</span>
     </div>
     <div class="board-region">
       <div class="board-frame">
@@ -42,7 +42,16 @@
     <aside class="side">
       <section class="setup panel" id="setup" aria-labelledby="setup-title">
         <h2 id="setup-title">Nouvelle partie</h2>
-        <p>Choisissez la taille du plateau.</p>
+        <div class="game-options">
+          <label>Adversaire
+            <select data-opponent>
+              <option value="human">Deuxième joueur</option>
+              <option value="computer">IA Monte-Carlo · Blancs</option>
+            </select>
+          </label>
+          <label class="check-option"><input type="checkbox" data-history> Autoriser le retour en arrière</label>
+        </div>
+        <p>Choisissez un plateau pour commencer.</p>
         <div class="size-options">
           <button type="button" class="size-option" data-size="9" disabled>
             <span class="size-grid size-grid-small" aria-hidden="true"></span>
@@ -64,6 +73,11 @@
 
       <section id="game-controls" hidden aria-label="Partie">
         <h2 id="turn-label" class="turn-label" aria-live="polite">Aux Noirs de jouer</h2>
+        <nav id="history" aria-label="Historique des coups" hidden>
+          <button class="button quiet" id="previous" type="button" aria-label="Coup précédent" title="Coup précédent">←</button>
+          <span id="ply" aria-live="polite"></span>
+          <button class="button quiet" id="next" type="button" aria-label="Coup suivant" title="Coup suivant">→</button>
+        </nav>
         <div class="players">
           <article class="player player-black" id="player-black" aria-labelledby="black-label">
             <h3 id="black-label"><span class="stone-icon black-stone" aria-hidden="true"></span>Noirs</h3>
@@ -102,6 +116,7 @@
           <button class="button primary wide" id="confirm-move" type="button" hidden>Poser ici</button>
           <button class="button quiet pass-button" id="pass" type="button">Passer</button>
         </section>
+        <button class="button primary wide" type="button" id="ai-resume" hidden>Jouer le coup de l’IA</button>
         <section class="panel scoring" id="scoring" hidden aria-label="Décompte">
           <p id="count-hint">Touchez un groupe pour le marquer mort ou le rétablir.</p>
           <table>
@@ -139,6 +154,8 @@
       <p>Placez-la dans une rigole intérieure, dès le premier tour et même près d’un bord. Une barrière reste en place jusqu’à la fin de la partie. Elle peut toucher une autre barrière par son extrémité, sans la croiser ni la recouvrir.</p>
       <h3>Captures et ko</h3>
       <p>Seule une pierre peut capturer. Après sa pose, le jeu retire les groupes adverses privés de toute liberté. Si l’un de vos groupes reste sans liberté après ces captures, le coup est interdit. Le ko interdit de rétablir immédiatement la position précédente, barrières comprises.</p>
+      <h3>Historique facultatif</h3>
+      <p>Les flèches permettent de revoir chaque coup. Jouer un coup différent depuis une position antérieure remplace la suite de la partie. En solo, les Blancs sont joués par l’IA Monte-Carlo.</p>
       <h3>Décompte</h3>
       <p>Deux passes de suite ouvrent le décompte. Marquez ensemble les groupes morts, puis validez pour chaque couleur. Chaque intersection vide délimitée par une seule couleur et chaque prisonnier vaut un point. Les Blancs reçoivent 6,5 points de komi.</p>
       <p class="keyboard-note">Au clavier, utilisez les flèches pour viser, Entrée pour jouer et R pour pivoter une barrière.</p>
@@ -151,6 +168,15 @@
       <form method="dialog"><button class="button quiet close-button" aria-label="Fermer" autofocus>×</button></form>
     </div>
     <p id="restart-note">La partie en cours sera remplacée.</p>
+    <div class="game-options">
+          <label>Adversaire
+            <select data-opponent>
+              <option value="human">Deuxième joueur</option>
+              <option value="computer">IA Monte-Carlo · Blancs</option>
+            </select>
+          </label>
+          <label class="check-option"><input type="checkbox" data-history> Autoriser le retour en arrière</label>
+        </div>
     <div class="size-options restart-options">
       <button type="button" class="size-option" data-size="9"><span class="size-label">9 × 9</span><span class="size-stock"></span></button>
       <button type="button" class="size-option" data-size="13"><span class="size-label">13 × 13</span><span class="size-stock"></span></button>
