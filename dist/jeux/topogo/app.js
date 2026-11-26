@@ -77,7 +77,7 @@
         : 'Le calcul des Blancs a été interrompu. Tu peux le relancer.');
     };
     try {
-      const current = new Worker('ai-worker.js?v=yeux4');
+      const current = new Worker('ai-worker.js?v=groupes5');
       worker = current;
       computerFailed = false;
       announce();
