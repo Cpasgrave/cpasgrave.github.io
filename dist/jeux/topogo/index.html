@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#b57848">
+  <meta name="description" content="Jouez à Topogo à deux ou contre une IA Monte-Carlo. Les barrières en bois occupent les intersections.">
+  <title>Topogo · CéPAGRAVE</title>
+  <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
+  <link rel="preload" href="../quarto/fonts/The-Wildeast-FR.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css?v=orange-cuivre">
+  <script src="./rules.js?v=monte-carlo" defer></script>
+  <script src="./board.js?v=monte-carlo" defer></script>
+  <script src="./ai-level.js?v=monte-carlo" defer></script>
+  <script src="./app.js?v=monte-carlo" defer></script>
+</head>
+<body>
+  <main class="table">
+    <a class="return" href="../../codes/jeux/index.html">← CéPAGRAVE · Jeux</a>
+    <header class="heading">
+      <h1>Topogo</h1>
+      <nav aria-label="Menu de Topogo">
+        <button class="wood-button" id="open-rules" type="button">Règles</button>
+        <button class="wood-button" id="open-new" type="button">Nouvelle partie</button>
+      </nav>
+    </header>
+
+    <div class="game">
+      <section class="table-board" aria-label="Plateau de Topogo">
+        <div class="goban" id="goban">
+          <canvas class="grid" id="grid" aria-hidden="true"></canvas>
+          <canvas class="pieces" id="pieces" aria-hidden="true"></canvas>
+          <div class="intersections" id="intersections" role="group" aria-label="Intersections du plateau"></div>
+        </div>
+      </section>
+
+      <aside class="sheet" aria-label="Commandes de la partie">
+        <div class="sheet-heading">
+          <p class="game-size" id="game-size">9 × 9</p>
+          <p class="game-mode" id="game-mode">À deux sur le même écran</p>
+        </div>
+        <div class="players" aria-label="Joueurs et réserves">
+          <div class="player" id="player-1">
+            <span class="pebble black" aria-hidden="true"></span>
+            <div><h2>Noirs</h2><p id="captures-1">0 prise</p></div>
+            <p class="reserve" id="reserve-1"></p>
+          </div>
+          <div class="player" id="player-2">
+            <span class="pebble white" aria-hidden="true"></span>
+            <div><h2>Blancs</h2><p id="captures-2">0 prise</p></div>
+            <p class="reserve" id="reserve-2"></p>
+          </div>
+        </div>
+        <details id="match-level" class="match-level" hidden>
+          <summary>Niveau de l’IA <span id="match-level-summary"></span></summary>
+          <div data-level-control></div>
+        </details>
+
+        <section class="turn" aria-labelledby="status">
+          <h2 id="status" aria-live="polite">Aux Noirs de jouer</h2>
+          <div id="play-controls">
+            <div class="tools" role="group" aria-label="Pièce à poser">
+              <button type="button" class="tool" id="stone" aria-pressed="true">
+                <canvas width="112" height="64" aria-hidden="true"></canvas><span>Pierre</span>
+              </button>
+              <button type="button" class="tool" id="wall-1" aria-pressed="false">
+                <canvas width="112" height="64" aria-hidden="true"></canvas><span>1 point</span>
+              </button>
+              <button type="button" class="tool" id="wall-2" aria-pressed="false">
+                <canvas width="112" height="64" aria-hidden="true"></canvas><span>2 points</span>
+              </button>
+            </div>
+            <button class="orientation" id="orientation" type="button" hidden>
+              <span id="direction-symbol" aria-hidden="true">↔</span><span id="direction-label">Horizontale</span><kbd aria-hidden="true">R</kbd>
+            </button>
+            <p class="hint" id="hint">Pose une pierre sur une intersection libre.</p>
+            <button class="wood-button pass" id="pass" type="button">Passer</button>
+          </div>
+          <button class="wood-button" id="ai-retry" type="button" hidden>Relancer le calcul</button>
+          <div id="scoring-controls" hidden>
+            <p class="hint" id="scoring-hint">Clique sur un groupe mort ou sur une zone à laisser neutre.</p>
+            <dl class="score" id="score"></dl>
+            <div class="scoring-actions" id="scoring-actions">
+              <button class="wood-button" id="score-done" type="button">Valider le score</button>
+              <button class="plain" id="resume" type="button">Reprendre</button>
+            </div>
+          </div>
+          <p class="message" id="message" role="status" hidden></p>
+        </section>
+
+        <nav class="history" aria-label="Historique des coups">
+          <button class="arrow" id="back" type="button" aria-label="Coup précédent" disabled>‹</button>
+          <div><p id="move-number">Coup 0</p><p id="move-description">Début de partie</p></div>
+          <button class="arrow" id="forward" type="button" aria-label="Coup suivant" disabled>›</button>
+        </nav>
+      </aside>
+    </div>
+  </main>
+
+  <dialog id="rules-dialog" class="paper-dialog" aria-labelledby="rules-title">
+    <form method="dialog"><button class="wood-button close" type="submit">Fermer</button></form>
+    <h2 id="rules-title">Règles de Topogo</h2>
+    <p>À ton tour, pose une pierre, pose une barrière ou passe. Les Noirs commencent. Les pierres et les barrières se posent sur les intersections libres.</p>
+    <p>Les pierres de même couleur reliées par les lignes forment un groupe. Chaque intersection libre voisine est une liberté. Une pierre ou une barrière peut prendre la dernière liberté d’un groupe adverse et le capturer. Un coup qui laisse ton propre groupe sans liberté est interdit, de même que la reprise immédiate dans un ko.</p>
+    <p>Les barrières restent en place. Elles bloquent les connexions, les libertés et le passage entre territoires. La petite couvre une intersection. La grande couvre deux intersections contiguës. Choisis son sens avec le bouton d’orientation ou la touche <kbd>R</kbd>.</p>
+    <table>
+      <caption>Réserve de chaque joueur</caption>
+      <thead><tr><th scope="col">Plateau</th><th scope="col">1 point</th><th scope="col">2 points</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">9 × 9</th><td>1</td><td>1</td></tr>
+        <tr><th scope="row">13 × 13</th><td>1</td><td>2</td></tr>
+        <tr><th scope="row">19 × 19</th><td>0</td><td>4</td></tr>
+      </tbody>
+    </table>
+    <p>Après deux passes de suite, indiquez les groupes morts et neutralisez au besoin les zones proposées. Le score additionne intersections de territoire et prises. Les Blancs reçoivent 6,5 points de komi. Les intersections sous les barrières sont exclues du décompte. En cas de désaccord, reprenez la partie.</p>
+    <p>En solo, l’IA Monte-Carlo joue les Blancs. Les niveaux supérieurs lui donnent plus de simulations et lui permettent de lire des suites plus longues. Le réglage en cours de partie s’applique au prochain calcul. Tu peux corriger le décompte après deux passes.</p>
+    <p>Au clavier, déplace-toi avec les flèches sur le plateau et joue avec Entrée.</p>
+  </dialog>
+
+  <dialog id="new-dialog" class="paper-dialog new-game" aria-labelledby="new-title">
+    <h2 id="new-title">Nouvelle partie</h2>
+    <form id="new-game">
+      <fieldset class="size-options">
+        <legend>Taille du plateau</legend>
+        <div class="size-cards">
+          <label class="option"><input name="size" type="radio" value="9" checked><span><canvas width="144" height="144" aria-hidden="true"></canvas>9 × 9</span></label>
+          <label class="option"><input name="size" type="radio" value="13"><span><canvas width="144" height="144" aria-hidden="true"></canvas>13 × 13</span></label>
+          <label class="option"><input name="size" type="radio" value="19"><span><canvas width="144" height="144" aria-hidden="true"></canvas>19 × 19</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Adversaire</legend>
+        <div class="mode-options">
+          <label class="option"><input name="opponent" type="radio" value="local" checked><span>À deux</span></label>
+          <label class="option"><input name="opponent" type="radio" value="computer"><span>IA Monte-Carlo</span></label>
+        </div>
+      </fieldset>
+      <div id="setup-level" data-level-control hidden></div>
+      <p class="hint" id="restart-warning" hidden>La partie en cours sera remplacée.</p>
+      <button class="wood-button" type="submit">Jouer</button>
+      <button class="plain" type="button" id="cancel-new">Annuler</button>
+    </form>
+  </dialog>
+  <template id="level-template">
+    <label class="level-control">
+      <span class="level-heading"><span>Niveau de recherche</span><output aria-hidden="true"></output></span>
+      <input type="range" min="1" step="1">
+    </label>
+    <div class="level-scale" aria-hidden="true"><span>Rapide</span><span>Plus profond</span></div>
+  </template>
+</body>
+</html>
