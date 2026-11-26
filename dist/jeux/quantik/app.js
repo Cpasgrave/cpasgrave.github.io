@@ -4,7 +4,7 @@
   const $ = id => document.getElementById(id);
   const forms = ["Sphère", "Cylindre", "Cube", "Cône"];
   const files = ["sphere", "cylindre", "cube", "cone"];
-  const colors = ["miel", "vert sapin"];
+  const colors = ["miel", "vert olive"];
   const preferencesKey = "cepagrave.quantik.v1";
   let prefs = {};
   try { prefs = JSON.parse(localStorage.getItem(preferencesKey)) || {}; } catch {}
@@ -29,12 +29,10 @@
     return rack === racks[0] ? first : 1-first;
   }
   function source(side, shape, copy) {
-    return "dessins/" + (side ? "sapin-" : "miel-") + files[shape] + "-" + (copy+1) + ".webp";
+    return (side ? "sapin-" : "miel-") + files[shape] + "-" + (copy+1);
   }
   function piece(side, shape, copy) {
-    const image = document.createElement("img");
-    image.src = source(side, shape, copy); image.className = "piece"; image.alt = ""; image.draggable = false;
-    return image;
+    return QuantikPions.make(source(side,shape,copy));
   }
   function inReserve(side, shape, copy) {
     const mask = state.pieces[side*4+shape];
@@ -146,7 +144,7 @@
         const shape = Number(button.dataset.shape), copy = Number(button.dataset.copy);
         const present = inReserve(side,shape,copy);
         const image = button.firstChild, path = source(side,shape,copy);
-        if (image.getAttribute("src") !== path) image.src = path;
+        if (image.dataset.drawing !== path) image.replaceWith(QuantikPions.make(path));
         button.disabled = !present || !playable() || side !== state.turn || !Quantik.targets(state,side,shape);
         button.classList.toggle("empty",!present);
         button.setAttribute("aria-hidden",!present);
