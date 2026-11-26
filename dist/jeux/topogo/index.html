@@ -9,10 +9,10 @@
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
   <link rel="preload" href="../quarto/fonts/The-Wildeast-FR.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./style.css?v=decompte3">
-  <script src="./rules.js?v=yeux4" defer></script>
-  <script src="./board.js?v=yeux4" defer></script>
+  <script src="./rules.js?v=groupes5" defer></script>
+  <script src="./board.js?v=groupes5" defer></script>
   <script src="./ai-level.js?v=profondeur2" defer></script>
-  <script src="./app.js?v=yeux4" defer></script>
+  <script src="./app.js?v=groupes5" defer></script>
 </head>
 <body>
   <main class="table">
@@ -78,7 +78,7 @@
           </div>
           <button class="wood-button" id="ai-retry" type="button" hidden>Relancer le calcul</button>
           <div id="scoring-controls" hidden>
-            <p class="hint">Les carrés indiquent le territoire vide. Les pierres barrées sont prisonnières. Leur intersection libérée peut aussi rapporter un point de territoire.</p>
+            <p class="hint">Les prisonniers sont retirés du goban et repérés par une croix rouge. Les carrés indiquent le territoire. Clique sur une croix pour rétablir son groupe.</p>
             <p class="hint" id="scoring-hint">Clique sur un groupe pour le déclarer mort ou vivant, ou sur une zone pour corriger son territoire.</p>
             <table class="score" aria-label="Détail du décompte">
               <thead><tr><th scope="col">Points</th><th scope="col">Noirs</th><th scope="col">Blancs</th></tr></thead>

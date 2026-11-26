@@ -203,7 +203,7 @@
     const { pitch } = geometry;
     if (tally) {
       for (let i = 0; i < tally.ownership.length; i++) {
-        if (!tally.ownership[i] || game.board[i] !== 0) continue;
+        if (!tally.ownership[i] || (game.board[i] !== 0 && !dead.has(i))) continue;
         const [x, y] = center(i, geometry);
         const size = pitch * .33;
         ctx.fillStyle = tally.ownership[i] === BLACK ? '#403027c4' : '#fff4dce8';
@@ -214,6 +214,18 @@
       const color = game.board[i];
       if (color !== BLACK && color !== WHITE) continue;
       const [x, y] = center(i, geometry);
+      if (tally && dead.has(i)) {
+        const arm = pitch * .10;
+        ctx.beginPath();
+        ctx.moveTo(x - arm, y - arm);
+        ctx.lineTo(x + arm, y + arm);
+        ctx.moveTo(x + arm, y - arm);
+        ctx.lineTo(x - arm, y + arm);
+        ctx.strokeStyle = '#8a3026';
+        ctx.lineWidth = Math.max(1.5, pitch * .045);
+        ctx.stroke();
+        continue;
+      }
       stone(ctx, x, y, pitch * .455, color, {
         marked: !tally && game.lastMove?.type === 'stone' && game.lastMove.point === i,
         dead: dead.has(i),

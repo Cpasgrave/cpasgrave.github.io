@@ -193,3 +193,37 @@ test('en séki, les deux yeux privés et la liberté commune restent neutres', (
   assert.equal(suggestDead(game).size, 0);
   assert.deepEqual(score(game).territory, [0, 0, 0]);
 });
+
+test('les groupes enfermés dans huit à dix libertés sont proposés morts sans sélection manuelle', () => {
+  for (const size of [9, 13, 19]) for (const color of [BLACK, WHITE]) for (const width of [4, 5]) {
+    for (const barrier of [false, true]) {
+      const game = createGame(size);
+      game.board.fill(color);
+      const invaders = [];
+      for (let row = 3; row < 6; row++) for (let col = 2; col < 2 + width; col++) {
+        const point = row * size + col;
+        game.board[point] = row === 3 ? 3 - color : 0;
+        if (row === 3) invaders.push(point);
+        if (barrier) game.board[2 * size + col] = WALL;
+      }
+      for (const point of [size + 1, size + 3]) game.board[point] = 0;
+      const original = structuredClone(game);
+      assert.deepEqual(suggestDead(game), new Set(invaders));
+      const result = score(game);
+      assert.equal(result.captures[color], width);
+      assert.equal(result.territory[color], width * 3 + 2);
+      assert.equal(score(game, new Set()).captures[color], 0);
+      assert.deepEqual(game, original);
+    }
+  }
+});
+
+test('deux yeux existants protègent un groupe enfermé, même avec un large espace vide autour', () => {
+  const game = createGame(13);
+  game.board.fill(BLACK);
+  for (let row = 3; row <= 6; row++) for (let col = 2; col <= 7; col++) game.board[row * 13 + col] = 0;
+  for (let row = 3; row <= 5; row++) for (let col = 2; col <= 6; col++) game.board[row * 13 + col] = WHITE;
+  for (const p of [4 * 13 + 3, 4 * 13 + 5, 14, 16]) game.board[p] = 0;
+  assert.equal(suggestDead(game).size, 0);
+  assert.equal(score(game).captures[BLACK], 0);
+});

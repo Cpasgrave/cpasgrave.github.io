@@ -125,7 +125,7 @@
   // local stone defence (including playing elsewhere) before proposing prisoners.
   function lostPocket(game, room, alive, graph, budget) {
     const { color, points, empty, border } = room;
-    if (empty.length > 7 || points.length > 48) return false;
+    if (points.length > 48) return false;
     const cells = new Set(points);
     const boundary = [];
     for (const group of border) {
@@ -142,6 +142,8 @@
     for (const p of cells) for (const n of graph[p]) {
       if (!cells.has(n) && game.board[n] !== WALL && game.board[n] !== color) return false;
     }
+    if (cells.size <= 30) return readLocalPocket(game, cells, color, graph, budget);
+    if (empty.length > 7) return false;
     const defender = other(color);
     const memo = new Map(), path = new Set();
     let remaining = Math.min(1200, budget.left);
@@ -198,6 +200,102 @@
       Math.min(18, 2 * (empty.length + cells.size - points.length) + 6));
   }
 
+  function readLocalPocket(game, cells, attacker, graph, budget) {
+    const points = [...cells];
+    const index = new Map(points.map((point, i) => [point, i]));
+    const all = 2 ** points.length - 1;
+    const links = points.map(point => graph[point].reduce((mask, next) =>
+      index.has(next) ? mask | (1 << index.get(next)) : mask, 0));
+    let edge = 0, attack = 0, defense = 0;
+    for (const [i, point] of points.entries()) {
+      if (graph[point].some(next => !cells.has(next) && game.board[next] === attacker)) edge |= 1 << i;
+      if (game.board[point] === attacker) attack |= 1 << i;
+      if (game.board[point] === other(attacker)) defense |= 1 << i;
+    }
+    function adjacent(mask) {
+      let result = 0;
+      while (mask) {
+        const bit = mask & -mask;
+        result |= links[31 - Math.clz32(bit)];
+        mask ^= bit;
+      }
+      return result;
+    }
+    function chain(seed, stones) {
+      let connected = seed, front = seed;
+      while (front) {
+        front = adjacent(front) & stones & ~connected;
+        connected |= front;
+      }
+      return connected;
+    }
+    function place(own, enemy, bit, attacking) {
+      own |= bit;
+      let contact = adjacent(bit) & enemy;
+      while (contact) {
+        const group = chain(contact & -contact, enemy);
+        contact &= ~group;
+        if (!attacking && (group & edge)) continue;
+        if (!(adjacent(group) & all & ~(own | enemy))) enemy &= ~group;
+      }
+      const group = chain(bit, own);
+      if (!(attacking && (group & edge)) && !(adjacent(group) & all & ~(own | enemy))) return null;
+      return [own, enemy];
+    }
+    const memo = new Map(), path = new Set();
+    let remaining = Math.min(45000, budget.left);
+    function wins(attackers, defenders, attacking, depth) {
+      if (--remaining < 0 || --budget.left < 0) return false;
+      if (!defenders) {
+        let vacant = all & ~attackers;
+        while (vacant) {
+          const bit = vacant & -vacant;
+          vacant ^= bit;
+          const recapture = place(0, attackers, bit, false);
+          if (recapture && recapture[1] !== attackers) return false;
+        }
+        return true;
+      }
+      if (!depth) return false;
+      const key = attackers + '/' + defenders + '/' + Number(attacking);
+      if (path.has(key)) return false;
+      const entry = key + '/' + depth;
+      if (memo.has(entry)) return memo.get(entry);
+      path.add(key);
+      // A defender may play elsewhere. Every legal defence inside the pocket
+      // must also lose before the original stones can be proposed dead.
+      let result = !attacking && wins(attackers, defenders, true, depth - 1);
+      if (attacking || result) {
+        const vacant = all & ~(attackers | defenders);
+        const near = adjacent(defenders) & vacant;
+        for (let options of [near, vacant & ~near]) {
+          while (options) {
+            const bit = options & -options;
+            options ^= bit;
+            const next = attacking ? place(attackers, defenders, bit, true) : place(defenders, attackers, bit, false);
+            if (!next) continue;
+            if (attacking) {
+              const removed = defenders ^ next[1];
+              const group = chain(bit, next[0]);
+              const liberties = adjacent(group) & all & ~(next[0] | next[1]);
+              if (removed && !(removed & (removed - 1)) && group === bit && !(bit & edge) && liberties === removed) continue;
+            }
+            const reply = attacking ? wins(next[0], next[1], false, depth - 1) : wins(next[1], next[0], true, depth - 1);
+            if (reply === attacking) {
+              result = attacking;
+              break;
+            }
+          }
+          if (result === attacking || remaining < 0 || budget.left < 0) break;
+        }
+      }
+      path.delete(key);
+      if (remaining >= 0 && budget.left >= 0) memo.set(entry, result);
+      return result;
+    }
+    return wins(attack, defense, false, Math.min(40, 2 * points.length + 6));
+  }
+
   function suggestDead(game) {
     const { board, size } = game;
     const graph = Array.from(board, (_, p) => neighbors(p, size));
@@ -250,7 +348,7 @@
         if (interior.length <= 1) for (const prisoner of room.invaders) dead.add(prisoner);
       }
     }
-    const budget = { left: 6500 };
+    const budget = { left: 180000 };
     const proposed = [];
     for (const room of pockets.sort((a, b) => a.empty.length - b.empty.length)) {
       if (budget.left <= 0) break;
