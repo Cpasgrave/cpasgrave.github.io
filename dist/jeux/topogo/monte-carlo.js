@@ -8,17 +8,20 @@
   const byRank = (a, b) => b.rank - a.rank;
   const pass = { type: 'pass' };
 
-  function value(game, info, terminal = false) {
-    const lead = terminal ? info.count : info.lead;
-    const scale = game.size * .9;
-    return Math.tanh(lead / scale);
+  function value(game, info) {
+    if (game.passes >= 2) {
+      const { totals } = rules.score(game);
+      return Math.sign(totals[rules.BLACK] - totals[rules.WHITE]);
+    }
+    // Retain score sensitivity even when one side already leads by several captures.
+    return 2 / Math.PI * Math.atan(info.lead / (game.size * .65));
   }
 
   // The quiet estimate represents playing elsewhere. Explore captures and escapes
   // before accepting it, including barriers that close two liberties at once.
   function read(game, info, depth, branches, deadline, alpha = -1, beta = 1) {
     const side = sign(game.turn);
-    let best = side * value(game, info, game.passes >= 2);
+    let best = side * value(game, info);
     if (!depth || game.passes >= 2 || performance.now() >= deadline || best >= beta) return best;
     alpha = Math.max(alpha, best);
     for (const child of reading.tactical(game, info, branches)) {
@@ -31,7 +34,7 @@
     return best;
   }
 
-  function capturePreference(before, after, info) {
+  function capturePreference(before, after, info, until) {
     if (after.passes >= 2) return 0;
     const player = before.turn;
     const gain = after.captures[player] - before.captures[player];
@@ -41,7 +44,16 @@
       group.color === player && (group.liberties.size === 1 || group.wallAtari));
     const reply = threatened ? reading.tactical(after, info, 6) : [];
     const loss = Math.max(0, ...reply.map(child => child.game.captures[after.turn] - after.captures[after.turn]));
-    return .27 * Math.tanh((gain - loss) / 2);
+    let risk = 0;
+    const move = after.lastMove;
+    if (move.type === 'stone') {
+      const group = info.chain[move.point];
+      const netLoss = group.points.length - gain;
+      if (netLoss > 0 && group.liberties.size <= 2 && reading.caught(after, move.point, after.turn, until)) {
+        risk = .38 + .13 * Math.log2(1 + netLoss);
+      }
+    }
+    return .24 * Math.tanh((gain - loss) / 2) - risk;
   }
 
   function* extraChoices(stones, walls) {
@@ -86,7 +98,7 @@
     const ready = game.passes === 1 && covered >= .42 && info.contested < info.playable * .23;
     const quiet = info.occupied > 0 && bestRank < -2;
     if (!children.length || late || ready || quiet) {
-      const winningCount = ready && sign(game.turn) * info.count > 0 && bestRank < 7;
+      const winningCount = ready && bestRank < 7 && sign(game.turn) * value(rules.pass(game), null) > 0;
       const rank = winningCount ? 4 : quiet ? 4 : -3.8;
       children.push({ move: pass, game: rules.pass(game), rank });
     }
@@ -105,15 +117,16 @@
     const rootDeadline = Math.min(deadline, performance.now() + budgetMs * .19);
     const recentLeaves = new Map();
 
-    function addChild(parent, child) {
+    function addChild(parent, child, readUntil = rootDeadline) {
       // Tactical priorities guide exploration while keeping a floor for quiet moves.
       child.prior = .045 + Math.exp((child.rank - parent.bestRank) / 3);
       child.visits = 0;
       child.sum = 0;
       if (parent === root && performance.now() < deadline) {
         const info = inspect(child.game);
-        child.capture = capturePreference(game, child.game, info);
-        child.initial = sign(child.game.turn) * read(child.game, info, tacticalDepth, 4, rootDeadline);
+        const chaseUntil = Number.isFinite(deadline) ? Math.min(deadline, performance.now() + 8) : Infinity;
+        child.capture = capturePreference(game, child.game, info, chaseUntil);
+        child.initial = sign(child.game.turn) * read(child.game, info, tacticalDepth, 4, readUntil);
       }
       parent.mass += child.prior;
       parent.children.push(child);
@@ -131,7 +144,12 @@
       parent.bestRank = children[0].rank;
       parent.mass = 0;
       parent.children = [];
-      for (const child of children) addChild(parent, child);
+      for (const [index, child] of children.entries()) {
+        if (atRoot) {
+          const now = performance.now();
+          addChild(parent, child, now + (rootDeadline - now) / (children.length - index));
+        } else addChild(parent, child);
+      }
       parent.extra = extra;
       const rootWiden = wideOpening || parent.bestRank >= 8 ? 24 : 7;
       parent.nextWiden = atRoot ? rootWiden : 19 + 6 * depth;
@@ -154,7 +172,7 @@
 
     function select(parent, startValue) {
       let best, high = -Infinity;
-      const exploration = parent === root ? 2.05 : 1.45;
+      const exploration = parent === root ? 1.55 : 1.05;
       const rate = exploration * Math.sqrt(parent.visits + 1) / parent.mass;
       const side = sign(parent.game.turn);
       for (const child of parent.children) {

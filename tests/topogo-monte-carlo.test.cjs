@@ -3,6 +3,8 @@ const test = require('node:test');
 const { BLACK, WHITE, createGame, play, pass } = require('../dist/jeux/topogo/rules.js');
 const { search } = require('../dist/jeux/topogo/monte-carlo.js');
 const { count, settings } = require('../dist/jeux/topogo/ai-level.js');
+const { caught } = require('../dist/jeux/topogo/ai-reading.js');
+const { groupAt } = require('../dist/jeux/topogo/rules.js');
 
 function seeded() {
   let state = 631122;
@@ -77,4 +79,30 @@ test('les trois formats donnent un coup légal et une position terminée arrête
     assert.ok(play(game, move).game);
     assert.equal(search(pass(pass(game))), null);
   }
+});
+
+test('le niveau maximal évite une coupe isolée à deux libertés en présence de bons développements', () => {
+  let game = createGame(9);
+  for (const point of [12, 11, 47, 37, 66, 61, 67, 13, 22, 48, 19]) {
+    game = play(game, { type: 'stone', point }).game;
+  }
+  const isolated = groupAt(play(game, { type: 'stone', point: 21 }).game.board, 9, 21);
+  assert.equal(isolated.points.length, 1);
+  assert.equal(isolated.liberties.size, 2);
+  const move = search(game, { ...settings(5), iterations: 1200, budgetMs: Infinity, random: seeded() });
+  assert.equal(move.type, 'stone');
+  assert.ok(groupAt(play(game, move).game.board, 9, move.point).liberties.size >= 3);
+});
+
+test('la poursuite distingue une capture forcée, une fuite et deux libertés prises par une barrière', () => {
+  const game = createGame(9);
+  game.board[20] = WHITE;
+  for (const p of [11, 19, 28, 12, 39, 48]) game.board[p] = BLACK;
+  game.stock[BLACK] = game.stock[WHITE] = { 1: 0, 2: 0 };
+  assert.equal(groupAt(game.board, 9, 20).liberties.size, 2);
+  assert.equal(caught(game, 20, BLACK, Infinity), true);
+  for (const p of [28, 12, 39, 48]) game.board[p] = 0;
+  assert.equal(caught(game, 20, BLACK, Infinity), false);
+  const wallAttack = { ...corner(WHITE), turn: BLACK };
+  assert.equal(caught(wallAttack, 0, BLACK, Infinity), true);
 });

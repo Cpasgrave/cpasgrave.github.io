@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { BLACK, WHITE, WALL, KOMI, createGame, play, pass, score } = require('../dist/jeux/topogo/rules.js');
+const { BLACK, WHITE, WALL, KOMI, createGame, play, pass, score, suggestDead } = require('../dist/jeux/topogo/rules.js');
 
 const stone = point => ({ type: 'stone', point });
 const wall = (point, length = 1, orientation = 'horizontal') => ({ type: 'wall', point, length, orientation });
@@ -86,4 +86,51 @@ test('deux passes consécutives arrêtent la pose', () => {
   assert.equal(play(game, stone(0)).game.passes, 0);
   assert.equal(play(pass(game), wall(0)).error, 'scoring');
   assert.equal(play(pass(game), stone(0)).error, 'scoring');
+});
+
+test('dernière blanche capturée : zéro territoire, même si Blanc avait fait des prises', () => {
+  for (const size of [9, 13, 19]) {
+    let game = createGame(size);
+    for (const point of [0, 1, size * size - 1, size]) game = play(game, stone(point)).game;
+    assert.equal(game.captures[WHITE], 1);
+    for (const point of [2, null, size + 1, null, 0, null, 2 * size]) {
+      game = point === null ? pass(game) : play(game, stone(point)).game;
+    }
+    const result = score(pass(pass(game)));
+    assert.equal(result.living[WHITE], 0);
+    assert.equal(result.ownership.includes(WHITE), false);
+    assert.equal(result.territory[WHITE], 0);
+    assert.equal(result.totals[WHITE], 1 + KOMI);
+    assert.equal(result.captures[BLACK], 2);
+  }
+  let game = createGame(9);
+  for (const point of [9, 0, 1]) game = play(game, stone(point)).game;
+  assert.equal(score(pass(pass(game))).totals[WHITE], KOMI);
+});
+
+test('les deux passes laissent les vastes zones ouvertes neutres et révisables', () => {
+  const game = pass(pass(fixture([40], [], [0])));
+  const result = score(game);
+  assert.equal(result.territory[BLACK], 0);
+  assert.equal(result.claimants[result.regions[1]], BLACK);
+  assert.equal(score(game, new Set(), new Set([result.regions[1]])).territory[BLACK], 79);
+  assert.equal(score(game).territory[BLACK], 0);
+});
+
+test('un prisonnier entre des groupes vivants est proposé une seule fois et sa marque est réversible', () => {
+  const game = createGame(9);
+  game.board.fill(BLACK);
+  for (const p of [10, 12, 41]) game.board[p] = 0;
+  game.board[40] = WHITE;
+  game.captures[WHITE] = 3;
+  const original = game.board.slice();
+  assert.deepEqual([...suggestDead(game)], [40]);
+  const result = score(game);
+  assert.equal(result.territory[BLACK], 4);
+  assert.equal(result.captures[BLACK], 1);
+  assert.equal(result.totals[WHITE], 3 + KOMI);
+  assert.equal(score(game, new Set()).captures[BLACK], 0);
+  assert.deepEqual(score(game), result);
+  assert.deepEqual(game.board, original);
+  assert.equal(suggestDead(fixture([1, 9], [10])).size, 0);
 });
