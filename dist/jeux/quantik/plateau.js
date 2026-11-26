@@ -11,6 +11,7 @@ const QuantikTable = (() => {
   function path(container, d, className) {
     const line = document.createElementNS(ns,"path");
     line.setAttribute("d",d); line.setAttribute("class",className); container.append(line);
+    return line;
   }
   function carveRegions(svg) {
     for (let i = 0; i < 4; i++) {
@@ -21,7 +22,7 @@ const QuantikTable = (() => {
         " Q "+p(right,top)+" "+p(right,top+.035)+" L "+p(right,bottom-.03)+
         " Q "+p(right,bottom)+" "+p(right-.03,bottom)+" Q "+p(left+.22,bottom-.004)+" "+p(left+.03,bottom)+
         " Q "+p(left,bottom)+" "+p(left,bottom-.03)+" L "+p(left,top+.035)+" Q "+p(left,top)+" "+p(left+.035,top)+" Z";
-      path(svg,d,"region-rim"); path(svg,d,"region-wash r"+i);
+      path(svg,d,"region-wash r"+i);
     }
   }
   const outlines = [
@@ -43,8 +44,32 @@ const QuantikTable = (() => {
     well.setAttribute("viewBox","0 0 150 100"); well.setAttribute("preserveAspectRatio","none");
     well.setAttribute("aria-hidden","true"); well.classList.add("well");
     const d = outlines[(col+row*3)%4];
-    path(well,d,"well-lip"); path(well,d,"well-wash");
-    path(well,"M14 49Q16 29 45 20M107 79q14-5 22-14","toolmark");
+    const floorPosition = "translate(4 9) scale(.956 .88)";
+    const rimMask = document.createElementNS(ns,"mask");
+    rimMask.id = "rebord-"+index;
+    rimMask.setAttribute("maskUnits","userSpaceOnUse");
+    const outer = path(rimMask,d,"");
+    outer.setAttribute("fill","white");
+    const cutout = path(rimMask,d,"");
+    cutout.setAttribute("transform",floorPosition);
+    cutout.setAttribute("fill","black");
+    well.append(rimMask);
+    path(well,d,"well-wash").setAttribute("mask","url(#"+rimMask.id+")");
+    const clip = document.createElementNS(ns,"clipPath");
+    clip.id = "cavite-"+index;
+    path(clip,d,""); well.append(clip);
+    const interior = document.createElementNS(ns,"g");
+    interior.setAttribute("clip-path","url(#"+clip.id+")"); well.append(interior);
+    // The upper wall catches shade. The displaced, shallower oval is the
+    // bottom of the cut; the original wood grain remains visible through it.
+    const floor = path(interior,d,"well-floor");
+    floor.setAttribute("transform",floorPosition);
+    const rear = path(interior,"M12 47C15 31 35 18 58 16m7-.8 11-.5","well-brow");
+    rear.setAttribute("transform","rotate("+((index%3)-1)*1.7+" 74 50)");
+    const cuts = path(interior,
+      "M17 36l-2 6m8-12-3 8m9-13-2 8m9-12-2 7m8-10-1 5m10-7-1 4m9-6-1 4","well-hatch");
+    cuts.setAttribute("transform","translate("+(col-row)+" "+(row%2)+")");
+    path(well,d,"well-indicator");
     const token = document.createElement("span"); token.className = "token";
     button.append(well,token); return button;
   }
