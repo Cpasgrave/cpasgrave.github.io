@@ -40,7 +40,7 @@
 
     ctx.lineCap = 'square';
     ctx.lineWidth = clamp(pitch * .027, .85, 1.7);
-    ctx.strokeStyle = '#503720';
+    ctx.strokeStyle = '#624226';
     ctx.beginPath();
     for (let index = 0; index < size; index++) {
       const line = origin + index * pitch;
@@ -51,14 +51,14 @@
     }
     ctx.stroke();
 
-    ctx.fillStyle = '#523922';
+    ctx.fillStyle = '#5c3820';
     for (const [row, col] of STARS[size]) {
       circle(ctx, origin + col * pitch, origin + row * pitch, clamp(pitch * .066, 1.45, 3.8));
       ctx.fill();
     }
 
     const label = origin * .39;
-    ctx.font = '600 ' + clamp(pitch * .29, 9, 14) + 'px "Segoe UI", sans-serif';
+    ctx.font = '600 ' + clamp(pitch * .29, 10, 17) + 'px "Cormorant Garamond", Georgia, serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for (let index = 0; index < size; index++) {
@@ -73,24 +73,24 @@
   function drawStone(ctx, x, y, radius, player, { ghost, dead, marked } = {}) {
     const black = player === BLACK;
     ctx.save();
-    ctx.globalAlpha = ghost ? .48 : dead ? .31 : 1;
+    ctx.globalAlpha = ghost ? .45 : dead ? .35 : 1;
     if (!ghost && !dead) {
-      ctx.shadowColor = '#34201383';
-      ctx.shadowOffsetY = radius * .15;
-      ctx.shadowBlur = radius * .24;
+      ctx.shadowColor = '#27150c9e';
+      ctx.shadowOffsetY = radius * .19;
+      ctx.shadowBlur = radius * .22;
     }
     const shading = ctx.createRadialGradient(
-      x - radius * .28, y - radius * .36, radius * .04, x, y, radius,
+      x - radius * .35, y - radius * .4, 0, x, y, radius,
     );
-    shading.addColorStop(0, black ? '#5b5b53' : '#fffef8');
-    shading.addColorStop(.62, black ? '#282823' : '#f1eddf');
-    shading.addColorStop(.88, black ? '#181915' : '#e0d7c3');
-    shading.addColorStop(1, black ? '#121310' : '#c8bca4');
+    shading.addColorStop(0, black ? '#564640' : '#fff8e6');
+    shading.addColorStop(.64, black ? '#2d2420' : '#f1e6cd');
+    shading.addColorStop(.88, black ? '#1f1815' : '#e4d6b7');
+    shading.addColorStop(1, black ? '#100e0c' : '#ad9874');
     circle(ctx, x, y, radius);
     ctx.fillStyle = shading;
     ctx.fill();
     ctx.shadowColor = 'transparent';
-    ctx.strokeStyle = black ? '#070a08b0' : '#b4a58ad9';
+    ctx.strokeStyle = black ? '#18100b' : '#9f8057';
     ctx.lineWidth = Math.max(.5, radius * .045);
     ctx.stroke();
     ctx.restore();
@@ -117,13 +117,13 @@
     if (wall.orientation === 'vertical') ctx.rotate(Math.PI / 2);
     ctx.globalAlpha = ghost ? .75 : 1;
     const shading = ctx.createLinearGradient(0, -thickness / 2, 0, thickness / 2);
-    shading.addColorStop(0, invalid ? '#ffe0a2' : '#e36a60');
-    shading.addColorStop(.25, invalid ? '#e1983e' : '#ab262e');
-    shading.addColorStop(1, invalid ? '#a25a20' : '#771823');
+    shading.addColorStop(0, invalid ? '#ffe0a2' : '#de8771');
+    shading.addColorStop(.38, invalid ? '#e1983e' : '#ad3830');
+    shading.addColorStop(1, invalid ? '#a25a20' : '#7c231f');
     ctx.beginPath();
     ctx.roundRect(-length / 2, -thickness / 2, length, thickness, thickness * .28);
     ctx.fillStyle = shading;
-    ctx.strokeStyle = marked ? '#fff0af' : invalid ? '#58351e' : '#661623';
+    ctx.strokeStyle = marked ? '#fff0af' : invalid ? '#58351e' : '#672419';
     if (invalid) ctx.setLineDash([3, 2]);
     ctx.lineWidth = marked ? 1.25 : .85;
     ctx.shadowColor = '#4b2c17a6';
@@ -132,6 +132,18 @@
     ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.stroke();
+    if (!invalid) {
+      ctx.lineWidth = .55;
+      for (const offset of [-.24, -.04, .17]) {
+        const grain = thickness * offset;
+        ctx.strokeStyle = offset < 0 ? '#ffd2a76a' : '#57140b71';
+        ctx.beginPath();
+        ctx.moveTo(-length / 2 + thickness * .45, grain);
+        ctx.bezierCurveTo(-length * .19, grain + .65, length * .23, grain - .65,
+          length / 2 - thickness * .45, grain);
+        ctx.stroke();
+      }
+    }
     ctx.restore();
   }
 
@@ -233,6 +245,12 @@
     new ResizeObserver(() => {
       if (frame) draw(frame);
     }).observe(canvas);
+    document.fonts.load('600 14px "Cormorant Garamond"').then(() => {
+      if (!layout || !frame) return;
+      surfaceCtx.clearRect(0, 0, layout.width, layout.width);
+      drawGoban(surfaceCtx, layout);
+      draw(frame);
+    }, () => {}); // The board can also use the fallback serif.
     return { draw, pick };
   }
 

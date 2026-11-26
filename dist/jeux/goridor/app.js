@@ -3,6 +3,7 @@
 
   const rules = window.GoridorRules;
   const scoring = window.GoridorScoring;
+  const levels = window.GoridorLevels;
   const estimates = new WeakMap();
   const { BLACK, WHITE } = rules;
   const { createBoard, coordinate } = window.GoridorBoard;
@@ -36,6 +37,7 @@
   const feedback = byId('feedback');
   const sound = byId('sound');
   const aim = byId('aim');
+  const matchLevel = byId('match-ai-level');
 
   let game = rules.createGame(9);
   let phase = 'setup';
@@ -52,6 +54,7 @@
   let countApproval = BLACK;
   let audio = null;
   let computer = false;
+  let computerLevel = levels.defaultLevel;
   let allowHistory = false;
   let frames = [];
   let cursor = 0;
@@ -106,7 +109,7 @@
   function requestComputer() {
     if (!computerTurn() || worker) return;
     try {
-      const current = new Worker('ai-worker.js?v=vie1');
+      const current = new Worker('ai-worker.js?v=niveau1');
       worker = current;
       current.onmessage = ({data}) => {
         if (current !== worker) return;
@@ -119,7 +122,7 @@
         refresh();
         announce('Calcul interrompu. Vous pouvez relancer le coup des Blancs.', true);
       };
-      current.postMessage(game);
+      current.postMessage({game, level:computerLevel});
       refresh();
     } catch {
       stopComputer();
@@ -131,6 +134,18 @@
   const samePoint = (first, second) => first?.row === second?.row && first?.col === second?.col;
   const number = value => value.toLocaleString('fr-FR');
   const positionLabel = target => coordinate(target.row, target.col, game.size);
+
+  function displayLevel(control, level) {
+    const input = control.querySelector('input');
+    const seconds = number(levels.settings(level).budgetMs / 1000);
+    input.value = level;
+    input.setAttribute('aria-valuetext', 'Niveau ' + level + ' sur ' + levels.count + ', environ ' + seconds + ' secondes');
+    control.querySelector('.ai-level-value').textContent = level + '/' + levels.count + ' · env. ' + seconds + ' s';
+  }
+
+  function showSoloOptions(options) {
+    options.querySelector('[data-ai-level]').hidden = options.querySelector('[data-opponent]').value !== 'computer';
+  }
 
   function describeTarget(target, type = mode) {
     const start = positionLabel(target);
@@ -299,6 +314,7 @@
       byId('ply').textContent = 'Coup ' + cursor + ' / ' + (frames.length - 1);
     }
     byId('ai-resume').hidden = !computerTurn() || Boolean(worker);
+    matchLevel.hidden = !playing || !computer;
     byId('opponent-label').textContent = phase === 'setup' ? 'Jeu local' : computer ? 'IA Monte-Carlo · Blancs' : 'Deux joueurs · en local';
     setup.hidden = phase !== 'setup';
     byId('restart').hidden = phase === 'setup';
@@ -326,6 +342,10 @@
   function start(size, focusBoard, options) {
     stopComputer();
     computer = options.querySelector('[data-opponent]').value === 'computer';
+    if (computer) {
+      computerLevel = options.querySelector('[data-ai-level] input').valueAsNumber;
+      displayLevel(matchLevel, computerLevel);
+    }
     allowHistory = options.querySelector('[data-history]').checked;
     if (restartDialog.open) restartDialog.close();
     byId('estimate').open = false;
@@ -590,6 +610,20 @@
     updateScoreFrame();
     refresh();
   });
+  for (const control of document.querySelectorAll('[data-ai-level]')) {
+    control.append(byId('ai-level-template').content.cloneNode(true));
+    const input = control.querySelector('input');
+    input.max = levels.count;
+    displayLevel(control, computerLevel);
+    input.addEventListener('input', () => {
+      displayLevel(control, input.valueAsNumber);
+      if (control === matchLevel) computerLevel = input.valueAsNumber;
+    });
+  }
+  for (const options of [setup, restartDialog]) {
+    options.querySelector('[data-opponent]').addEventListener('change', () => showSoloOptions(options));
+    showSoloOptions(options);
+  }
   document.querySelectorAll('button[data-size]').forEach(button => {
     const size = Number(button.dataset.size);
     button.querySelector('.size-stock').textContent = rules.STOCK[size] + ' barrières chacun';
@@ -600,6 +634,8 @@
     byId('restart-note').hidden = phase === 'done';
     restartDialog.querySelector('[data-opponent]').value = computer ? 'computer' : 'human';
     restartDialog.querySelector('[data-history]').checked = allowHistory;
+    displayLevel(restartDialog.querySelector('[data-ai-level]'), computerLevel);
+    showSoloOptions(restartDialog);
     restartDialog.showModal();
   });
   byId('estimate').addEventListener('toggle', updateEstimate);

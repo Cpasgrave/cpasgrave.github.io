@@ -34,7 +34,8 @@
 
   function terminal(game) {
     const result = ending(game);
-    return outcome(result) ?? Math.tanh((result.totals[1]-result.totals[2]) / game.size);
+    // An unresolved count can guide search, with less weight than a confirmed outcome.
+    return outcome(result) ?? .5 * Math.tanh((result.totals[1]-result.totals[2]) / game.size);
   }
 
   function value(game, info, weights) {
@@ -50,48 +51,70 @@
     return next ? {next, point:p, gain:next.captures[game.turn] - game.captures[game.turn]} : null;
   }
 
-  function choices(game, info, random, width) {
-    const pool = reading.ranked(game, info, random);
-    const children = [];
-    const late = info.occupied > game.stones.length * .48;
-    const secure = info.life.owner;
-    for (const [list, limit] of [[pool.stones, width], [pool.walls, Math.max(2, Math.ceil(width / 3))]]) {
-      let count = 0;
-      for (const {move, rank} of list) {
-        const p = move.row * game.size + move.col;
-        if (move.type === 'stone' && secure[p] === game.turn && rank < 5) continue;
-        const next = rules.play(game, move).game;
-        if (!next) continue;
-        let priority = rank;
-        if (move.type === 'stone') {
-          const group = rules.groupAt(next.stones, next.size, next.edges, p);
-          const gain = next.captures[game.turn] - game.captures[game.turn];
-          if (group.liberties.size === 1) {
-            const reply = takeLastLiberty(next, group);
-            if (reply) {
-              const capturingChain = rules.groupAt(reply.next.stones, game.size, game.edges, reply.point);
-              const recapture = takeLastLiberty(reply.next, capturingChain);
-              const trade = gain - reply.gain + (recapture?.gain ?? 0);
-              if (trade < 0 && !gain) continue;
-              if (trade < 0) priority = Math.min(priority, trade - 2);
-              if (trade > gain) priority += 2 + Math.log2(1 + trade);
-            }
+  function* legalChildren(game, info, candidates) {
+    for (const candidate of candidates) {
+      const {move, rank} = candidate;
+      const p = move.row * game.size + move.col;
+      if (move.type === 'stone' && info.life.owner[p] === game.turn && rank < 5) continue;
+      const next = candidate.game ?? rules.play(game, move).game;
+      if (!next) continue;
+      let priority = rank;
+      if (move.type === 'stone') {
+        const group = rules.groupAt(next.stones, next.size, next.edges, p);
+        const gain = next.captures[game.turn] - game.captures[game.turn];
+        if (group.liberties.size === 1) {
+          const reply = takeLastLiberty(next, group);
+          if (reply) {
+            const capturingChain = rules.groupAt(reply.next.stones, game.size, game.edges, reply.point);
+            const recapture = takeLastLiberty(reply.next, capturingChain);
+            const trade = gain - reply.gain + (recapture?.gain ?? 0);
+            if (trade < 0 && !gain) continue;
+            if (trade < 0) priority = Math.min(priority, trade - 2);
+            if (trade > gain) priority += 2 + Math.log2(1 + trade);
           }
         }
-        children.push({move, game:next, rank:priority});
-        if (++count >= limit) break;
+      }
+      yield {move, game:next, rank:priority};
+    }
+  }
+
+  function* extraChoices(stones, walls, reserve) {
+    // Keep an independent turn for moves missed by the heuristic cutoffs.
+    const streams = [reserve, stones, walls];
+    while (streams.length) {
+      const stream = streams.shift();
+      const candidate = stream.next();
+      if (candidate.done) continue;
+      streams.push(stream);
+      yield candidate.value;
+    }
+  }
+
+  function choices(game, info, random, width, widening) {
+    const pool = reading.ranked(game, info, random);
+    const stones = legalChildren(game, info, pool.stones);
+    const walls = legalChildren(game, info, pool.walls);
+    const children = [];
+    for (const [moves, limit] of [[stones, width], [walls, Math.max(2, Math.ceil(width / 3))]]) {
+      for (let i = 0; i < limit; i++) {
+        const candidate = moves.next();
+        if (candidate.done) break;
+        children.push(candidate.value);
       }
     }
-    if (!children.length || late) {
-      const winningPass = late && game.passes === 1 && outcome(ending(game)) === side(game);
+    const late = info.occupied > game.stones.length * .48;
+    if (!children.length || late || game.passes === 1) {
+      const winningPass = game.passes === 1 && outcome(ending(game)) === side(game);
       children.push({move:{type:'pass'}, game:rules.pass(game), rank:winningPass ? 25 : -1.4});
     }
-    return children.sort((a,b) => b.rank - a.rank);
+    const extra = widening ? extraChoices(stones, walls,
+      legalChildren(game, info, reading.reserve(game, info, pool, random))) : null;
+    return {children:children.sort((a,b) => b.rank - a.rank), extra};
   }
 
   // Read alternating forcing replies to a quiet evaluation. A chain can sometimes
   // be saved by capturing a different chain, so all ataris on the board participate.
-  function read(game, info, weights, cache, depth) {
+  function read(game, info, weights, cache, depth, deadline) {
     let best = value(game, info, weights);
     if (!depth) return best;
     const targets = new Map();
@@ -103,26 +126,38 @@
     const order = [...targets].sort((a,b) => b[1] - a[1]).slice(0, 4);
     const sense = side(game);
     for (const [p] of order) {
+      if (performance.now() >= deadline) break;
       const next = rules.play(game, {type:'stone',row:Math.floor(p/game.size),col:p%game.size}).game;
       if (!next) continue;
-      const reply = read(next, reading.inspect(next, cache), weights, cache, depth-1);
+      const reply = read(next, reading.inspect(next, cache), weights, cache, depth-1, deadline);
       if (sense * reply > sense * best) best = reply;
     }
     return best;
   }
 
-  // PUCT uses tactical priors to allocate simulations. Root moves additionally
-  // get a two-reply tactical reading before the statistical search commits to one.
+  // PUCT uses tactical priors to allocate simulations. Root moves also receive
+  // a tactical reading whose depth depends on the selected level.
   function search(game, {weights = initialWeights, random = Math.random, iterations = 128,
-    budgetMs = Infinity, width = 8, rollout = 2} = {}) {
+    budgetMs = Infinity, width = 8, rollout = 2, widening = game.size === 9, onRoot} = {}) {
     if (game.passes >= 2) return null;
     const deadline = performance.now() + budgetMs;
+    if (game.passes === 1 && outcome(ending(game)) === side(game)) {
+      const move = {type:'pass'};
+      if (onRoot) onRoot({visits:0, maxDepth:0, moves:[{move, visits:0, widened:false}]});
+      return move;
+    }
     const cache = new WeakMap();
     const root = {game, visits:0, sum:0};
     const inspectNode = n => n.info ??= reading.inspect(n.game, cache);
+    function setPrior(child, maxRank) {
+      child.prior = .045 + Math.exp((child.rank-maxRank) / 2.8);
+      child.visits = 0;
+      child.sum = 0;
+      return child.prior;
+    }
     function expand(parent) {
       const atRoot = parent === root;
-      const list = choices(parent.game, inspectNode(parent), random, atRoot ? 2*width : width);
+      const {children:list, extra} = choices(parent.game, inspectNode(parent), random, atRoot ? 2*width : width, widening);
       if (atRoot) {
         const until = Math.min(deadline, performance.now() + budgetMs * .24);
         for (const child of list) {
@@ -134,16 +169,29 @@
         }
         list.sort((a,b) => b.rank - a.rank);
       }
-      const maxRank = list[0].rank;
-      let mass = 0;
-      for (const child of list) {
-        child.prior = .045 + Math.exp((child.rank-maxRank) / 2.8);
-        mass += child.prior;
-        child.visits = 0;
-        child.sum = 0;
-      }
-      for (const child of list) child.prior /= mass;
+      parent.maxRank = list[0].rank;
+      parent.mass = 0;
+      for (const child of list) parent.mass += setPrior(child, parent.maxRank);
       parent.children = list;
+      parent.extra = extra;
+      // Give clear captures, escapes and winning passes more reading time first.
+      parent.nextWiden = parent.maxRank >= 8 ? 32 : 6;
+      parent.added = 0;
+    }
+
+    function widen(parent) {
+      const candidate = parent.extra.next();
+      if (candidate.done) {
+        parent.extra = null;
+        return null;
+      }
+      const child = candidate.value;
+      child.widened = true;
+      parent.mass += setPrior(child, parent.maxRank);
+      parent.children.push(child);
+      parent.added++;
+      parent.nextWiden += 4 + 4*parent.added;
+      return child;
     }
 
     expand(root);
@@ -152,17 +200,27 @@
       child.initial = rootValue;
       if (child.game.passes === 2) child.initial = terminal(child.game);
       else if (performance.now() < deadline) {
-        child.initial = read(child.game, inspectNode(child), weights, cache, Math.min(2,rollout));
+        child.initial = read(child.game, inspectNode(child), weights, cache, rollout, deadline);
         child.initial += side(game) * .18 * (child.tactics || 0);
       }
     }
 
+    let maxDepth = 0;
     for (let i=0; i<iterations && (i===0 || performance.now()<deadline); i++) {
       let current = root;
       const path = [current];
       while (current.children) {
+        // Give every newly admitted action one real visit, then let PUCT decide.
+        if (current.extra && current.visits >= current.nextWiden && performance.now() < deadline) {
+          const child = widen(current);
+          if (child) {
+            current = child;
+            path.push(child);
+            break;
+          }
+        }
         let best, high = -Infinity;
-        const exploration = 1.65 * Math.sqrt(current.visits+1);
+        const exploration = 1.65 * Math.sqrt(current.visits+1) / current.mass;
         for (const child of current.children) {
           const initial = child.initial ?? (current.visits ? current.sum/current.visits : rootValue);
           const mean = (child.sum + initial*2) / (child.visits+2);
@@ -174,9 +232,12 @@
         if (current.visits && !current.children && current.game.passes < 2) expand(current);
       }
       const result = current.game.passes === 2 ? terminal(current.game)
-        : read(current.game, inspectNode(current), weights, cache, Math.min(1,rollout));
+        : read(current.game, inspectNode(current), weights, cache, Math.min(1,rollout), deadline);
+      maxDepth = Math.max(maxDepth, path.length - 1);
       for (const ancestor of path) { ancestor.sum += result; ancestor.visits++; }
     }
+    if (onRoot) onRoot({visits:root.visits, maxDepth, moves:root.children.map(child =>
+      ({move:child.move, visits:child.visits, widened:Boolean(child.widened)}))});
     return root.children.reduce((a,b) => b.visits > a.visits ? b : a).move;
   }
 

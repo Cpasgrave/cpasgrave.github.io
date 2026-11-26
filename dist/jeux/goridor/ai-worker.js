@@ -1,5 +1,6 @@
 'use strict';
-importScripts('rules.js?v=mc2', 'life.js?v=vie1', 'scoring.js?v=vie1', 'lecture.js?v=vie1', 'monte-carlo.js?v=vie1');
+importScripts('rules.js?v=mc2', 'life.js?v=vie1', 'scoring.js?v=vie1', 'lecture.js?v=niveau1',
+  'monte-carlo.js?v=niveau1', 'ai-level.js?v=niveau1');
 async function publishedWeights() {
   try {
     const response = await fetch('modele-9.json?v=vie1');
@@ -12,7 +13,8 @@ async function publishedWeights() {
   }
   return GoridorAI.initialWeights;
 }
-self.onmessage = async ({ data }) => {
-  const weights = data.size === 9 ? await publishedWeights() : GoridorAI.initialWeights;
-  self.postMessage(GoridorAI.search(data, { weights, iterations: 2400, budgetMs: 800 }));
+self.onmessage = async ({ data:{game, level} }) => {
+  const weights = game.size === 9 ? await publishedWeights() : GoridorAI.initialWeights;
+  const settings = GoridorLevels.settings(level);
+  self.postMessage(GoridorAI.search(game, {...settings, weights, iterations:Infinity}));
 };

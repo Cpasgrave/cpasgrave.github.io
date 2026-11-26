@@ -53,6 +53,9 @@ test('la barrière ferme E2, indépendamment de l’œil B1–C1', () => {
   assert.ok(life.eyeMoves(playable, info.life).walls.has(2*(7*9+4)));
   const after = rules.play(playable,{type:'wall',row:7,col:4,orientation:'vertical'}).game;
   assert.ok(reading.inspect(after).features[6] < info.features[6]);
+  const move = ai.search(playable, {weights:ai.modelWeights(require('../dist/jeux/goridor/modele-9.json')),
+    iterations:128, random:() => .5});
+  assert.deepEqual(move, {type:'wall', row:7, col:4, orientation:'vertical'});
 });
 
 test('séki à une liberté partagée et un œil privé chacun : aucun point de territoire', () => {

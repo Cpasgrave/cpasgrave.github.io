@@ -178,6 +178,44 @@
     return {stones, walls};
   }
 
+  // Enumerate the rest only when a node earns a wider search. A low tactical
+  // score can postpone a move, while the normal game rules decide its legality.
+  function* reserve(game, info, pool, random) {
+    if (game.passes >= 2) return;
+    const {size, stones} = game;
+    const knownStones = new Uint8Array(stones.length);
+    const knownWalls = new Uint8Array(2 * stones.length);
+    for (const {move} of pool.stones) knownStones[move.row * size + move.col] = 1;
+    for (const {move} of pool.walls) {
+      const slot = 2 * (move.row * size + move.col) + Number(move.orientation === 'horizontal');
+      knownWalls[slot] = 1;
+    }
+
+    const rest = [];
+    for (let p = 0; p < stones.length; p++) {
+      const row = Math.floor(p / size), col = p % size;
+      if (!stones[p] && !knownStones[p]) {
+        // These intersections failed the stone heuristic, e.g. filling an eye.
+        rest.push({move:{type:'stone', row, col}, rank:-9 + .4 * random()});
+      }
+      if (!game.stock[game.turn] || row === size-1 || col === size-1) continue;
+      for (const horizontal of [false,true]) {
+        if (knownWalls[2*p + Number(horizontal)]) continue;
+        const rank = wallRank(game, info, p, horizontal);
+        if (!Number.isFinite(rank)) continue; // overlap, two stones, or a last liberty
+        // Among quiet walls favour a contested area over empty, distant space.
+        const nearBoth = Math.max(info.distance[1][p], info.distance[2][p]) <= 3;
+        const orientation = horizontal ? 'horizontal' : 'vertical';
+        rest.push({move:{type:'wall', row, col, orientation}, rank:rank + (nearBoth ? .35 : 0) + .45 * random()});
+      }
+    }
+    rest.sort((a,b) => b.rank - a.rank);
+    for (const {move, rank} of rest) {
+      const next = rules.play(game, move).game;
+      if (next) yield {move, rank, game:next};
+    }
+  }
+
   // A bounded ladder reader. A proof requires a winning reply to every extension
   // and every adjacent countercapture. Running out of time or nodes gives no bonus.
   function caught(game, anchor, attacker, budget, depth) {
@@ -248,7 +286,7 @@
     return reward - risk;
   }
 
-  const api = { inspect, ranked, ladderAdjustment };
+  const api = { inspect, ranked, reserve, ladderAdjustment };
   if (typeof module === 'object') module.exports = api;
   else globalThis.GoridorReading = api;
 })();
