@@ -209,14 +209,16 @@
     return points.length && points.every(point => !game.board[point]) ? points : null;
   }
 
-  function ranked(game, info, random) {
+  function ranked(game, info, random, includeDistantWalls = true) {
     const stones = [], walls = [];
+    const nearStones = point => Math.min(info.distance[BLACK][point], info.distance[WHITE][point]) <= 2;
     for (let point = 0; point < game.board.length; point++) {
       if (game.board[point]) continue;
       stones.push({ move: stone(point), rank: stoneRank(game, info, point) + .42 * random() });
       for (const move of wallCandidates(game, point, false)) {
         const points = availablePoints(game, move);
-        if (points) walls.push({ move, rank: wallRank(game, info, points) + .30 * random() });
+        if (!points || (!includeDistantWalls && !points.some(nearStones))) continue;
+        walls.push({ move, rank: wallRank(game, info, points) + .30 * random() });
       }
     }
     return [stones.sort(descending), walls.sort(descending)];

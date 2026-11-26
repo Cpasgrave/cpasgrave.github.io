@@ -44,16 +44,30 @@ test('le niveau augmente les budgets et la recherche visite des coups élargis �
   assert.ok(profiles.at(-1).tacticalDepth > profiles[0].tacticalDepth);
   let game = createGame(9);
   for (const point of [20, 31, 39, 40, 29, 22, 49]) game = play(game, { type: 'stone', point }).game;
-  const [quick, deeper] = [1, 3].map(level => {
+  const [quick, deeper] = [[1, 300], [3, 2500]].map(([level, iterations]) => {
     let report;
-    search(game, { ...settings(level), budgetMs: Infinity, random: seeded(), onRoot: stats => { report = stats; } });
-    assert.equal(report.visits, settings(level).iterations);
+    search(game, { ...settings(level), iterations, budgetMs: Infinity, random: seeded(), onRoot: stats => { report = stats; } });
+    assert.equal(report.visits, iterations);
     return report;
   });
   assert.ok(deeper.maxDepth > quick.maxDepth);
+  assert.ok(deeper.meanDepth > quick.meanDepth);
   for (const type of ['stone', 'wall']) {
     assert.ok(deeper.moves.some(child => child.move.type === type && child.widened && child.visits));
   }
+});
+
+test('en ouverture 19 × 19 la recherche approfondit les suites même avec un budget fixe', () => {
+  let game = createGame(19);
+  for (const point of [40, 61, 79, 80, 59, 42, 99]) game = play(game, { type: 'stone', point }).game;
+  let report;
+  const move = search(game, {
+    ...settings(5), iterations: 3500, budgetMs: Infinity, random: seeded(),
+    onRoot: stats => { report = stats; },
+  });
+  assert.ok(play(game, move).game);
+  assert.ok(report.maxDepth >= 8, 'une ligne atteint au moins huit demi-coups');
+  assert.ok(report.meanDepth >= 4, 'la profondeur moyenne progresse aussi');
 });
 
 test('les trois formats donnent un coup légal et une position terminée arrête la recherche', () => {

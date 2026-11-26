@@ -16,14 +16,17 @@
 
   // The quiet estimate represents playing elsewhere. Explore captures and escapes
   // before accepting it, including barriers that close two liberties at once.
-  function read(game, info, depth, branches, deadline) {
-    let best = value(game, info, game.passes >= 2);
-    if (!depth || game.passes >= 2 || performance.now() >= deadline) return best;
+  function read(game, info, depth, branches, deadline, alpha = -1, beta = 1) {
     const side = sign(game.turn);
+    let best = side * value(game, info, game.passes >= 2);
+    if (!depth || game.passes >= 2 || performance.now() >= deadline || best >= beta) return best;
+    alpha = Math.max(alpha, best);
     for (const child of reading.tactical(game, info, branches)) {
       if (performance.now() >= deadline) break;
-      const response = read(child.game, inspect(child.game), depth - 1, branches, deadline);
-      if (side * response > side * best) best = response;
+      const reply = -read(child.game, inspect(child.game), depth - 1, branches, deadline, -beta, -alpha);
+      best = Math.max(best, reply);
+      if (best >= beta) break;
+      alpha = Math.max(alpha, best);
     }
     return best;
   }
@@ -53,16 +56,29 @@
     }
   }
 
-  function choices(game, info, random, width) {
-    const [stoneMoves, wallMoves] = reading.ranked(game, info, random);
-    const stones = reading.legal(game, stoneMoves), walls = reading.legal(game, wallMoves);
+  function* takeFromEnd(candidates) {
+    while (candidates.length) yield candidates.pop();
+  }
+
+  function choices(game, info, random, width, fullReserve) {
+    const [stoneMoves, wallMoves] = reading.ranked(game, info, random, fullReserve);
+    const stones = reading.legal(game, takeFromEnd(stoneMoves.reverse()));
+    const walls = reading.legal(game, takeFromEnd(wallMoves.reverse()));
     const children = [];
-    for (const [stream, limit] of [[stones, width], [walls, Math.max(2, Math.ceil(width / 3))]]) {
+    const wallWidth = Math.ceil(width / 3);
+    for (const [stream, limit] of [[stones, width], [walls, wallWidth]]) {
       for (let i = 0; i < limit; i++) {
         const candidate = stream.next();
         if (candidate.done) break;
         children.push(candidate.value);
       }
+    }
+    if (!fullReserve && !children.length) return choices(game, info, random, width, true);
+    // Keep the full reserve at the root. Below it retain just enough candidates
+    // to widen promising lines without holding a full board's moves at every node.
+    if (!fullReserve) {
+      stoneMoves.splice(0, Math.max(0, stoneMoves.length - (2 * width + 5)));
+      wallMoves.splice(0, Math.max(0, wallMoves.length - (wallWidth + 5)));
     }
     const bestRank = Math.max(-Infinity, ...children.map(child => child.rank));
     const covered = (info.occupied + info.settled) / info.playable;
@@ -82,7 +98,12 @@
     if (game.passes >= 2) return null;
     const deadline = performance.now() + budgetMs;
     const root = { game, visits: 0, sum: 0 };
-    const inspectNode = position => position.info ??= inspect(position.game);
+    const rootInfo = inspect(game);
+    const wideOpening = game.size > 9 && rootInfo.occupied < game.size &&
+      rootInfo.groups.every(group => group.liberties.size > 2);
+    const initial = value(game, rootInfo);
+    const rootDeadline = Math.min(deadline, performance.now() + budgetMs * .19);
+    const recentLeaves = new Map();
 
     function addChild(parent, child) {
       // Tactical priorities guide exploration while keeping a floor for quiet moves.
@@ -90,21 +111,30 @@
       child.visits = 0;
       child.sum = 0;
       if (parent === root && performance.now() < deadline) {
-        child.capture = capturePreference(game, child.game, inspectNode(child));
+        const info = inspect(child.game);
+        child.capture = capturePreference(game, child.game, info);
+        child.initial = sign(child.game.turn) * read(child.game, info, tacticalDepth, 4, rootDeadline);
       }
       parent.mass += child.prior;
       parent.children.push(child);
     }
 
-    function expand(parent) {
+    function expand(parent, depth) {
       const atRoot = parent === root;
-      const { children, extra } = choices(parent.game, inspectNode(parent), random, atRoot ? width * 2 : width);
+      let nodeWidth = 2;
+      if (atRoot) nodeWidth = wideOpening ? width + 2 : width * 2;
+      else if (depth < 3) nodeWidth = wideOpening ? 3 : Math.ceil(width / 2);
+      else if (depth < 6 && !wideOpening) nodeWidth = 3;
+      const info = atRoot ? rootInfo : recentLeaves.get(parent) ?? inspect(parent.game);
+      recentLeaves.delete(parent);
+      const { children, extra } = choices(parent.game, info, random, nodeWidth, atRoot);
       parent.bestRank = children[0].rank;
       parent.mass = 0;
       parent.children = [];
       for (const child of children) addChild(parent, child);
       parent.extra = extra;
-      parent.nextWiden = parent.bestRank >= 8 ? 24 : 7;
+      const rootWiden = wideOpening || parent.bestRank >= 8 ? 24 : 7;
+      parent.nextWiden = atRoot ? rootWiden : 19 + 6 * depth;
       parent.added = 0;
     }
 
@@ -124,7 +154,8 @@
 
     function select(parent, startValue) {
       let best, high = -Infinity;
-      const rate = 2.05 * Math.sqrt(parent.visits + 1) / parent.mass;
+      const exploration = parent === root ? 2.05 : 1.45;
+      const rate = exploration * Math.sqrt(parent.visits + 1) / parent.mass;
       const side = sign(parent.game.turn);
       for (const child of parent.children) {
         const initial = child.initial ?? startValue;
@@ -137,23 +168,28 @@
       return best;
     }
 
-    expand(root);
-    const initial = value(game, root.info);
-    const rootDeadline = Math.min(deadline, performance.now() + budgetMs * .29);
-    for (const child of root.children) {
-      if (performance.now() >= rootDeadline) break;
-      const info = inspectNode(child);
-      child.initial = read(child.game, info, tacticalDepth, 4, rootDeadline);
+    function evaluateLeaf(leaf, depth) {
+      if (leaf.value !== undefined) return leaf.value;
+      const state = leaf.game;
+      const info = inspect(state);
+      leaf.value = sign(state.turn) * read(state, info, Math.min(1, tacticalDepth), 2, deadline);
+      if (state.passes < 2 && !leaf.children && depth < maxDepth) {
+        // Reuse a recent analysis when its leaf is expanded, with limited memory on 19×19.
+        if (recentLeaves.size >= 128) recentLeaves.delete(recentLeaves.keys().next().value);
+        recentLeaves.set(leaf, info);
+      }
+      return leaf.value;
     }
 
-    let deepest = 0;
+    expand(root, 0);
+    let deepest = 0, depthSum = 0;
     for (let i = 0; i < iterations && (i === 0 || performance.now() < deadline); i++) {
       let current = root;
       const path = [current];
       while (path.length <= maxDepth && current.game.passes < 2) {
         if (!current.children) {
           if (!current.visits || performance.now() >= deadline) break;
-          expand(current);
+          expand(current, path.length - 1);
         }
         const fresh = current.extra && current.visits >= current.nextWiden && performance.now() < deadline
           ? widen(current) : null;
@@ -161,15 +197,17 @@
         path.push(current);
         if (fresh) break;
       }
-      const result = read(current.game, inspectNode(current), Math.min(2, tacticalDepth), 2, deadline);
-      deepest = Math.max(deepest, path.length - 1);
+      const depth = path.length - 1;
+      const result = evaluateLeaf(current, depth);
+      deepest = Math.max(deepest, depth);
+      depthSum += depth;
       for (const position of path) {
         position.sum += result;
         position.visits++;
       }
     }
     onRoot?.({
-      visits: root.visits, maxDepth: deepest, moves: root.children.map(child =>
+      visits: root.visits, maxDepth: deepest, meanDepth: depthSum / Math.max(1, root.visits), moves: root.children.map(child =>
         ({ move: child.move, visits: child.visits, widened: Boolean(child.widened) })),
     });
     return root.children.reduce((a, b) => b.visits > a.visits ? b : a).move;
