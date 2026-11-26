@@ -26,7 +26,7 @@
   const setupLevel = $('setup-level');
   const matchLevel = $('match-level');
   let history, view, selection, orientation, focusPoint, hovered, geometry;
-  let dead, neutral, tally, finished;
+  let dead, flipped, tally, finished;
   let opponent = 'local', computerLevel = levels.defaultLevel;
   let worker = null, computerFailed = false;
 
@@ -77,7 +77,7 @@
         : 'Le calcul des Blancs a été interrompu. Tu peux le relancer.');
     };
     try {
-      const current = new Worker('ai-worker.js?v=profondeur2');
+      const current = new Worker('ai-worker.js?v=libertes3');
       worker = current;
       computerFailed = false;
       announce();
@@ -106,7 +106,7 @@
   function clearScore() {
     tally = null;
     dead = new Set();
-    neutral = new Set();
+    flipped = new Set();
     finished = false;
   }
 
@@ -165,7 +165,8 @@
       button.disabled = !active;
       button.setAttribute('aria-disabled', String(!canClick));
       button.setAttribute('aria-label', coord + ', ' + label +
-        (isScoring && dead.has(point) ? ', marquée morte' : ''));
+        (isScoring && dead.has(point) ? ', marquée morte' : '') +
+        (isScoring && !cell ? (tally.ownership[point] ? ', territoire des ' + colors[tally.ownership[point]] : ', neutre') : ''));
     }
   }
 
@@ -247,20 +248,41 @@
     $('move-description').textContent = label;
   }
 
-  function updateScore() {
-    tally = rules.score(live(), dead, neutral);
-    const rows = [BLACK, WHITE].map(color => {
-      const label = document.createElement('dt');
-      label.textContent = colors[color];
-      const value = document.createElement('dd');
-      value.textContent = formatter.format(tally.totals[color]);
-      const detail = document.createElement('small');
-      detail.textContent = tally.territory[color] + ' territoire · ' + tally.captures[color] + ' prises' +
-        (color === WHITE ? ' · ' + formatter.format(rules.KOMI) + ' komi' : '');
-      value.append(detail);
-      return [label, value];
-    });
-    $('score').replaceChildren(...rows.flat());
+  function updateScore(afterGroupEdit = false) {
+    const game = live();
+    const previous = tally;
+    tally = rules.score(game, dead, flipped);
+    if (afterGroupEdit && flipped.size) {
+      for (const id of flipped) {
+        if (tally.claimants[id] !== previous.claimants[id] ||
+            tally.regions.some((region, p) => (region === id) !== (previous.regions[p] === id))) flipped.delete(id);
+      }
+      tally = rules.score(game, dead, flipped);
+    }
+    const rows = [
+      ['Territoire', tally.territory],
+      ['Prises en jeu', game.captures],
+      ['Prisonniers au décompte', tally.captures.map((n, i) => n - game.captures[i])],
+      ['Komi', [0, 0, rules.KOMI]],
+      ['Total', tally.totals],
+    ];
+    $('score-rows').replaceChildren(...rows.map(([name, points]) => {
+      const row = document.createElement('tr');
+      const label = document.createElement('th');
+      label.scope = 'row';
+      label.textContent = name;
+      row.append(label);
+      for (const color of [BLACK, WHITE]) {
+        const cell = document.createElement('td');
+        cell.textContent = formatter.format(points[color]);
+        row.append(cell);
+      }
+      return row;
+    }));
+    const absent = [BLACK, WHITE].filter(color => !tally.living[color]);
+    $('score-note').textContent = absent.map(color => 'Aucune pierre ' +
+      (color === WHITE ? 'blanche' : 'noire') + ' vivante · 0 point de territoire.').join(' ');
+    $('score-note').hidden = !absent.length;
   }
 
   function update() {
@@ -277,7 +299,10 @@
     view = history.length - 1;
     selection = 0;
     hovered = null;
-    if (game.passes >= 2) updateScore();
+    if (game.passes >= 2) {
+      dead = rules.suggestDead(game);
+      updateScore();
+    }
     announce();
     update();
     requestComputer();
@@ -293,14 +318,13 @@
         if (markDead) dead.add(member);
         else dead.delete(member);
       }
-      neutral.clear();
     } else {
       const region = tally.regions[point];
-      if (neutral.has(region)) neutral.delete(region);
-      else if (tally.ownership[point]) neutral.add(region);
+      if (flipped.has(region)) flipped.delete(region);
+      else if (tally.claimants[region]) flipped.add(region);
       else return;
     }
-    updateScore();
+    updateScore(Boolean(cell));
     update();
   }
 

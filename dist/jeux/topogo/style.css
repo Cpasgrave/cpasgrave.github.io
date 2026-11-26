@@ -295,16 +295,16 @@ kbd { font: 700 14px/1 var(--serif); padding: 1px 4px; border: 1px solid current
 #move-description { font-size: 16px; color: var(--muted); }
 
 .score {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
-  column-gap: 8px;
-  row-gap: 6px;
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
   margin: 0 0 14px;
 }
-.score dt { font: 400 24px/1 var(--hand); }
-.score dd { margin: 0; text-align: right; font-size: 26px; font-weight: 700; }
-.score small { display: block; color: var(--muted); font-size: 15px; font-weight: 600; }
+.score th, .score td { padding: 3px 2px; text-align: right; }
+.score th:first-child { text-align: left; }
+.score tbody th { font-size: 15px; font-weight: 500; }
+.score thead th, .score tbody tr:last-child > * { font: 400 23px/1.2 var(--hand); }
+.score tbody tr:last-child { border-top: 1px solid #a06c43a5; }
 .scoring-actions { display: flex; gap: 7px 12px; flex-wrap: wrap; align-items: center; }
 .plain { min-height: 40px; padding: 4px; font: 400 23px/1 var(--hand); }
 

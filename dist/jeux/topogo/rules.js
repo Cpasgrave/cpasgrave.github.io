@@ -121,19 +121,75 @@
     };
   }
 
-  function score(game, dead = new Set(), neutral = new Set()) {
+  // Only propose prisoners surrounded by unconditionally living chains. A
+  // chain needs two distinct vital regions, each touching it at every empty point.
+  function suggestDead(game) {
+    const { board, size } = game;
+    const graph = Array.from(board, (_, p) => neighbors(p, size));
+    const chain = [], groups = [], dead = new Set();
+    for (let p = 0; p < board.length; p++) {
+      if (board[p] !== BLACK && board[p] !== WHITE || chain[p]) continue;
+      const group = groupAt(board, size, p);
+      groups.push(group);
+      for (const member of group.points) chain[member] = group;
+    }
+    for (const color of [BLACK, WHITE]) {
+      let alive = new Set(groups.filter(g => board[g.points[0]] === color));
+      if (!alive.size) continue;
+      const seen = new Uint8Array(board.length);
+      let rooms = [];
+      for (let p = 0; p < board.length; p++) {
+        if (seen[p] || board[p] === color || board[p] === WALL) continue;
+        const points = [p], empty = [], border = new Set(), invaders = [];
+        seen[p] = 1;
+        for (const member of points) {
+          if (board[member] === EMPTY) empty.push(member);
+          else invaders.push(member);
+          for (const next of graph[member]) {
+            if (board[next] === color) border.add(chain[next]);
+            else if (board[next] !== WALL && !seen[next]) {
+              seen[next] = 1;
+              points.push(next);
+            }
+          }
+        }
+        if (!border.size || !empty.length) continue;
+        const vital = [...border].filter(g => empty.every(point => g.liberties.has(point)));
+        rooms.push({ border, vital, points, invaders });
+      }
+      for (;;) {
+        const eyes = new Map();
+        for (const room of rooms) for (const group of room.vital) eyes.set(group, (eyes.get(group) || 0) + 1);
+        const previous = alive.size;
+        alive = new Set([...alive].filter(g => eyes.get(g) >= 2));
+        if (alive.size === previous) break;
+        rooms = rooms.filter(room => [...room.border].every(g => alive.has(g)));
+      }
+      for (const room of rooms) {
+        if (!room.invaders.length) continue;
+        const interior = room.points.filter(p => !graph[p].some(next => board[next] === color));
+        if (interior.length <= 1) for (const prisoner of room.invaders) dead.add(prisoner);
+      }
+    }
+    return dead;
+  }
+
+  function score(game, dead = suggestDead(game), flipped = new Set()) {
     const { size } = game;
     const board = game.board.slice();
     const captures = [...game.captures];
     const territory = [0, 0, 0];
     const ownership = new Uint8Array(board.length);
     const regions = new Int16Array(board.length).fill(-1);
+    const claimants = new Uint8Array(board.length);
+    const living = [0, 0, 0];
     for (const point of dead) {
       const color = board[point];
       if (color !== BLACK && color !== WHITE) continue;
       captures[other(color)]++;
       board[point] = EMPTY;
     }
+    for (const color of board) if (color === BLACK || color === WHITE) living[color]++;
     for (let start = 0; start < board.length; start++) {
       if (board[start] !== EMPTY || regions[start] !== -1) continue;
       const points = [start];
@@ -150,16 +206,35 @@
           }
         }
       }
-      if (border.size !== 1 || neutral.has(start)) continue;
+      if (border.size !== 1) continue;
       const [color] = border;
+      claimants[start] = color;
+      // Two early passes can leave the whole outside touching just one colour.
+      // Leave large, deep open space neutral in the proposal; players can claim it.
+      let open = false;
+      if (points.length > board.length / 2) {
+        let frontier = points.filter(p => neighbors(p, size).some(n => board[n] === color));
+        const covered = new Set(frontier);
+        for (let i = 0; i < 2; i++) {
+          const more = [];
+          for (const p of frontier) for (const n of neighbors(p, size)) {
+            if (regions[n] !== start || covered.has(n)) continue;
+            covered.add(n);
+            more.push(n);
+          }
+          frontier = more;
+        }
+        open = points.length - covered.size >= size;
+      }
+      if (open !== flipped.has(start)) continue;
       territory[color] += points.length;
       for (const point of points) ownership[point] = color;
     }
     const totals = [0, territory[BLACK] + captures[BLACK], territory[WHITE] + captures[WHITE] + KOMI];
-    return { captures, territory, ownership, regions, totals };
+    return { captures, territory, ownership, regions, claimants, living, totals };
   }
 
-  const rules = { EMPTY, BLACK, WHITE, WALL, KOMI, STOCK, createGame, neighbors, groupAt, wallPoints, play, pass, score };
+  const rules = { EMPTY, BLACK, WHITE, WALL, KOMI, STOCK, createGame, neighbors, groupAt, wallPoints, play, pass, suggestDead, score };
   if (typeof module === 'object') module.exports = rules;
   else globalThis.TopogoRules = rules;
 })();

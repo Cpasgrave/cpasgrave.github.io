@@ -18,13 +18,19 @@
     return graphBySize.get(size);
   }
 
-  function distances(board, graph, sources) {
+  function distances(board, graph, sources, chain) {
     const distance = new Uint16Array(board.length).fill(unreachable);
-    const queue = sources.slice();
-    for (const point of queue) distance[point] = 0;
+    const queue = [];
+    // A chain fighting for its own liberties projects less influence. The actual
+    // adjacency of stones is still read from the board when ranking a move.
+    for (const point of sources) {
+      const group = chain[point];
+      distance[point] = group.eyes >= 2 ? 0 : Math.max(0, 3 - group.liberties.size);
+      queue.push(point);
+    }
     for (const point of queue) {
       for (const next of graph[point]) {
-        if (board[next] || distance[next] !== unreachable) continue;
+        if (board[next] || distance[next] <= distance[point] + 1) continue;
         distance[next] = distance[point] + 1;
         queue.push(next);
       }
@@ -67,8 +73,8 @@
       }
     }
 
-    const distance = [null, distances(board, graph, stones[BLACK]),
-      distances(board, graph, stones[WHITE])];
+    const distance = [null, distances(board, graph, stones[BLACK], chain),
+      distances(board, graph, stones[WHITE], chain)];
     const owner = new Uint8Array(board.length);
     const seen = new Uint8Array(board.length);
     let territory = 0, settled = 0, influence = 0, danger = 0, contested = 0;
@@ -106,12 +112,12 @@
 
     for (const group of groups) {
       const count = group.liberties.size;
-      let risk = count === 1 ? .92 : count === 2 ? .16 : 0;
+      let risk = count === 1 ? 1.55 : count === 2 ? .6 : count === 3 ? .12 : 0;
       if (count === 2 && game.stock[3 - group.color][2]) {
         const [a, b] = group.liberties;
         if (graph[a].includes(b)) {
           group.wallAtari = true;
-          risk = .66;
+          risk = 1.35;
         }
       }
       if (group.eyes >= 2) risk = 0;
@@ -121,11 +127,12 @@
     const prisoners = game.captures[BLACK] - game.captures[WHITE];
     const stoneBalance = stones[BLACK].length - stones[WHITE].length;
     const occupied = stones[BLACK].length + stones[WHITE].length;
+    const reserves = game.stock[BLACK][1] - game.stock[WHITE][1] +
+      1.5 * (game.stock[BLACK][2] - game.stock[WHITE][2]);
     return {
       graph, groups, chain, liberties, owner, distance, occupied, settled, contested,
       playable: board.length - blocked,
-      lead: 1.85 * prisoners - KOMI + territory + .63 * influence + danger + .16 * stoneBalance,
-      count: prisoners - KOMI + territory + .33 * influence + danger,
+      lead: prisoners - KOMI + territory + .60 * influence + danger + .3 * stoneBalance + .8 * reserves,
     };
   }
 
@@ -143,7 +150,7 @@
     const { turn } = game;
     let rank = .55 * openingRank(game, point);
     const groups = info.liberties[point];
-    let allies = 0, enemies = 0, urgent = false;
+    let allies = 0, enemies = 0, urgent = false, attacksWeak = false;
     for (const group of groups) {
       const count = group.liberties.size;
       const weight = Math.log2(1 + group.points.length);
@@ -156,10 +163,22 @@
       } else if (own && group.wallAtari) {
         urgent = true;
         rank += 3 + 2 * weight;
-      } else if (!own && count === 2) rank += 2 + weight;
+      } else if (!own && count === 2) {
+        attacksWeak = true;
+        rank += 2 + weight;
+      }
     }
     if (allies > 1) rank += 1.8;
     if (enemies > 1) rank += 1.2;
+    if (!allies && !urgent) {
+      const free = info.graph[point].filter(next => !game.board[next]);
+      if (free.length <= 1) rank -= 13;
+      else if (free.length === 2 && enemies) {
+        const support = free.some(next => info.liberties[next].some(group =>
+          group.color === turn && group.liberties.size >= 3));
+        rank -= (support ? 2 : 4.8) - (attacksWeak ? 1.5 : 0);
+      }
+    }
     const own = info.distance[turn][point], enemy = info.distance[3 - turn][point];
     if (Math.max(own, enemy) <= 3) rank += 1.5;
     if (own === 1 && enemy > 3 && !urgent && allies < 2) rank -= 1.8;
@@ -262,14 +281,82 @@
       }
     }
     const result = [];
-    for (const child of legal(game, choices.sort(descending))) {
+    for (const candidate of choices.sort(descending)) {
+      // The raw priority is an upper bound: legal() can downgrade self-atari.
+      if (result.length === branches && candidate.rank <= result.at(-1).rank) break;
+      const child = legal(game, [candidate]).next().value;
+      if (!child) continue;
       result.push(child);
-      if (result.length === branches) break;
+      result.sort(descending);
+      if (result.length > branches) result.pop();
     }
     return result;
   }
 
-  const reading = { inspect, ranked, legal, tactical, sign };
+  // Local pursuit of the new chain, including countercaptures and wooden barriers.
+  // Unknown lines (time, depth or node limit) never establish a forced loss.
+  function caught(game, anchor, attacker, until) {
+    const graph = graphFor(game.size);
+    let remaining = 100;
+    function chase(state, depth) {
+      if (--remaining < 0 || !depth || performance.now() >= until) return false;
+      const group = groupAt(state.board, state.size, anchor);
+      if (group.liberties.size > 2) return false;
+      const attacking = state.turn === attacker;
+      const targets = new Set(group.liberties);
+      if (attacking && targets.size === 2 && state.stock[attacker][2]) {
+        const [a, b] = [...targets].sort((x, y) => x - y);
+        if (graph[a].includes(b)) {
+          const capture = play(state, wall(a, 2, b - a === 1 ? 'horizontal' : 'vertical')).game;
+          if (capture && !capture.board[anchor]) return true;
+        }
+      }
+      const wallTargets = new Set(attacking ? targets : []);
+      if (!attacking) {
+        const seen = new Set();
+        for (const member of group.points) for (const near of graph[member]) {
+          if (state.board[near] !== attacker || seen.has(near)) continue;
+          const opposing = groupAt(state.board, state.size, near, seen);
+          const libs = [...opposing.liberties];
+          if (libs.length === 1) targets.add(libs[0]);
+          if (libs.length === 1 || (libs.length === 2 && graph[libs[0]].includes(libs[1]))) {
+            for (const lib of libs) wallTargets.add(lib);
+          }
+        }
+      }
+      const moves = [...targets].map(stone);
+      const seenWalls = new Set();
+      for (const target of wallTargets) for (const move of wallCandidates(state, target, true)) {
+        const key = move.point * 3 + (move.length === 1 ? 0 : move.orientation === 'horizontal' ? 1 : 2);
+        if (seenWalls.has(key)) continue;
+        seenWalls.add(key);
+        moves.push(move);
+      }
+      for (const move of moves) {
+        const next = play(state, move).game;
+        if (!next) continue;
+        if (!attacking && move.type === 'wall' && next.captures[state.turn] === state.captures[state.turn]) continue;
+        if (!next.board[anchor]) {
+          if (move.type === 'stone') {
+            const captor = groupAt(next.board, next.size, move.point);
+            if (captor.liberties.size === 1) {
+              const reply = play(next, stone([...captor.liberties][0]));
+              if (reply.error === 'ko' || (reply.game &&
+                  reply.game.captures[next.turn] - next.captures[next.turn] >= group.points.length)) continue;
+            }
+          }
+          return true;
+        }
+        if (attacking && groupAt(next.board, next.size, anchor).liberties.size > 1) continue;
+        if (chase(next, depth - 1) === attacking) return attacking;
+      }
+      // The defender can also ignore an atari or spend the turn on a ko threat.
+      return !attacking && chase(rules.pass(state), depth - 1);
+    }
+    return chase(game, 16);
+  }
+
+  const reading = { inspect, ranked, legal, tactical, caught, sign };
   if (node) module.exports = reading;
   else globalThis.TopogoReading = reading;
 })();
