@@ -77,7 +77,7 @@
         : 'Le calcul des Blancs a été interrompu. Tu peux le relancer.');
     };
     try {
-      const current = new Worker('ai-worker.js?v=libertes3');
+      const current = new Worker('ai-worker.js?v=yeux4');
       worker = current;
       computerFailed = false;
       announce();
@@ -153,7 +153,8 @@
   }
 
   function updateIntersections(game) {
-    const isScoring = !reviewing() && game.passes >= 2 && !finished;
+    const counted = !reviewing() && game.passes >= 2;
+    const isScoring = counted && !finished;
     const active = playing() || isScoring;
     for (let point = 0; point < game.board.length; point++) {
       const cell = game.board[point];
@@ -165,8 +166,8 @@
       button.disabled = !active;
       button.setAttribute('aria-disabled', String(!canClick));
       button.setAttribute('aria-label', coord + ', ' + label +
-        (isScoring && dead.has(point) ? ', marquée morte' : '') +
-        (isScoring && !cell ? (tally.ownership[point] ? ', territoire des ' + colors[tally.ownership[point]] : ', neutre') : ''));
+        (counted && dead.has(point) ? ', prisonnière' : '') +
+        (counted && (!cell || dead.has(point)) ? (tally.ownership[point] ? ', territoire des ' + colors[tally.ownership[point]] : ', neutre') : ''));
     }
   }
 
@@ -195,6 +196,7 @@
     $('scoring-controls').hidden = !counted;
     $('scoring-hint').hidden = finished;
     $('scoring-actions').hidden = finished;
+    $('review-score').hidden = !finished;
 
     let status = 'Aux ' + colors[game.turn] + ' de jouer';
     if (reviewing()) status = 'Historique';
@@ -424,6 +426,11 @@
     update();
     $('status').tabIndex = -1;
     $('status').focus();
+  });
+  $('review-score').addEventListener('click', () => {
+    finished = false;
+    update();
+    $('score-done').focus();
   });
 
   function review(offset) {

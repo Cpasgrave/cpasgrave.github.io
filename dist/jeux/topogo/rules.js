@@ -121,12 +121,88 @@
     };
   }
 
-  // Only propose prisoners surrounded by unconditionally living chains. A
-  // chain needs two distinct vital regions, each touching it at every empty point.
+  // Read an enclosed fight on the agreed topology after two passes. Try every
+  // local stone defence (including playing elsewhere) before proposing prisoners.
+  function lostPocket(game, room, alive, graph, budget) {
+    const { color, points, empty, border } = room;
+    if (empty.length > 7 || points.length > 48) return false;
+    const cells = new Set(points);
+    const boundary = [];
+    for (const group of border) {
+      const outside = [...group.liberties].filter(p => !cells.has(p));
+      if (alive.has(group) || outside.length >= 3) boundary.push(group);
+      else if (!outside.length && group.points.length <= 6) {
+        // A throw-in trapped inside the pocket can be captured by the defender.
+        // Include the intersections it releases and all ensuing recaptures.
+        for (const p of group.points) cells.add(p);
+      } else return false;
+    }
+    if (!boundary.length || cells.size > 48) return false;
+    // Absorbing a throw-in must not open a connection to another fighting area.
+    for (const p of cells) for (const n of graph[p]) {
+      if (!cells.has(n) && game.board[n] !== WALL && game.board[n] !== color) return false;
+    }
+    const defender = other(color);
+    const memo = new Map(), path = new Set();
+    let remaining = Math.min(1200, budget.left);
+
+    function wins(position, depth) {
+      if (--remaining < 0 || --budget.left < 0 || !depth) return false;
+      const { board, turn } = position;
+      const attacking = turn === color;
+      const vacant = [], liberties = [], symbols = [];
+      for (const p of cells) {
+        symbols.push(board[p]);
+        if (board[p] !== EMPTY) continue;
+        vacant.push(p);
+        if (graph[p].some(n => board[n] === defender)) liberties.push(p);
+      }
+      if (!symbols.includes(defender)) {
+        // A recapture even after an outside ko threat keeps the verdict open.
+        return !vacant.some(point => {
+          const reply = play({ ...position, previousBoard: null, turn: defender }, { type: 'stone', point }).game;
+          return reply && reply.captures[defender] > position.captures[defender];
+        });
+      }
+      const key = turn + '/' + symbols.join('');
+      if (path.has(key)) return false;
+      const entry = key + '/' + depth;
+      // A ko is never used as proof. Refuse attacking moves that start one,
+      // and let the defender recapture immediately.
+      if (memo.has(entry)) return memo.get(entry);
+      path.add(key);
+      let result = false;
+      if (!attacking) {
+        result = wins({ ...position, previousBoard: null, turn: color }, depth - 1);
+      }
+      if (attacking || result) {
+        const options = attacking ? liberties : vacant;
+        for (const point of options) {
+          const next = play(position, { type: 'stone', point }).game;
+          if (!next) continue;
+          if (attacking && next.captures[color] === position.captures[color] + 1) {
+            const captor = groupAt(next.board, game.size, point);
+            if (captor.points.length === 1 && captor.liberties.size === 1) continue;
+          }
+          if (wins({ ...next, previousBoard: null }, depth - 1) === attacking) {
+            result = attacking;
+            break;
+          }
+        }
+      }
+      path.delete(key);
+      if (remaining >= 0 && budget.left >= 0) memo.set(entry, result);
+      return result;
+    }
+    return wins({ ...game, turn: defender, passes: 0, previousBoard: null },
+      Math.min(18, 2 * (empty.length + cells.size - points.length) + 6));
+  }
+
   function suggestDead(game) {
     const { board, size } = game;
     const graph = Array.from(board, (_, p) => neighbors(p, size));
     const chain = [], groups = [], dead = new Set();
+    const living = new Set(), pockets = [];
     for (let p = 0; p < board.length; p++) {
       if (board[p] !== BLACK && board[p] !== WHITE || chain[p]) continue;
       const group = groupAt(board, size, p);
@@ -155,7 +231,9 @@
         }
         if (!border.size || !empty.length) continue;
         const vital = [...border].filter(g => empty.every(point => g.liberties.has(point)));
-        rooms.push({ border, vital, points, invaders });
+        const room = { color, border, vital, points, empty, invaders };
+        rooms.push(room);
+        if (invaders.length) pockets.push(room);
       }
       for (;;) {
         const eyes = new Map();
@@ -165,13 +243,55 @@
         if (alive.size === previous) break;
         rooms = rooms.filter(room => [...room.border].every(g => alive.has(g)));
       }
+      for (const group of alive) living.add(group);
       for (const room of rooms) {
         if (!room.invaders.length) continue;
         const interior = room.points.filter(p => !graph[p].some(next => board[next] === color));
         if (interior.length <= 1) for (const prisoner of room.invaders) dead.add(prisoner);
       }
     }
+    const budget = { left: 6500 };
+    const proposed = [];
+    for (const room of pockets.sort((a, b) => a.empty.length - b.empty.length)) {
+      if (budget.left <= 0) break;
+      if (room.invaders.every(p => dead.has(p)) || room.invaders.some(p => living.has(chain[p]))) continue;
+      if (lostPocket(game, room, living, graph, budget)) proposed.push(room);
+    }
+    const threatened = new Set(proposed.flatMap(room => room.invaders));
+    for (const room of proposed) {
+      // Opposite proposals depending on each other's capture are unresolved.
+      if ([...room.border].some(g => threatened.has(g.points[0]) || dead.has(g.points[0]))) continue;
+      for (const p of room.invaders) dead.add(p);
+    }
     return dead;
+  }
+
+  // A private eye in a seki can be bordered by just one colour. Test the actual
+  // exchanges at the shared liberty before assigning either private eye.
+  function sharedLifeEye(game, eye, color) {
+    const { size, board } = game;
+    const around = neighbors(eye, size).filter(p => board[p] !== WALL);
+    const group = groupAt(board, size, around[0]);
+    if (group.liberties.size !== 2 || !around.every(p => group.points.includes(p))) return false;
+    const common = [...group.liberties].find(p => p !== eye);
+    const opponent = other(color);
+    const adjacent = neighbors(common, size);
+    const rival = adjacent.find(p => board[p] === opponent);
+    if (rival === undefined) return false;
+    const enemy = groupAt(board, size, rival);
+    if (enemy.liberties.size !== 2) return false;
+    const secondEye = [...enemy.liberties].find(p => p !== common);
+    if (!neighbors(secondEye, size).every(p => board[p] === WALL || enemy.points.includes(p))) return false;
+    if (!adjacent.every(p => board[p] === WALL || group.points.includes(p) || enemy.points.includes(p))) return false;
+    return [[color, eye, group], [opponent, secondEye, enemy]].every(([turn, liberty, chain]) => {
+      const attempt = play({ ...game, turn }, { type: 'stone', point: common }).game;
+      if (!attempt) return true;
+      const reply = play(attempt, { type: 'stone', point: liberty }).game;
+      if (!reply || reply.board[chain.points[0]]) return false;
+      const captor = groupAt(reply.board, size, liberty);
+      if (captor.liberties.size !== 1) return true;
+      return !play({ ...reply, previousBoard: null }, { type: 'stone', point: [...captor.liberties][0] }).game;
+    });
   }
 
   function score(game, dead = suggestDead(game), flipped = new Set()) {
@@ -212,6 +332,13 @@
       // Two early passes can leave the whole outside touching just one colour.
       // Leave large, deep open space neutral in the proposal; players can claim it.
       let open = false;
+      if (points.length === 1) {
+        const opponent = other(color);
+        const local = { ...game, board, turn: opponent, previousBoard: null, passes: 0 };
+        const invasion = play(local, { type: 'stone', point: start }).game;
+        open = Boolean(invasion && invasion.captures[opponent] > game.captures[opponent]) ||
+          sharedLifeEye(local, start, color);
+      }
       if (points.length > board.length / 2) {
         let frontier = points.filter(p => neighbors(p, size).some(n => board[n] === color));
         const covered = new Set(frontier);

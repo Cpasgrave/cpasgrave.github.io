@@ -7,11 +7,15 @@
   const { inspect, sign } = reading;
   const byRank = (a, b) => b.rank - a.rank;
   const pass = { type: 'pass' };
+  const outcomes = new WeakMap();
 
   function value(game, info) {
     if (game.passes >= 2) {
-      const { totals } = rules.score(game);
-      return Math.sign(totals[rules.BLACK] - totals[rules.WHITE]);
+      if (!outcomes.has(game)) {
+        const { totals } = rules.score(game);
+        outcomes.set(game, Math.sign(totals[rules.BLACK] - totals[rules.WHITE]));
+      }
+      return outcomes.get(game);
     }
     // Retain score sensitivity even when one side already leads by several captures.
     return 2 / Math.PI * Math.atan(info.lead / (game.size * .65));
@@ -98,9 +102,10 @@
     const ready = game.passes === 1 && covered >= .42 && info.contested < info.playable * .23;
     const quiet = info.occupied > 0 && bestRank < -2;
     if (!children.length || late || ready || quiet) {
-      const winningCount = ready && bestRank < 7 && sign(game.turn) * value(rules.pass(game), null) > 0;
+      const passed = rules.pass(game);
+      const winningCount = ready && bestRank < 7 && sign(game.turn) * value(passed, null) > 0;
       const rank = winningCount ? 4 : quiet ? 4 : -3.8;
-      children.push({ move: pass, game: rules.pass(game), rank });
+      children.push({ move: pass, game: passed, rank });
     }
     return { children: children.sort(byRank), extra: extraChoices(stones, walls) };
   }

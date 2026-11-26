@@ -9,10 +9,10 @@
   <link rel="icon" type="image/jpeg" href="../../assets/avatar-cpasgrave.jpg">
   <link rel="preload" href="../quarto/fonts/The-Wildeast-FR.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./style.css?v=decompte3">
-  <script src="./rules.js?v=libertes3" defer></script>
-  <script src="./board.js?v=monte-carlo" defer></script>
+  <script src="./rules.js?v=yeux4" defer></script>
+  <script src="./board.js?v=yeux4" defer></script>
   <script src="./ai-level.js?v=profondeur2" defer></script>
-  <script src="./app.js?v=libertes3" defer></script>
+  <script src="./app.js?v=yeux4" defer></script>
 </head>
 <body>
   <main class="table">
@@ -78,7 +78,8 @@
           </div>
           <button class="wood-button" id="ai-retry" type="button" hidden>Relancer le calcul</button>
           <div id="scoring-controls" hidden>
-            <p class="hint" id="scoring-hint">Clique sur un groupe pour le déclarer mort ou vivant. Clique sur un territoire pour le compter ou le laisser neutre.</p>
+            <p class="hint">Les carrés indiquent le territoire vide. Les pierres barrées sont prisonnières. Leur intersection libérée peut aussi rapporter un point de territoire.</p>
+            <p class="hint" id="scoring-hint">Clique sur un groupe pour le déclarer mort ou vivant, ou sur une zone pour corriger son territoire.</p>
             <table class="score" aria-label="Détail du décompte">
               <thead><tr><th scope="col">Points</th><th scope="col">Noirs</th><th scope="col">Blancs</th></tr></thead>
               <tbody id="score-rows"></tbody>
@@ -88,6 +89,7 @@
               <button class="wood-button" id="score-done" type="button">Valider le score</button>
               <button class="plain" id="resume" type="button">Reprendre</button>
             </div>
+            <button class="plain" id="review-score" type="button" hidden>Revoir le décompte</button>
           </div>
           <p class="message" id="message" role="status" hidden></p>
         </section>
@@ -116,7 +118,7 @@
         <tr><th scope="row">19 × 19</th><td>0</td><td>4</td></tr>
       </tbody>
     </table>
-    <p>Après deux passes, vérifiez les groupes morts proposés. Un clic sur un groupe change son statut. Les grandes zones encore ouvertes sont proposées comme neutres. Un clic sur une zone bordée d’une seule couleur permet de l’attribuer à cette couleur ou de la neutraliser. Le score additionne le territoire, les prises en jeu et les prisonniers déclarés au décompte. Les Blancs reçoivent aussi 6,5 points de komi. Les barrières ne rapportent aucun point. En cas de désaccord, reprenez la partie.</p>
+    <p>Après deux passes, le jeu propose les groupes morts en examinant les suites de pierres avec les barrières déjà posées. Un clic sur un groupe change son statut. Les grandes zones encore ouvertes sont proposées comme neutres. Un clic sur une zone bordée d’une seule couleur permet de l’attribuer à cette couleur ou de la neutraliser. Le score additionne le territoire, les prises en jeu et les prisonniers déclarés au décompte. Les Blancs reçoivent aussi 6,5 points de komi. Les barrières ne rapportent aucun point. En cas de désaccord, reprenez la partie.</p>
     <p>En solo, l’IA Monte-Carlo joue les Blancs. Les niveaux supérieurs lui donnent plus de simulations et lui permettent de lire des suites plus longues. Le réglage en cours de partie s’applique au prochain calcul. Tu peux corriger le décompte après deux passes.</p>
     <p>Au clavier, déplace-toi avec les flèches sur le plateau et joue avec Entrée.</p>
   </dialog>
