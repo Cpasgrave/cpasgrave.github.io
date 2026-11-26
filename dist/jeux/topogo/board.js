@@ -203,7 +203,7 @@
     const { pitch } = geometry;
     if (tally) {
       for (let i = 0; i < tally.ownership.length; i++) {
-        if (!tally.ownership[i]) continue;
+        if (!tally.ownership[i] || game.board[i] !== 0) continue;
         const [x, y] = center(i, geometry);
         const size = pitch * .33;
         ctx.fillStyle = tally.ownership[i] === BLACK ? '#403027c4' : '#fff4dce8';

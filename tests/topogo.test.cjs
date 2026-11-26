@@ -134,3 +134,62 @@ test('un prisonnier entre des groupes vivants est proposé une seule fois et sa 
   assert.deepEqual(game.board, original);
   assert.equal(suggestDead(fixture([1, 9], [10])).size, 0);
 });
+
+function edgePosition(size, rows, color = BLACK) {
+  const game = createGame(size);
+  for (const [row, cells] of rows.entries()) for (const [col, cell] of [...cells].entries()) {
+    game.board[row * size + col] = { '.': 0, X: color, O: 3 - color, '#': WALL }[cell];
+  }
+  return pass(pass(game));
+}
+
+test('un vrai œil et un faux œil au bord : même avec le premier coup, le groupe enfermé est mort', () => {
+  for (const size of [9, 13, 19]) for (const defender of [BLACK, WHITE]) {
+    const owner = 3 - defender;
+    const game = edgePosition(size, ['O.XXX.XO', 'XXXXOXXO', 'OOOOOOOO'], defender);
+    const original = structuredClone(game);
+    const dead = suggestDead(game);
+    const tally = score(game);
+    const defenders = [...game.board.keys()].filter(p => game.board[p] === defender);
+    assert.deepEqual(dead, new Set(defenders));
+    assert.equal(tally.captures[owner], 10);
+    assert.equal(tally.territory[owner], 12);
+    assert.equal(tally.ownership[0], 0, 'la pierre de bord adverse encore vivante ne compte pas en territoire');
+    assert.equal(tally.territory[defender], 0);
+    for (const p of defenders) assert.equal(tally.ownership[p], owner);
+    // Allowing the defender to actually take the lone edge stone first still fails.
+    const reply = play({ ...game, passes: 0, turn: defender }, stone(1)).game;
+    assert.equal(reply.board[0], 0);
+    assert.equal(reply.captures[defender], 1);
+    assert.equal(suggestDead(reply).size, 11);
+    assert.equal(score(game, new Set()).captures[owner], 0);
+    assert.equal(score(game, new Set()).ownership[5], 0, 'faux œil ouvert à une capture');
+    assert.deepEqual(game, original);
+  }
+});
+
+test('une connexion, un mur et une reprise en ko peuvent changer le verdict au bord', () => {
+  const alive = edgePosition(9, ['O.XXX.XO', 'XXXXXXXO', 'OOOOOOOO']);
+  assert.deepEqual(suggestDead(alive), new Set([0]));
+  assert.equal(score(alive).territory[BLACK], 3);
+  const wall = edgePosition(9, ['.XXX.X#', 'XXXXXX#', '#######']);
+  assert.equal(suggestDead(wall).size, 0);
+  const counted = score(wall);
+  assert.equal(counted.territory[BLACK], 2);
+  for (const p of wall.board.keys()) {
+    if (wall.board[p] !== 0) assert.equal(counted.ownership[p], 0);
+  }
+  const ko = edgePosition(9, ['.X.XO', 'XXXOO', 'OOOOO']);
+  const take = play({ ...ko, passes: 0, turn: WHITE }, stone(2)).game;
+  assert.equal(play(take, stone(3)).error, 'ko');
+  assert.equal(suggestDead(ko).size, 0);
+  assert.equal(score(ko).ownership[2], 0);
+});
+
+test('en séki, les deux yeux privés et la liberté commune restent neutres', () => {
+  const game = createGame(9);
+  for (const p of game.board.keys()) game.board[p] = p % 9 < 4 ? BLACK : WHITE;
+  for (const p of [37, 40, 43]) game.board[p] = 0;
+  assert.equal(suggestDead(game).size, 0);
+  assert.deepEqual(score(game).territory, [0, 0, 0]);
+});

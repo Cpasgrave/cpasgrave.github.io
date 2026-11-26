@@ -25,7 +25,7 @@
     // adjacency of stones is still read from the board when ranking a move.
     for (const point of sources) {
       const group = chain[point];
-      distance[point] = group.eyes >= 2 ? 0 : Math.max(0, 3 - group.liberties.size);
+      distance[point] = Math.max(0, 3 - group.liberties.size);
       queue.push(point);
     }
     for (const point of queue) {
@@ -38,16 +38,15 @@
     return distance;
   }
 
-  function ownEye(board, size, graph, point, color) {
-    if (graph[point].some(next => board[next] !== color && board[next] !== WALL)) return false;
-    const row = Math.floor(point / size), col = point % size;
-    let enemies = 0, corners = 0;
-    for (const dy of [-1, 1]) for (const dx of [-1, 1]) {
-      if (row + dy < 0 || row + dy >= size || col + dx < 0 || col + dx >= size) continue;
-      corners++;
-      if (board[point + dy * size + dx] === 3 - color) enemies++;
+  function splitsEye(room, graph, point) {
+    const remaining = new Set(room);
+    remaining.delete(point);
+    const connected = [remaining.values().next().value];
+    remaining.delete(connected[0]);
+    for (const p of connected) for (const n of graph[p]) {
+      if (remaining.delete(n)) connected.push(n);
     }
-    return enemies < (corners === 4 ? 2 : 1);
+    return remaining.size > 0;
   }
 
   function inspect(game) {
@@ -69,13 +68,13 @@
       for (const member of group.points) chain[member] = group;
       for (const liberty of group.liberties) {
         liberties[liberty].push(group);
-        if (ownEye(board, size, graph, liberty, color)) group.eyes++;
       }
     }
 
     const distance = [null, distances(board, graph, stones[BLACK], chain),
       distances(board, graph, stones[WHITE], chain)];
     const owner = new Uint8Array(board.length);
+    const eyeMoves = new Map(), eyeSpaces = [];
     const seen = new Uint8Array(board.length);
     let territory = 0, settled = 0, influence = 0, danger = 0, contested = 0;
     for (let point = 0; point < board.length; point++) {
@@ -94,8 +93,12 @@
       const color = boundary[0]?.color;
       // Do not award the entire outside to the only colour bordering it.
       const sealed = color && region.length <= size * 2 &&
-        boundary.every(group => group.color === color && (group.liberties.size > 1 || group.eyes >= 2));
+        boundary.every(group => group.color === color && group.liberties.size > 1);
       if (sealed) {
+        if (boundary.length === 1 && region.every(p => boundary[0].liberties.has(p))) {
+          boundary[0].eyes++;
+          if (region.length >= 3 && region.length <= 8) eyeSpaces.push({ region, group: boundary[0] });
+        }
         settled += region.length;
         territory += sign(color) * region.length;
         for (const member of region) owner[member] = color;
@@ -110,6 +113,10 @@
       }
     }
 
+    for (const { region, group } of eyeSpaces) {
+      if (group.eyes >= 2) continue;
+      for (const p of region) if (splitsEye(region, graph, p)) eyeMoves.set(p, group);
+    }
     for (const group of groups) {
       const count = group.liberties.size;
       let risk = count === 1 ? 1.55 : count === 2 ? .6 : count === 3 ? .12 : 0;
@@ -121,6 +128,7 @@
         }
       }
       if (group.eyes >= 2) risk = 0;
+      else if (group.eyes === 1 && count <= 3 && group.points.length >= 3) risk += .35;
       danger -= sign(group.color) * risk * group.points.length;
     }
 
@@ -130,7 +138,7 @@
     const reserves = game.stock[BLACK][1] - game.stock[WHITE][1] +
       1.5 * (game.stock[BLACK][2] - game.stock[WHITE][2]);
     return {
-      graph, groups, chain, liberties, owner, distance, occupied, settled, contested,
+      graph, groups, chain, liberties, owner, eyeMoves, distance, occupied, settled, contested,
       playable: board.length - blocked,
       lead: prisoners - KOMI + territory + .60 * influence + danger + .3 * stoneBalance + .8 * reserves,
     };
@@ -183,7 +191,9 @@
     if (Math.max(own, enemy) <= 3) rank += 1.5;
     if (own === 1 && enemy > 3 && !urgent && allies < 2) rank -= 1.8;
     if (own >= 2 && own <= 4) rank += .65;
-    if (info.owner[point] === turn && !urgent) rank -= 9;
+    const eyeGroup = info.eyeMoves.get(point);
+    if (eyeGroup) rank += (eyeGroup.color === turn ? 9 : 5) + Math.log2(1 + eyeGroup.points.length);
+    else if (info.owner[point] === turn && !urgent) rank -= 9;
     else if (info.owner[point] === 3 - turn && !urgent) rank -= 2;
     return rank;
   }
@@ -259,6 +269,7 @@
 
   function tactical(game, info, branches) {
     const urgencies = new Map();
+    for (const [p, group] of info.eyeMoves) urgencies.set(p, 4 + group.points.length);
     for (const group of info.groups) {
       const count = group.liberties.size;
       if (count > 2 || group.eyes >= 2) continue;

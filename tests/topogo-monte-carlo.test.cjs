@@ -3,7 +3,7 @@ const test = require('node:test');
 const { BLACK, WHITE, createGame, play, pass } = require('../dist/jeux/topogo/rules.js');
 const { search } = require('../dist/jeux/topogo/monte-carlo.js');
 const { count, settings } = require('../dist/jeux/topogo/ai-level.js');
-const { caught } = require('../dist/jeux/topogo/ai-reading.js');
+const { caught, inspect } = require('../dist/jeux/topogo/ai-reading.js');
 const { groupAt } = require('../dist/jeux/topogo/rules.js');
 
 function seeded() {
@@ -105,4 +105,15 @@ test('la poursuite distingue une capture forcée, une fuite et deux libertés pr
   assert.equal(caught(game, 20, BLACK, Infinity), false);
   const wallAttack = { ...corner(WHITE), turn: BLACK };
   assert.equal(caught(wallAttack, 0, BLACK, Infinity), true);
+});
+
+test('l’IA sauve le groupe au bord en séparant sa poche de trois points en deux yeux', () => {
+  const game = createGame(9);
+  for (const [p, cell] of [...'X...XO...XXXXXO...OOOOOO...'].entries()) game.board[p] = '.XO'.indexOf(cell);
+  game.stock[BLACK] = { 1: 0, 2: 0 };
+  game.stock[WHITE] = { 1: 0, 2: 0 };
+  assert.equal(inspect(game).chain[0].eyes, 1);
+  const move = search(game, { ...settings(5), iterations: 250, budgetMs: Infinity, random: seeded() });
+  assert.deepEqual(move, { type: 'stone', point: 2 });
+  assert.equal(inspect(play(game, move).game).chain[0].eyes, 2);
 });
